@@ -1,12 +1,22 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.EntityFrameworkCore;
+
+using RentDrive.Data;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 // Add services to the container.
+builder.Services
+    .AddDbContext<RentDriveDbContext>(options =>
+    {
+        options.UseSqlServer(connectionString);
+    });
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
