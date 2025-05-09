@@ -7,6 +7,9 @@ namespace RentDrive.Data.Models
         public ApplicationUser()
         {
             this.Id = Guid.NewGuid();
+            this.CreatedOn = DateTime.UtcNow;
         }
+        public DateTime CreatedOn { get; set; }
+        public bool IsCompanyEmployee { get; set; }
     }
 }
