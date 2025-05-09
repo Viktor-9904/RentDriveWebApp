@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RentDrive.Common\RentDrive.Common.csproj" />
     <ProjectReference Include="..\RentDrive.Data.Models\RentDrive.Data.Models.csproj" />
   </ItemGroup>
 

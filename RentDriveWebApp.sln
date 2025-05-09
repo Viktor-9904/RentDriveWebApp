@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentDrive.Backend", "RentDrive.Backend\RentDrive.Backend.csproj", "{14DBF293-8D52-4EB0-B991-90C4EBE267FE}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentDrive.Data", "RentDrive.Data\RentDrive.Data.csproj", "{E314296B-B4B1-4393-81E1-30354DEE7FC3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentDrive.Data.Models", "RentDrive.Data.Models\RentDrive.Data.Models.csproj", "{43ABB34A-1E84-448B-AD1F-1F7B8DDD2407}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentDrive.Common", "RentDrive.Common\RentDrive.Common.csproj", "{28B80C89-B69C-449B-85FF-7ABB891B922F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{43ABB34A-1E84-448B-AD1F-1F7B8DDD2407}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43ABB34A-1E84-448B-AD1F-1F7B8DDD2407}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43ABB34A-1E84-448B-AD1F-1F7B8DDD2407}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28B80C89-B69C-449B-85FF-7ABB891B922F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28B80C89-B69C-449B-85FF-7ABB891B922F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28B80C89-B69C-449B-85FF-7ABB891B922F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28B80C89-B69C-449B-85FF-7ABB891B922F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
