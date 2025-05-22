@@ -277,18 +277,26 @@ header
 
 .header-area .main-nav a.logo {
   background-image: url(/assets/images/white-logo.png);
-  width: 166px;
-  height: 58px;
+  width: 229px;
+  height: 80px;
   display: inline-block;
   margin-top: 20px;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
 
 .background-header .main-nav a.logo {
   background-image: url(/assets/images/black-logo.png);
-  width: 164px;
-  height: 58px;
+  width: 229px;
+  height: 80px;
   display: inline-block;
   margin-top: 10px;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
 
 .background-header .main-nav .nav {
