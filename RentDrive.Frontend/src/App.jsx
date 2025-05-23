@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router'
 import './App.css'
 
 import Home from './pages/Home'
+import Categories from './pages/Categories'
 
 import Spinner from './components/shared/Spinner'
 import Header from './components/shared/Header'
@@ -17,6 +18,7 @@ function App() {
 
       <Routes>
         <Route index element={<Home />} />
+        <Route path="/categories" element={<Categories />} />
       </Routes>
 
       <Footer />
