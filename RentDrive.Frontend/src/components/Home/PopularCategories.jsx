@@ -70,7 +70,7 @@ export default function PopularCategories() {
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <li>
+                                                {/* <li>
                                                     <div>
                                                         <div className="thumb">
                                                             <div className="row">
@@ -149,7 +149,7 @@ export default function PopularCategories() {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </li>
+                                                </li> */}
                                             </ul>
                                         </div>
                                     </div>
