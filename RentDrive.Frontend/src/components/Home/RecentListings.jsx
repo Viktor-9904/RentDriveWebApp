@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function RecentListing() {
     return (
         <>
@@ -17,10 +19,10 @@ export default function RecentListing() {
                                         <div className="col-lg-12">
                                             <div className="listing-item">
                                                 <div className="left-image">
-                                                    <a href="#"><img src="assets/images/listing-01.jpg" alt="" /></a>
+                                                    <Link to="#"><img src="assets/images/listing-01.jpg" alt="" /></Link>
                                                 </div>
                                                 <div className="right-content align-self-center">
-                                                    <a href="#"><h4>1. First Apartment Unit</h4></a>
+                                                    <Link to="#"><h4>1. First Apartment Unit</h4></Link>
                                                     <h6>by: Sale Agent</h6>
                                                     <ul className="rate">
                                                         <li><i className="fa fa-star-o"></i></li>
@@ -37,7 +39,7 @@ export default function RecentListing() {
                                                         <li><img src="assets/images/listing-icon-03.png" alt="" /> 4 Bathrooms</li>
                                                     </ul>
                                                     <div className="main-white-button">
-                                                        <a href="contact.html"><i className="fa fa-eye"></i> Contact Now</a>
+                                                        <Link to="/contact-us"><i className="fa fa-eye"></i> Contact Now</Link>
                                                     </div>
                                                 </div>
                                             </div>
@@ -45,10 +47,10 @@ export default function RecentListing() {
                                         <div className="col-lg-12">
                                             <div className="listing-item">
                                                 <div className="left-image">
-                                                    <a href="#"><img src="assets/images/listing-02.jpg" alt="" /></a>
+                                                    <Link to="#"><img src="assets/images/listing-02.jpg" alt="" /></Link>
                                                 </div>
                                                 <div className="right-content align-self-center">
-                                                    <a href="#"><h4>2. Another House of Gaming</h4></a>
+                                                    <Link to="#"><h4>2. Another House of Gaming</h4></Link>
                                                     <h6>by: Top Sale Agent</h6>
                                                     <ul className="rate">
                                                         <li><i className="fa fa-star-o"></i></li>
@@ -65,7 +67,7 @@ export default function RecentListing() {
                                                         <li><img src="assets/images/listing-icon-03.png" alt="" /> 3 Bathrooms</li>
                                                     </ul>
                                                     <div className="main-white-button">
-                                                        <a href="contact.html"><i className="fa fa-eye"></i> Contact Now</a>
+                                                        <Link to="/contact-us"><i className="fa fa-eye"></i> Contact Now</Link>
                                                     </div>
                                                 </div>
                                             </div>
@@ -73,10 +75,10 @@ export default function RecentListing() {
                                         <div className="col-lg-12">
                                             <div className="listing-item">
                                                 <div className="left-image">
-                                                    <a href="#"><img src="assets/images/listing-03.jpg" alt="" /></a>
+                                                    <Link to="#"><img src="assets/images/listing-03.jpg" alt="" /></Link>
                                                 </div>
                                                 <div className="right-content align-self-center">
-                                                    <a href="#"><h4>3. Secret Place Hidden House</h4></a>
+                                                    <Link to="#"><h4>3. Secret Place Hidden House</h4></Link>
                                                     <h6>by: Best Property</h6>
                                                     <ul className="rate">
                                                         <li><i className="fa fa-star-o"></i></li>
@@ -93,7 +95,7 @@ export default function RecentListing() {
                                                         <li><img src="assets/images/listing-icon-03.png" alt="" /> 3 Bathrooms</li>
                                                     </ul>
                                                     <div className="main-white-button">
-                                                        <a href="contact.html"><i className="fa fa-eye"></i> Contact Now</a>
+                                                        <Link to="/contact-us"><i className="fa fa-eye"></i> Contact Now</Link>
                                                     </div>
                                                 </div>
                                             </div>

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function MainBanner() {
     return (
         <>
@@ -47,11 +49,11 @@ export default function MainBanner() {
                         </div>
                         <div className="col-lg-10 offset-lg-1">
                             <ul className="categories">
-                                <li><a href="category.html"><span className="icon"><img src="assets/images/search-icon-01.png" alt="Home" /></span> Apartments</a></li>
-                                <li><a href="listing.html"><span className="icon"><img src="assets/images/search-icon-02.png" alt="Food" /></span> Food &amp; Life</a></li>
-                                <li><a href="#"><span className="icon"><img src="assets/images/search-icon-03.png" alt="Vehicle" /></span> Cars</a></li>
-                                <li><a href="#"><span className="icon"><img src="assets/images/search-icon-04.png" alt="Shopping" /></span> Shopping</a></li>
-                                <li><a href="#"><span className="icon"><img src="assets/images/search-icon-05.png" alt="Travel" /></span> Traveling</a></li>
+                                <li><Link to="/categories"><span className="icon"><img src="assets/images/search-icon-01.png" alt="Home" /></span> Apartments</Link></li>
+                                <li><Link to="/listing"><span className="icon"><img src="assets/images/search-icon-02.png" alt="Food" /></span> Food &amp; Life</Link></li>
+                                <li><Link to="#"><span className="icon"><img src="assets/images/search-icon-03.png" alt="Vehicle" /></span> Cars</Link></li>
+                                <li><Link to="#"><span className="icon"><img src="assets/images/search-icon-04.png" alt="Shopping" /></span> Shopping</Link></li>
+                                <li><Link to="#"><span className="icon"><img src="assets/images/search-icon-05.png" alt="Travel" /></span> Traveling</Link></li>
                             </ul>
                         </div>
                     </div>

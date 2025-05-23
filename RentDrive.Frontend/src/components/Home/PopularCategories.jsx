@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function PopularCategories() {
     return (
         <>
@@ -58,7 +60,7 @@ export default function PopularCategories() {
                                                                     <div className="left-text">
                                                                         <h4>One Of The Most Trending Stuffs Right Now!</h4>
                                                                         <p>Plot Listing is a responsive Bootstrap 5 website template that included 4 different HTML pages. This template is provided by TemplateMo website. You can apply this layout for your static or dynamic CMS websites.</p>
-                                                                        <div className="main-white-button"><a href="#"><i className="fa fa-eye"></i> Discover More</a></div>
+                                                                        <div className="main-white-button"><Link to="#"><i className="fa fa-eye"></i> Discover More</Link></div>
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-lg-7 align-self-center">
@@ -78,7 +80,7 @@ export default function PopularCategories() {
                                                                     <div className="left-text">
                                                                         <h4>Food and Lifestyle category is here</h4>
                                                                         <p>You can feel free to download, edit and apply this template for your website. Please tell your friends about TemplateMo website.</p>
-                                                                        <div className="main-white-button"><a href="#"><i className="fa fa-eye"></i> Explore More</a></div>
+                                                                        <div className="main-white-button"><Link to="#"><i className="fa fa-eye"></i> Explore More</Link></div>
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-lg-7 align-self-center">
@@ -98,7 +100,7 @@ export default function PopularCategories() {
                                                                     <div className="left-text">
                                                                         <h4>Best car rentals for your trips!</h4>
                                                                         <p>Did you know? You can get the best free HTML templates on Too CSS blog. Visit the blog pages and explore fresh and latest website templates.</p>
-                                                                        <div className="main-white-button"><a href="listing.html"><i className="fa fa-eye"></i> More Listing</a></div>
+                                                                        <div className="main-white-button"><Link to="listing.html"><i className="fa fa-eye"></i> More Listing</Link></div>
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-lg-7 align-self-center">
@@ -118,7 +120,7 @@ export default function PopularCategories() {
                                                                     <div className="left-text">
                                                                         <h4>Shopping List: Images from Unsplash</h4>
                                                                         <p>Image credits go to Unsplash website that provides free stock photos for anyone. Images used in this Plot Listing template are from Unsplash.</p>
-                                                                        <div className="main-white-button"><a href="#"><i className="fa fa-eye"></i> Discover More</a></div>
+                                                                        <div className="main-white-button"><Link to="#"><i className="fa fa-eye"></i> Discover More</Link></div>
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-lg-7 align-self-center">
@@ -138,7 +140,7 @@ export default function PopularCategories() {
                                                                     <div className="left-text">
                                                                         <h4>Information and Safety Tips for Traveling</h4>
                                                                         <p>You are allowed to use this template for your commercial websites. You are NOT allowed to redistribute this template ZIP file on any Free CSS collection websites.</p>
-                                                                        <div className="main-white-button"><a rel="nofollow" href="https://templatemo.com/contact"><i className="fa fa-eye"></i> Read More</a></div>
+                                                                        <div className="main-white-button"><Link rel="nofollow" to="https://templatemo.com/contact"><i className="fa fa-eye"></i> Read More</Link></div>
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-lg-7 align-self-center">
