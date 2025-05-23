@@ -1,3 +1,12 @@
+import { Link } from 'react-router'
+
+const navigation = [
+    { name: 'Home', href: '/' },
+    { name: 'categories', href: '/categories' },
+    { name: 'listing', href: '/listing' },
+    { name: 'contact-us', href: '/contact-us' },
+]
+
 export default function Header() {
     return (
         <>
@@ -7,21 +16,24 @@ export default function Header() {
                     <div className="row">
                         <div className="col-12">
                             <nav className="main-nav">
-                                {/* <!-- ***** Logo Start ***** --> */}
-                                <a href="index.html" className="logo">
-                                </a>
-                                {/* <!-- ***** Logo End ***** --> */}
+                                <Link to="/" className="logo"></Link>
+
                                 {/* <!-- ***** Menu Start ***** --> */}
+
+                                {/*TODO: ADD - className="active" */}
                                 <ul className="nav">
-                                    <li><a href="index.html" className="active">Home</a></li>
-                                    <li><a href="category.html">Categories</a></li>
-                                    <li><a href="listing.html">Listing</a></li>
-                                    <li><a href="contact.html">Contact Us</a></li>
-                                    <li><div className="main-white-button"><a href="#"><i className="fa fa-plus"></i> Add Your Listing</a></div></li>
+                                    {navigation.map((item) => (
+                                        <li key={item.name}>
+                                            <Link
+                                                to={item.href}>
+                                                {item.name}
+                                            </Link>
+                                        </li>
+                                    ))}
                                 </ul>
-                                <a className='menu-trigger'>
+                                <Link className='menu-trigger'>
                                     <span>Menu</span>
-                                </a>
+                                </Link>
                                 {/* <!-- ***** Menu End ***** --> */}
                             </nav>
                         </div>

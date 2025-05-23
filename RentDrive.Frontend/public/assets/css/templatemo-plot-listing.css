@@ -321,7 +321,7 @@ header
   padding-right: 30px;
 }
 
-.header-area .main-nav .nav li:last-child {
+/* .header-area .main-nav .nav li:last-child {
   padding-right: 0px;
   padding-left: 40px;
 }
@@ -353,7 +353,7 @@ header
 .header-area .main-nav .nav li:last-child a:hover,
 .header-area .main-nav .nav li:last-child a.active {
   color: #fff !important;
-}
+} */
 
 .header-area .main-nav .nav li a {
   display: block;
