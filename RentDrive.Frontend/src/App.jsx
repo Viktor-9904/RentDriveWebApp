@@ -9,6 +9,7 @@ import Spinner from './components/shared/Spinner'
 import Header from './components/shared/Header'
 import Footer from './components/shared/Footer'
 import Listing from './pages/Listing'
+import ContactUs from './pages/ContactUs'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/listing" element={<Listing />} />
+        <Route path="/contact-us" element={<ContactUs />} />
       </Routes>
 
       <Footer />
