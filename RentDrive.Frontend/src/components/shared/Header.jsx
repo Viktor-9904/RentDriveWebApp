@@ -18,8 +18,6 @@ export default function Header() {
                             <nav className="main-nav">
                                 <Link to="/" className="logo"></Link>
 
-                                {/* <!-- ***** Menu Start ***** --> */}
-
                                 {/*TODO: ADD - className="active" */}
                                 <ul className="nav">
                                     {navigation.map((item) => (
@@ -30,11 +28,9 @@ export default function Header() {
                                             </Link>
                                         </li>
                                     ))}
+                                    <li><Link to="/Register">Register</Link></li>
+                                    <li><Link to="/Login">Login</Link></li>
                                 </ul>
-                                <Link className='menu-trigger'>
-                                    <span>Menu</span>
-                                </Link>
-                                {/* <!-- ***** Menu End ***** --> */}
                             </nav>
                         </div>
                     </div>

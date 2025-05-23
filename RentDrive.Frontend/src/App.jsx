@@ -10,12 +10,13 @@ import Header from './components/shared/Header'
 import Footer from './components/shared/Footer'
 import Listing from './pages/Listing'
 import ContactUs from './pages/ContactUs'
+import Login from './pages/Login'
 
 function App() {
   return (
     <>
       {/* <Spinner/> */}
-
+    
       <Header />
 
       <Routes>
@@ -23,6 +24,7 @@ function App() {
         <Route path="/categories" element={<Categories />} />
         <Route path="/listing" element={<Listing />} />
         <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
 
       <Footer />

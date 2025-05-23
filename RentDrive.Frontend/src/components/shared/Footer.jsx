@@ -11,7 +11,7 @@ export default function Footer() {
                                 <div className="logo">
                                     <img src="assets/images/black-logo.png" alt="Plot Listing" />
                                 </div>
-                                <p>If you consider that <Link rel="nofollow" to="https://templatemo.com/tm-564-plot-listing" target="_parent">Plot Listing template</Link> is useful for your website, please <Link rel="nofollow" to="https://www.paypal.me/templatemo" target="_blank">support us</Link> a little via PayPal.</p>
+                                <p>Copyright © 2021 Plot Listing Co., Ltd. All Rights Reserved.</p>
                             </div>
                         </div>
                         <div className="col-lg-4">
@@ -49,13 +49,6 @@ export default function Footer() {
                                         <Link to="#">090-080-0760</Link>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-12">
-                            <div className="sub-footer">
-                                <p>Copyright © 2021 Plot Listing Co., Ltd. All Rights Reserved.
-                                    <br />
-                                    Design: <Link rel="nofollow" to="https://templatemo.com" title="CSS Templates">TemplateMo</Link></p>
                             </div>
                         </div>
                     </div>
