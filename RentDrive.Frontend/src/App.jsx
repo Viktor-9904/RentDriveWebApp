@@ -11,6 +11,7 @@ import Footer from './components/shared/Footer'
 import Listing from './pages/Listing'
 import ContactUs from './pages/ContactUs'
 import Login from './pages/Login'
+import Register from './pages/Register'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/listing" element={<Listing />} />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
 
       <Footer />
