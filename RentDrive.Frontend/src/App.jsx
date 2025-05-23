@@ -8,6 +8,7 @@ import Categories from './pages/Categories'
 import Spinner from './components/shared/Spinner'
 import Header from './components/shared/Header'
 import Footer from './components/shared/Footer'
+import Listing from './pages/Listing'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route index element={<Home />} />
         <Route path="/categories" element={<Categories />} />
+        <Route path="/listing" element={<Listing />} />
       </Routes>
 
       <Footer />
