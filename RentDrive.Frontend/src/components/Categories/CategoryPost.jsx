@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function CategoryPost() {
     return (
         <>
@@ -53,7 +55,7 @@ export default function CategoryPost() {
                                                                             </div>
                                                                             <div className="col-lg-6">
                                                                                 <div className="main-white-button">
-                                                                                    <a href="#"><i className="fa fa-plus"></i> Check Our Listings</a>
+                                                                                    <Link to="#"><i className="fa fa-plus"></i> Check Our Listings</Link>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -64,7 +66,7 @@ export default function CategoryPost() {
                                                                         <div className="row">
                                                                             <div className="col-lg-9">
                                                                                 <h4>Description for Apartments</h4>
-                                                                                <p>If you feel that Plot Listing HTML template is useful, please <a rel="nofollow" href="https://www.paypal.me/templatemo" target="_blank">support us</a> a little via PayPal. You are allowed to use this template for your commercial websites. You are NOT allowed to redistribute this template ZIP file on any Free CSS collection websites. You may contact us for more information. Thank you.</p>
+                                                                                <p>If you feel that Plot Listing HTML template is useful, please <Link rel="nofollow" to="https://www.paypal.me/templatemo" target="_blank">support us</Link> a little via PayPal. You are allowed to use this template for your commercial websites. You are NOT allowed to redistribute this template ZIP file on any Free CSS collection websites. You may contact us for more information. Thank you.</p>
                                                                             </div>
                                                                             <div className="col-lg-3">
                                                                                 <div className="text-icon">
@@ -106,7 +108,7 @@ export default function CategoryPost() {
                                                                             </div>
                                                                             <div className="col-lg-6">
                                                                                 <div className="main-white-button">
-                                                                                    <a href="#"><i className="fa fa-plus"></i> Check Our Listings</a>
+                                                                                    <Link to="#"><i className="fa fa-plus"></i> Check Our Listings</Link>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -162,7 +164,7 @@ export default function CategoryPost() {
                                                                             </div>
                                                                             <div className="col-lg-6">
                                                                                 <div className="main-white-button">
-                                                                                    <a href="#"><i className="fa fa-plus"></i> Check Our Listings</a>
+                                                                                    <Link to="#"><i className="fa fa-plus"></i> Check Our Listings</Link>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -215,7 +217,7 @@ export default function CategoryPost() {
                                                                             </div>
                                                                             <div className="col-lg-6">
                                                                                 <div className="main-white-button">
-                                                                                    <a href="#"><i className="fa fa-plus"></i> Check Our Listings</a>
+                                                                                    <Link to="#"><i className="fa fa-plus"></i> Check Our Listings</Link>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -268,7 +270,7 @@ export default function CategoryPost() {
                                                                             </div>
                                                                             <div className="col-lg-6">
                                                                                 <div className="main-white-button">
-                                                                                    <a href="#"><i className="fa fa-plus"></i> Check Our Listings</a>
+                                                                                    <Link to="#"><i className="fa fa-plus"></i> Check Our Listings</Link>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
