@@ -1,6 +1,11 @@
+import { data } from 'jquery'
 import { Link } from 'react-router-dom'
 
 export default function Footer() {
+
+    const appPublishYear = 2025;
+    const currentYear = new Date().getFullYear();
+    
     return (
         <>
             <footer>
@@ -11,7 +16,7 @@ export default function Footer() {
                                 <div className="logo">
                                     <img src="assets/images/black-logo.png" alt="Plot Listing" />
                                 </div>
-                                <p>Copyright © 2021 Plot Listing Co., Ltd. All Rights Reserved.</p>
+                                <p>Copyright © {currentYear > appPublishYear ? `${appPublishYear} - ${currentYear}` : currentYear} Rent Drive Co., Ltd. All Rights Reserved.</p>
                             </div>
                         </div>
                         <div className="col-lg-4">
