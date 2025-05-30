@@ -13,6 +13,7 @@
         public string Color { get; set; } = null!;
         public decimal PricePerHour { get; set; }
         public DateTime DateOfProduction { get; set; }
+        public DateTime DateAdded { get; set; }
         public double CurbWeightInKg { get; set; }
         public int OdoKilometers { get; set; }
         public double? EngineDisplacement { get; set; }
