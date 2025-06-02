@@ -1,6 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 
 using RentDrive.Data;
+using RentDrive.Data.Models;
+using RentDrive.Data.Repository;
+using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data;
+using RentDrive.Services.Data.Interfaces;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
@@ -25,6 +30,13 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod();
     });
 });
+
+builder.Services.AddScoped<IRepository<ApplicationUser, Guid>, BaseRepository<ApplicationUser, Guid>>();
+builder.Services.AddScoped<IRepository<Vehicle, Guid>, BaseRepository<Vehicle, Guid>>();
+builder.Services.AddScoped<IRepository<VehicleType, Guid>, BaseRepository<VehicleType, Guid>>();
+builder.Services.AddScoped<IRepository<VehicleTypeCategory, Guid>, BaseRepository<VehicleTypeCategory, Guid>>();
+
+builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 WebApplication app = builder.Build();
 

@@ -14,7 +14,7 @@ namespace RentDrive.Services.Data
             this.vehicleRepository = vehicleRepository;
         }
 
-        public async Task<IEnumerable<RecentVehicleIndexViewModel>> IndexGetTop3RecentVehicles()
+        public async Task<IEnumerable<RecentVehicleIndexViewModel>> IndexGetTop3RecentVehiclesAsync()
         {
             IEnumerable<RecentVehicleIndexViewModel> top3RecentVehicles = await vehicleRepository
                 .GetAllAsQueryable()

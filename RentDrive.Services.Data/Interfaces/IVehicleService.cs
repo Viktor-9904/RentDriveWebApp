@@ -5,6 +5,6 @@ namespace RentDrive.Services.Data.Interfaces
 {
     public interface IVehicleService
     {
-        Task<IEnumerable<RecentVehicleIndexViewModel>> IndexGetTop3RecentVehicles();
+        Task<IEnumerable<RecentVehicleIndexViewModel>> IndexGetTop3RecentVehiclesAsync();
     }
 }
