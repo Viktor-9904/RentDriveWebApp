@@ -4,6 +4,7 @@ using RentDrive.Data;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+string frontEndURL = builder.Configuration["FrontEndURL:URL"]!;
 
 // Add services to the container.
 builder.Services
@@ -15,6 +16,15 @@ builder.Services
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontEnd", policy =>
+    {
+        policy.WithOrigins(frontEndURL)
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 
 WebApplication app = builder.Build();
 
