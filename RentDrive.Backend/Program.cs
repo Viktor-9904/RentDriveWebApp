@@ -50,6 +50,8 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontEnd");
 
+app.UseStaticFiles();
+
 app.UseAuthorization();
 
 app.MapControllers();

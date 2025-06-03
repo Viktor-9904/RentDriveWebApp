@@ -25,4 +25,8 @@
     <ProjectReference Include="..\RentDrive.Web.ViewModels\RentDrive.Web.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\vehicles\" />
+  </ItemGroup>
+
 </Project>
