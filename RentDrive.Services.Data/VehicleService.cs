@@ -1,17 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Vehicles;
+
+using static RentDrive.Common.EntityValidationConstants.VehicleImages;
 
 namespace RentDrive.Services.Data
 {
     public class VehicleService : IVehicleService
     {
         private readonly IRepository<Vehicle, Guid> vehicleRepository;
-        public VehicleService(IRepository<Vehicle, Guid> vehicleRepository)
+        private readonly IVehicleImageService vehicleImageService;
+        public VehicleService(
+            IRepository<Vehicle, Guid> vehicleRepository,
+            IVehicleImageService vehicleImageService)
         {
             this.vehicleRepository = vehicleRepository;
+            this.vehicleImageService = vehicleImageService;
         }
 
         public async Task<IEnumerable<RecentVehicleIndexViewModel>> IndexGetTop3RecentVehiclesAsync()
@@ -24,13 +31,21 @@ namespace RentDrive.Services.Data
                 .Take(3)
                 .Select(v => new RecentVehicleIndexViewModel()
                 {
+                    Id = v.Id,
                     Make = v.Make,
                     Model = v.Model,
                     PricePerHour = v.PricePerHour,
+                    ImageURL = DefaultImageURL,
                     //TODO: Fuel Type
                     Description = v.Description,
                 })
                 .ToArrayAsync();
+
+            foreach (RecentVehicleIndexViewModel vehicle in top3RecentVehicles)
+            {
+                string currentVehicleImageURL = await vehicleImageService.GetFirstImageByVehicleIdAsync(vehicle.Id);
+                vehicle.ImageURL = currentVehicleImageURL;
+            }
 
             return top3RecentVehicles;
         }
