@@ -18,5 +18,10 @@
         {
             public const int NameMaxLength = 50;
         }
+        public static class VehicleImages
+        {
+            public const int ImageURLMaxLength = 100;
+            public const string DefaultImageURL = "images/default-image.jpg";
+        }
     }
 }

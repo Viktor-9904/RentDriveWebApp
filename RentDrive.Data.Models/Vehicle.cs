@@ -20,5 +20,7 @@
         public FuelType? FuelType { get; set; }
         public string? Description { get; set; }
         public double? PowerInKiloWatts { get; set; }
+        public ICollection<VehicleImages> VehicleImages { get; set; }
+            = new List<VehicleImages>();
     }
 }
