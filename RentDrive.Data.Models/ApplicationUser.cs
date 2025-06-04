@@ -11,5 +11,7 @@ namespace RentDrive.Data.Models
         }
         public DateTime CreatedOn { get; set; }
         public bool IsCompanyEmployee { get; set; }
+        public ICollection<Vehicle> Vehicles { get; set; }
+            = new HashSet<Vehicle>();
     }
 }

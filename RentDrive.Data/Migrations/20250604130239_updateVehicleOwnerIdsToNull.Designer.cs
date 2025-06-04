@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentDrive.Data;
 
@@ -11,9 +12,11 @@ using RentDrive.Data;
 namespace RentDrive.Data.Migrations
 {
     [DbContext(typeof(RentDriveDbContext))]
-    partial class RentDriveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250604130239_updateVehicleOwnerIdsToNull")]
+    partial class updateVehicleOwnerIdsToNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -300,8 +303,6 @@ namespace RentDrive.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.HasIndex("VehicleTypeCategoryId");
 
@@ -602,11 +603,6 @@ namespace RentDrive.Data.Migrations
 
             modelBuilder.Entity("RentDrive.Data.Models.Vehicle", b =>
                 {
-                    b.HasOne("RentDrive.Data.Models.ApplicationUser", "Owner")
-                        .WithMany("Vehicles")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("RentDrive.Data.Models.VehicleTypeCategory", "VehicleTypeCategory")
                         .WithMany("Vehicles")
                         .HasForeignKey("VehicleTypeCategoryId")
@@ -618,8 +614,6 @@ namespace RentDrive.Data.Migrations
                         .HasForeignKey("VehicleTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("Owner");
 
                     b.Navigation("VehicleType");
 
@@ -646,11 +640,6 @@ namespace RentDrive.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("VehicleType");
-                });
-
-            modelBuilder.Entity("RentDrive.Data.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Vehicles");
                 });
 
             modelBuilder.Entity("RentDrive.Data.Models.Vehicle", b =>

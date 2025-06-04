@@ -24,6 +24,13 @@ namespace RentDrive.Data.Configuration
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
+                .HasOne(v => v.Owner)
+                .WithMany(au => au.Vehicles)
+                .HasForeignKey(v => v.OwnerId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder
                 .HasOne(v => v.VehicleTypeCategory)
                 .WithMany(vt => vt.Vehicles)
                 .HasForeignKey(v => v.VehicleTypeCategoryId)
@@ -116,7 +123,7 @@ namespace RentDrive.Data.Configuration
                 new()
                 {
                     Id = Guid.Parse("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
-                    OwnerId = Guid.Parse("cd327e1f-6c3b-4e6d-a5f7-fd9e4b84357d"),
+                    OwnerId = null,
                     VehicleTypeId = 1,
                     VehicleTypeCategoryId = 1,
                     Make = "Jeep",
@@ -135,7 +142,7 @@ namespace RentDrive.Data.Configuration
                 new()
                 {
                     Id = Guid.Parse("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
-                    OwnerId = Guid.Parse("c8fbe2fc-c8e2-4b3e-aabc-c87aebf09a8d"),
+                    OwnerId = null,
                     VehicleTypeId = 1,
                     VehicleTypeCategoryId = 3,
                     Make = "Volkswagen",
