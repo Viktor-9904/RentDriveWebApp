@@ -7,7 +7,9 @@
         public string Model { get; set; } = null!;
         public decimal PricePerHour { get; set; }
         public string ImageURL { get; set; } = null!;
-        //public string FuelType { get; set; } = null!;
+        public int YearOfProduction { get; set; }
+        public string? OwnerName { get; set; }
+        public string? FuelType { get; set; }
         public string? Description { get; set; }
     }
 }

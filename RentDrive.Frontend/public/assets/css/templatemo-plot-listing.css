@@ -382,10 +382,10 @@ header
   opacity: 1;
 }
 
-.header-area .main-nav .nav li:last-child a:hover ,
+/* .header-area .main-nav .nav li:last-child a:hover ,
 .background-header .main-nav .nav li:last-child a:hover {
   background-color: #8d99af;
-}
+} */
 
 .header-area .main-nav .nav li.has-sub {
   position: relative;
@@ -1013,17 +1013,32 @@ Recent Listing
   margin-bottom: 30px;
 }
 
+.recent-listing .item {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 1.5em;
+  height: 36.5em;
+}
+
 .recent-listing .item .left-image {
-  float: left;
+  width: 50em;
+  
+  height: 36.5em;
   overflow: hidden;
-  border-top-left-radius: 7px;
-  border-bottom-left-radius: 7px;
+  border-top-left-radius: 0.44em;
+  border-bottom-left-radius: 0.44em;
+  flex-shrink: 0;
+  position: relative;
 }
 
 .recent-listing .item .left-image img {
-  overflow: hidden;
-  border-top-left-radius: 7px;
-  border-bottom-left-radius: 7px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-top-left-radius: 0.44em;
+  border-bottom-left-radius: 0.44em;
+  display: block;
 }
 
 .recent-listing .item .right-content {

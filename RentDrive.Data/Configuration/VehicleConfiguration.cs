@@ -97,7 +97,7 @@ namespace RentDrive.Data.Configuration
                 new()
                 {
                     Id = Guid.Parse("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
-                    OwnerId = Guid.Parse("b90b7c45-b16f-48ef-9c01-fb3032a038ae"),
+                    OwnerId = null,
                     VehicleTypeId = 1,
                     VehicleTypeCategoryId = 2,
                     Make = "Toyota",

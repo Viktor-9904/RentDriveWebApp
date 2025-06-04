@@ -36,7 +36,9 @@ namespace RentDrive.Services.Data
                     Model = v.Model,
                     PricePerHour = v.PricePerHour,
                     ImageURL = DefaultImageURL,
-                    //TODO: Fuel Type
+                    OwnerName = v.OwnerId.ToString(), //TODO: Change to owner name instead of owner Id.
+                    YearOfProduction = v.DateOfProduction.Year,
+                    FuelType = v.FuelType.ToString(),
                     Description = v.Description,
                 })
                 .ToArrayAsync();
