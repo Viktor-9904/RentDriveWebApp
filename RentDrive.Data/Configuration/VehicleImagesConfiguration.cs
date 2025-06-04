@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 using RentDrive.Data.Models;
-using static RentDrive.Common.EntityValidationConstants.VehicleImages;
+using static RentDrive.Common.Vehicle.VehicleValidationConstants.VehicleImages;
 
 namespace RentDrive.Data.Configuration
 {

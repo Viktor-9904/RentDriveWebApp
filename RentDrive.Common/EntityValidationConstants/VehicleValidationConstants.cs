@@ -1,6 +1,6 @@
-﻿namespace RentDrive.Common
+﻿namespace RentDrive.Common.Vehicle
 {
-    public static class EntityValidationConstants
+    public static class VehicleValidationConstants
     {
         public static class Vehicle
         {
@@ -20,7 +20,7 @@
         }
         public static class VehicleImages
         {
-            public const int ImageURLMaxLength = 100;
+            public const int ImageURLMaxLength = 2083;
             public const string DefaultImageURL = "images/default-image.jpg";
         }
     }
