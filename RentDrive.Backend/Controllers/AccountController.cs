@@ -11,11 +11,11 @@ namespace RentDrive.Backend.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IAccountService userService;
+        private readonly IAccountService accountService;
 
-        public AccountController(IAccountService userService)
+        public AccountController(IAccountService accountService)
         {
-            this.userService = userService;
+            this.accountService = accountService;
         }
 
         [HttpPost("register", Name = "Register User")]
@@ -26,7 +26,7 @@ namespace RentDrive.Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await userService.RegisterUserAsync(viewModel);
+            IdentityResult result = await accountService.RegisterUserAsync(viewModel);
 
             if (!result.Succeeded)
             {
@@ -39,6 +39,22 @@ namespace RentDrive.Backend.Controllers
             }
 
             return Ok("Successful registration.");
+        }
+        [HttpPost("login", Name = "Login User")]
+        public async Task<IActionResult> Login([FromBody] LoginUserInputViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await this.accountService.LoginUserAsync(viewModel.EmailOrUsername, viewModel.Password);
+
+            if (!result.Succeeded)
+            {
+                return Unauthorized("Invalid credentials.");
+            }
+            return Ok("Logged in successfully!");
         }
     }
 }

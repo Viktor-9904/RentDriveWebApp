@@ -9,9 +9,13 @@ namespace RentDrive.Services.Data
     public class AccountService : IAccountService
     {
         private readonly UserManager<ApplicationUser> userManager;
-        public AccountService(UserManager<ApplicationUser> userManager)
+        private readonly SignInManager<ApplicationUser> signInManager;
+        public AccountService(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
         public async Task<IdentityResult> RegisterUserAsync(RegisterUserInputViewModel viewModel)
         {
@@ -23,6 +27,26 @@ namespace RentDrive.Services.Data
 
             IdentityResult result = await userManager.CreateAsync(user, viewModel.Password);
             return result;
+        }
+        public async Task<SignInResult> LoginUserAsync(string emailOrUsername, string password)
+        {
+            ApplicationUser? user;
+
+            if (emailOrUsername.Contains('@'))
+            {
+                user = await this.userManager.FindByEmailAsync(emailOrUsername);
+            }
+            else
+            {
+                user = await this.userManager.FindByNameAsync(emailOrUsername);
+            }
+
+            if (user == null)
+            {
+                return SignInResult.Failed;
+            }
+
+            return await this.signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: false);
         }
     }
 }

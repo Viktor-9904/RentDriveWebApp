@@ -10,8 +10,8 @@ import Header from './components/shared/Header'
 import Footer from './components/shared/Footer'
 import Listing from './pages/Listing'
 import ContactUs from './pages/ContactUs'
-import Login from './pages/Login'
-import Register from './pages/Register'
+import Register from './pages/Register/Register'
+import Login from './pages/Login/Login'
 
 function App() {
   return (
