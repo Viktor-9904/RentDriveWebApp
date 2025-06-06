@@ -6,7 +6,7 @@ using RentDrive.Web.ViewModels.Vehicles;
 
 namespace RentDrive.Backend.Controllers
 {
-    [Route("api/recent")]
+    [Route("api/[controller]")]
     [ApiController]
     public class VehicleController : ControllerBase
     {
@@ -16,7 +16,7 @@ namespace RentDrive.Backend.Controllers
             this.vehicleService = vehicleService;
         }
 
-        [HttpGet(Name = "RecentVehicles")]
+        [HttpGet("recent", Name = "RecentVehicles")]
         public async Task<IEnumerable<RecentVehicleIndexViewModel>> GetRecentVehicles()
         {
             IEnumerable<RecentVehicleIndexViewModel> recentVehiclesViewModels

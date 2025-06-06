@@ -1823,8 +1823,14 @@ Listing Page
   width: 14px;
   height: 14px;
 }
-
-
+.error-text {
+  color: #e22626; 
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 4px; 
+  display: block;  
+  line-height: 1.2;
+}
 
 /* 
 ---------------------------------------------

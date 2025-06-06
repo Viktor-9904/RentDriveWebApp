@@ -8,7 +8,7 @@ export default function RecentListing() {
     const [recentVehicles, setRecentVehicles] = useState([])
 
     useEffect(() => {
-        fetch(`${backEndURL}/api/recent`)
+        fetch(`${backEndURL}/api/vehicle/recent`)
             .then(res => res.json())
             .then(data => {
                 console.log(data);

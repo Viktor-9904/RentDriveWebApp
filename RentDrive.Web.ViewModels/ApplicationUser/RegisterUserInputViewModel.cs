@@ -17,6 +17,10 @@ namespace RentDrive.Web.ViewModels.ApplicationUser
         [MaxLength(passwordMaxLength, ErrorMessage = passwordTooLongErrorMessage)]
         public string Password { get; set; } = null!;
 
+        [Required(ErrorMessage = comfirmedPasswordIsRequired)]
+        [Compare("Password", ErrorMessage = comfirmedPasswordDoesntMatch)]
+        public string ComfirmedPassword { get; set; } = null!;
+
         [Required(ErrorMessage = emailIsRequired)]
         [EmailAddress(ErrorMessage = notValidEmail)]
         [MaxLength(emailMaxLength, ErrorMessage = emailTooLongErrorMessage)]

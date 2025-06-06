@@ -10,7 +10,7 @@ namespace RentDrive.Common.EntityValidationConstants
     {
         public static class ApplicationUser
         {
-            // IMPORTANT: IF CHANGED, MAKE SURE TO UPDATE ERROR MESSAGES AS WELL!
+            // IMPORTANT: IF CHANGED, MAKE SURE TO UPDATE ERROR MESSAGES, CLIENT VALIDATION ERROR MESSAGES AND APPSETTINGS.JSON IDENTITY AS WELL!
 
             public const int usernameMinLength = 3;
             public const int usernameMaxLength = 20;

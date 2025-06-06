@@ -1,6 +1,64 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useRegisterValidation } from '../hooks/useRegisterValidation';
+import { useRegisterPost } from '../hooks/useRegisterPost';
 
 export default function Register() {
+
+    const {registerUser, loading, error } = useRegisterPost()
+    const navigate = useNavigate()
+
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const [usernameTouched, setUsernameTouched] = useState(false);
+    const [emailTouched, setEmailTouched] = useState(false);
+    const [passwordTouched, setPasswordTouched] = useState(false);
+    const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
+
+    const { errors } = useRegisterValidation({
+        username,
+        usernameTouched,
+        email,
+        emailTouched,
+        password,
+        passwordTouched,
+        confirmPassword,
+        confirmPasswordTouched,
+    });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        setUsernameTouched(true);
+        setEmailTouched(true);
+        setPasswordTouched(true);
+        setConfirmPasswordTouched(true);
+
+        const hasErrors = Object.values(errors).some(error => error !== "")
+        if(hasErrors){
+            return;
+        }
+
+        const payload = {
+            Username: username,
+            Email: email,
+            Password: password,
+            ComfirmedPassword: confirmPassword
+        }
+        const wasUserSuccessfullyRegistered = await registerUser(payload)
+
+        if(wasUserSuccessfullyRegistered){
+            console.log("Registered successfully!")
+            navigate('/')            
+        } else{
+            console.log("Failed to register: " + JSON.stringify(error))
+        }
+
+    };
+
     return (
         <>
             <div className="page-heading">
@@ -10,15 +68,18 @@ export default function Register() {
                             <h2>Create an Account</h2>
                             <p>Join us today! Fill in the details to register.</p>
                         </div>
-                        <form action="/register" method="POST">
+                        <form onSubmit={handleSubmit}>
                             <div className="form-group mb-3">
                                 <input
                                     type="text"
                                     name="username"
                                     className="form-control"
                                     placeholder="Username"
-                                    required
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    onBlur={() => setUsernameTouched(true)}
                                 />
+                                {errors.username && <small className="error-text">{errors.username}</small>}
                             </div>
                             <div className="form-group mb-3">
                                 <input
@@ -26,8 +87,11 @@ export default function Register() {
                                     name="email"
                                     className="form-control"
                                     placeholder="Email Address"
-                                    required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    onBlur={() => setEmailTouched(true)}
                                 />
+                                {errors.email && <small className="error-text">{errors.email}</small>}
                             </div>
                             <div className="form-group mb-3">
                                 <input
@@ -35,8 +99,11 @@ export default function Register() {
                                     name="password"
                                     className="form-control"
                                     placeholder="Password"
-                                    required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    onBlur={() => setPasswordTouched(true)}
                                 />
+                                {errors.password && <small className="error-text">{errors.password}</small>}
                             </div>
                             <div className="form-group mb-4">
                                 <input
@@ -44,8 +111,11 @@ export default function Register() {
                                     name="confirmPassword"
                                     className="form-control"
                                     placeholder="Confirm Password"
-                                    required
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    onBlur={() => setConfirmPasswordTouched(true)}
                                 />
+                                {errors.confirmPassword && <small className="error-text">{errors.confirmPassword}</small>}
                             </div>
                             <button type="submit" className="btn btn-primary btn-block main-button">
                                 Register

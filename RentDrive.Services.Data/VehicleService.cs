@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Vehicles;
 
-using static RentDrive.Common.EntityValidationConstants.VehicleImages;
+using static RentDrive.Common.Vehicle.VehicleValidationConstants.VehicleImages;
 
 namespace RentDrive.Services.Data
 {

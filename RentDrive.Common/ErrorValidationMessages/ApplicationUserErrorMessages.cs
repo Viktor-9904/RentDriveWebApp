@@ -14,6 +14,9 @@ namespace RentDrive.Common.ErrorValidationMessages
             public const string passwordTooShortErrorMessage = "Password must be at least 6 characters long!";
             public const string passwordTooLongErrorMessage = "Password must not exceed 50 characters!";
 
+            public const string comfirmedPasswordIsRequired = "Comfirmed password is required!";
+            public const string comfirmedPasswordDoesntMatch = "Password doesn't match!";
+
             public const string emailIsRequired = "Email is required!";
             public const string notValidEmail = "Email is not valid!";
             public const string emailTooLongErrorMessage = "Email must not exceed 254 characters!";
