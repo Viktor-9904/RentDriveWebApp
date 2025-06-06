@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useRegisterValidation } from '../hooks/useRegisterValidation';
-import { useRegisterPost } from '../hooks/useRegisterPost';
+import { useRegisterValidation } from './useRegisterValidation';
+import { useRegisterPost } from './useRegisterPost';
 
 export default function Register() {
 
