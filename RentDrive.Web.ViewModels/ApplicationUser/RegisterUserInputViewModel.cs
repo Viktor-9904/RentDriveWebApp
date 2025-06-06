@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 using static RentDrive.Common.EntityValidationConstants.ApplicationUserValidationConstants.ApplicationUser;
-using static RentDrive.Common.ErrorValidationMessages.ApplicationUserErrorMessages.ApplicationUser;
+using static RentDrive.Common.ErrorValidationMessages.ApplicationUserErrorMessages.RegisterUser;
 
 namespace RentDrive.Web.ViewModels.ApplicationUser
 {

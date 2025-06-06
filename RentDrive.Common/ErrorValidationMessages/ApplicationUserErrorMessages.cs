@@ -4,7 +4,7 @@ namespace RentDrive.Common.ErrorValidationMessages
 {
     public static class ApplicationUserErrorMessages
     {
-        public static class ApplicationUser
+        public static class RegisterUser
         {
             public const string usernameIsRequired = "Username is required!";
             public const string usernameTooShortErrorMessage = "Username must be at least 3 characters long!";
@@ -20,6 +20,11 @@ namespace RentDrive.Common.ErrorValidationMessages
             public const string emailIsRequired = "Email is required!";
             public const string notValidEmail = "Email is not valid!";
             public const string emailTooLongErrorMessage = "Email must not exceed 254 characters!";
+        }
+        public static class LoginUser
+        {
+            public const string emailOrUsernameIsRequired = "Email or Username is required!";
+            public const string passwordIsRequired = "Password is required!";
         }
     }
 }
