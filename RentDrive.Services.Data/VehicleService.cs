@@ -12,19 +12,22 @@ namespace RentDrive.Services.Data
     {
         private readonly IRepository<Vehicle, Guid> vehicleRepository;
         private readonly IVehicleImageService vehicleImageService;
+        private readonly IUserService userService;
         public VehicleService(
             IRepository<Vehicle, Guid> vehicleRepository,
-            IVehicleImageService vehicleImageService)
+            IVehicleImageService vehicleImageService,
+            IUserService userService)
         {
             this.vehicleRepository = vehicleRepository;
             this.vehicleImageService = vehicleImageService;
+            this.userService = userService;
         }
 
         public async Task<IEnumerable<RecentVehicleIndexViewModel>> IndexGetTop3RecentVehiclesAsync()
         {
             IEnumerable<RecentVehicleIndexViewModel> top3RecentVehicles = await vehicleRepository
                 .GetAllAsQueryable()
-                .OrderBy(v => v.DateAdded)
+                .OrderByDescending(v => v.DateAdded)
                 .ThenBy(v => v.Make)
                 .ThenBy(v => v.Model)
                 .Take(3)
@@ -35,7 +38,7 @@ namespace RentDrive.Services.Data
                     Model = v.Model,
                     PricePerHour = v.PricePerHour,
                     ImageURL = DefaultImageURL,
-                    OwnerName = v.OwnerId.ToString(), //TODO: Change to owner name instead of owner Id.
+                    OwnerId = v.OwnerId,
                     YearOfProduction = v.DateOfProduction.Year,
                     FuelType = v.FuelType.ToString(),
                     Description = v.Description,
@@ -46,6 +49,11 @@ namespace RentDrive.Services.Data
             {
                 string currentVehicleImageURL = await vehicleImageService.GetFirstImageByVehicleIdAsync(vehicle.Id);
                 vehicle.ImageURL = currentVehicleImageURL;
+
+                string? ownerName = vehicle.OwnerId != null
+                    ? await userService.GetOwnerNameById(vehicle.OwnerId)
+                    : null;
+                vehicle.OwnerName = ownerName;
             }
 
             return top3RecentVehicles;

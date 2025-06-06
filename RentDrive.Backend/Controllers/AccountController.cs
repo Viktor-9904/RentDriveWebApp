@@ -11,9 +11,9 @@ namespace RentDrive.Backend.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IApplicationUserService userService;
+        private readonly IAccountService userService;
 
-        public AccountController(IApplicationUserService userService)
+        public AccountController(IAccountService userService)
         {
             this.userService = userService;
         }

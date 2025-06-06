@@ -52,7 +52,8 @@ builder.Services.AddScoped<IRepository<ApplicationUser, Guid>, BaseRepository<Ap
 
 builder.Services.AddScoped<IVehicleImageService, VehicleImageService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
-builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 WebApplication app = builder.Build();
 

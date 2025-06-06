@@ -6,10 +6,10 @@ using RentDrive.Web.ViewModels.ApplicationUser;
 
 namespace RentDrive.Services.Data
 {
-    public class ApplicationUserService : IApplicationUserService
+    public class AccountService : IAccountService
     {
         private readonly UserManager<ApplicationUser> userManager;
-        public ApplicationUserService(UserManager<ApplicationUser> userManager)
+        public AccountService(UserManager<ApplicationUser> userManager)
         {
             this.userManager = userManager;
         }

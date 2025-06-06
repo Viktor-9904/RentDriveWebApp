@@ -26,7 +26,7 @@ export default function RecentListingsItem({
                                 </div>
                                 <div className="right-content align-self-center">
                                     <Link to="#"><h4>{`${make} - ${model}`}</h4></Link>
-                                    {ownerName.length > 0 && <h6>Owner: {`${ownerName}`}</h6>}
+                                    {ownerName && ownerName.length > 0 && <h6>Owner: {`${ownerName}`}</h6>}
                                     <ul className="rate">
                                         <li><i className="fa fa-star-o"></i></li>
                                         <li><i className="fa fa-star-o"></i></li>
