@@ -14,6 +14,7 @@ export function useLoginPost() {
         try {
             const response = await fetch(`${backEndURL}/api/account/login`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },

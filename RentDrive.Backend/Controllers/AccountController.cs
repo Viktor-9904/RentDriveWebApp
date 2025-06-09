@@ -26,15 +26,23 @@ namespace RentDrive.Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await accountService.RegisterUserAsync(viewModel);
+            IdentityResult registerUser = await accountService.RegisterUserAsync(viewModel);
 
-            if (!result.Succeeded)
+            if (!registerUser.Succeeded)
             {
-                foreach (IdentityError error in result.Errors)
+                foreach (IdentityError error in registerUser.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
 
+                return BadRequest(ModelState);
+            }
+
+            var loginUser = await this.accountService.LoginUserAsync(viewModel.Email, viewModel.Password);
+
+            if (!loginUser.Succeeded)
+            {
+                ModelState.AddModelError(string.Empty, "User was successfully registered but could not be logged in.");
                 return BadRequest(ModelState);
             }
 
@@ -55,6 +63,12 @@ namespace RentDrive.Backend.Controllers
                 return Unauthorized("Invalid credentials.");
             }
             return Ok("Logged in successfully!");
+        }
+        [HttpPost("logout", Name = "Logout User")]
+        public async Task<IActionResult> Logout()
+        {
+            await this.accountService.LogoutUserAsync();
+            return Ok("User logged out");
         }
     }
 }

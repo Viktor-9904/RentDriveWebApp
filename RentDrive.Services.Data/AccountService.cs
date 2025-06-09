@@ -46,7 +46,12 @@ namespace RentDrive.Services.Data
                 return SignInResult.Failed;
             }
 
-            return await this.signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: false);
+            return await this.signInManager.PasswordSignInAsync(user, password, isPersistent: true, lockoutOnFailure: false);
+        }
+
+        public async Task LogoutUserAsync()
+        {
+            await this.signInManager.SignOutAsync();
         }
     }
 }

@@ -38,6 +38,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontEnd", policy =>
     {
         policy.WithOrigins(frontEndURL)
+        .AllowCredentials()
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
@@ -69,6 +70,7 @@ app.UseCors("AllowFrontEnd");
 
 app.UseStaticFiles();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

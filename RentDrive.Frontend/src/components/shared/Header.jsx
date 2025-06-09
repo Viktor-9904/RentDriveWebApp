@@ -1,13 +1,19 @@
 import { Link } from 'react-router'
+import useLogout from '../../hooks/useLogout'
 
 const navigation = [
     { name: 'Home', href: '/' },
     { name: 'categories', href: '/categories' },
     { name: 'listing', href: '/listing' },
     { name: 'contact-us', href: '/contact-us' },
+    { name: 'Register', href: '/register' },
+    { name: 'Login', href: '/login' },
 ]
 
 export default function Header() {
+
+    const handleLogout = useLogout()
+
     return (
         <>
             {/* <!-- ***** Header Area Start ***** --> */}
@@ -28,8 +34,15 @@ export default function Header() {
                                             </Link>
                                         </li>
                                     ))}
-                                    <li><Link to="/Register">Register</Link></li>
-                                    <li><Link to="/Login">Login</Link></li>
+                                    <li>
+                                        <button
+                                            className="logout-button"
+                                            onClick={handleLogout}
+                                            onMouseDown={e => e.currentTarget.blur()}
+                                        >
+                                            Logout
+                                        </button>
+                                    </li>
                                 </ul>
                             </nav>
                         </div>

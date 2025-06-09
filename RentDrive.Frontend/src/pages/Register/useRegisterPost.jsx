@@ -15,6 +15,7 @@ export function useRegisterPost() {
         try {
             const response = await fetch(`${backEndURL}/api/account/register`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
