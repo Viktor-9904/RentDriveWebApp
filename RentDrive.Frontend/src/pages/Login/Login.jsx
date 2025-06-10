@@ -24,6 +24,10 @@ export default function Login() {
         passwordTouched,
     })
 
+    if(isAuthenticated){
+        navigate('/')
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 

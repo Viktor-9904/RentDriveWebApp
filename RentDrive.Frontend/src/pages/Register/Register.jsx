@@ -31,6 +31,10 @@ export default function Register() {
         confirmPasswordTouched,
     });
 
+    if(isAuthenticated){
+        navigate('/')
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
