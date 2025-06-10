@@ -53,5 +53,11 @@ namespace RentDrive.Services.Data
         {
             await this.signInManager.SignOutAsync();
         }
+
+        public async Task<ApplicationUser?> GetUserByIdAsync(string id)
+        {
+            ApplicationUser? user =  await userManager.FindByIdAsync(id);
+            return user;
+        }
     }
 }

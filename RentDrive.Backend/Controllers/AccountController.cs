@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using RentDrive.Data.Models;
 using RentDrive.Services.Data;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.ApplicationUser;
+using System.Security.Claims;
 
 namespace RentDrive.Backend.Controllers
 {
@@ -69,6 +70,29 @@ namespace RentDrive.Backend.Controllers
         {
             await this.accountService.LogoutUserAsync();
             return Ok("User logged out");
+        }
+        [HttpGet("me", Name = "User credentials")]
+        public async Task<IActionResult> GetUser()
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            ApplicationUser? user = await this.accountService.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(
+                new
+                {
+                    user.Id,
+                    user.UserName,
+                    user.Email,
+                });
         }
     }
 }
