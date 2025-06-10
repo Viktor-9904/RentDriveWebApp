@@ -2,11 +2,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useLoginPost } from './useLoginPost'
 import { useLoginValidation } from './useLoginValidation'
+import { useAuth } from '../../context/AccountContext';
+
 
 export default function Login() {
 
     const { loginUser, loading, error } = useLoginPost()
     const navigate = useNavigate()
+    const { user, isAuthenticated, loadUser } = useAuth();
 
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -40,6 +43,7 @@ export default function Login() {
 
         if (wasUserSuccessfullyLogged) {
             console.log("Logged In successfully!")
+            await loadUser();
             navigate('/')            
         } else {
             console.log("Failed to register: " + JSON.stringify(error))

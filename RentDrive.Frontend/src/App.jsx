@@ -12,17 +12,11 @@ import Listing from './pages/Listing'
 import ContactUs from './pages/ContactUs'
 import Register from './pages/Register/Register'
 import Login from './pages/Login/Login'
-import useAuth from './hooks/useAuth'
-import { AccountContext } from './context/AccountContext'
+import { AccountProvider } from './context/AccountContext'
 
 function App() {
-  const { user, isAuthenticated } = useAuth();
-
-  // console.log(`isAuthenticated - `, isAuthenticated)
-  // console.log(`user - `, user)
-
   return (
-    <AccountContext.Provider value={{user, isAuthenticated}}>
+    <AccountProvider>
       {/* <Spinner/> */}
 
       <Header />
@@ -37,7 +31,7 @@ function App() {
       </Routes>
 
       <Footer />
-    </AccountContext.Provider>
+    </AccountProvider>
   )
 }
 

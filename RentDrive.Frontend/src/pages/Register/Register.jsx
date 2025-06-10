@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRegisterValidation } from './useRegisterValidation';
 import { useRegisterPost } from './useRegisterPost';
+import { useAuth } from '../../context/AccountContext';
 
 export default function Register() {
 
     const {registerUser, loading, error } = useRegisterPost()
     const navigate = useNavigate()
+    const { user, isAuthenticated, loadUser } = useAuth();
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -52,6 +54,7 @@ export default function Register() {
 
         if(wasUserSuccessfullyRegistered){
             console.log("Registered successfully!")
+            await loadUser()
             navigate('/')            
         } else{
             console.log("Failed to register: " + JSON.stringify(error))
