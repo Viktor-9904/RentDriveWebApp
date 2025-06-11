@@ -24,5 +24,13 @@ namespace RentDrive.Backend.Controllers
 
             return recentVehiclesViewModels;
         }
+        [HttpGet("all", Name = "GetAllVehicles")]
+        public async Task<IEnumerable<ListingVehicleViewModel>> GetAllVehicles()
+        {
+            IEnumerable<ListingVehicleViewModel> allVehiclesViewModels 
+                = await this.vehicleService.GetAllVehiclesAsync();
+
+            return allVehiclesViewModels;
+        }
     }
 }

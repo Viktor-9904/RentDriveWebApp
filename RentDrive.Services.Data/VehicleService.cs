@@ -23,9 +23,38 @@ namespace RentDrive.Services.Data
             this.userService = userService;
         }
 
+        public async Task<IEnumerable<ListingVehicleViewModel>> GetAllVehiclesAsync()
+        {
+            IEnumerable<ListingVehicleViewModel> allVehicles = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .OrderBy(v => v.Make)
+                .ThenBy(v => v.Model)
+                .Select(v => new ListingVehicleViewModel()
+                {
+                    Id = v.Id,
+                    Make = v.Make,
+                    Model = v.Model,
+                    VehicleType = v.VehicleType.Name,
+                    VehicleTypeCategory = v.VehicleTypeCategory.CategoryName,
+                    YearOfProduction = v.DateOfProduction.Year,
+                    PricePerDay = v.PricePerHour,
+                    FuelType = v.FuelType.ToString(),
+                    OwnerName = v.Owner.UserName
+                })
+                .ToListAsync();
+
+            foreach (ListingVehicleViewModel vehicle in allVehicles)
+            {
+                string currentVehicleImageURL = await this.vehicleImageService.GetFirstImageByVehicleIdAsync(vehicle.Id);
+                vehicle.ImageURL = currentVehicleImageURL;
+            }
+
+            return allVehicles;
+        }
+
         public async Task<IEnumerable<RecentVehicleIndexViewModel>> IndexGetTop3RecentVehiclesAsync()
         {
-            IEnumerable<RecentVehicleIndexViewModel> top3RecentVehicles = await vehicleRepository
+            IEnumerable<RecentVehicleIndexViewModel> top3RecentVehicles = await this.vehicleRepository
                 .GetAllAsQueryable()
                 .OrderByDescending(v => v.DateAdded)
                 .ThenBy(v => v.Make)
@@ -47,7 +76,7 @@ namespace RentDrive.Services.Data
 
             foreach (RecentVehicleIndexViewModel vehicle in top3RecentVehicles)
             {
-                string currentVehicleImageURL = await vehicleImageService.GetFirstImageByVehicleIdAsync(vehicle.Id);
+                string currentVehicleImageURL = await this.vehicleImageService.GetFirstImageByVehicleIdAsync(vehicle.Id);
                 vehicle.ImageURL = currentVehicleImageURL;
 
                 string? ownerName = vehicle.OwnerId != null
