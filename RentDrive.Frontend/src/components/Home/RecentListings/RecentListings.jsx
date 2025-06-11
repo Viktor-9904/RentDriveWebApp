@@ -35,9 +35,11 @@ export default function RecentListing() {
                                 make={vehicle.make} 
                                 model={vehicle.model}
                                 imageURL={vehicle.imageURL}
-                                pricePerHour={vehicle.pricePerHour}
+                                pricePerDay={vehicle.pricePerDay}
                                 description={vehicle.description}
                                 yearOfProduction={vehicle.yearOfProduction}
+                                vehicleType={vehicle.vehicleType}
+                                vehicleTypeCategory={vehicle.vehicleTypeCategory}
                                 fuelType={vehicle.fuelType}
                                 ownerName={vehicle.ownerName}
                             />)}

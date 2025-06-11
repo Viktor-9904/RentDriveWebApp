@@ -5,7 +5,9 @@
         public Guid Id { get; set; }
         public string Make { get; set; } = null!;
         public string Model { get; set; } = null!;
-        public decimal PricePerHour { get; set; }
+        public string VehicleType { get; set; } = null!;
+        public string VehicleTypeCategory { get; set; } = null!;
+        public decimal PricePerDay { get; set; }
         public string ImageURL { get; set; } = null!;
         public int YearOfProduction { get; set; }
         public Guid? OwnerId { get; set; }

@@ -5,11 +5,13 @@ export default function RecentListingsItem({
     make,
     model,
     imageURL,
-    pricePerHour,
+    pricePerDay,
     description,
     ownerName,
     yearOfProduction,
     fuelType,
+    vehicleType,
+    vehicleTypeCategory,
 }) {
 
     const backEndURL = import.meta.env.VITE_API_URL;
@@ -35,12 +37,14 @@ export default function RecentListingsItem({
                                         <li><i className="fa fa-star-o"></i></li>
                                         <li>(18) Reviews</li>
                                     </ul>
-                                    <span className="price"><div className="icon"><img src="assets/images/listing-icon-01.png" alt="" /></div> {`${pricePerHour.toFixed(2)} € / per hour with taxes.`}</span>
-                                    <span className="details">Description: <em>{description}</em></span>
+                                    <span className="price"><div className="icon"><img src="assets/images/listing-icon-01.png" alt="" /></div> {`${pricePerDay.toFixed(2)} € / per day with taxes.`}</span>
+                                    <span className="details">Type: <em>{vehicleType}</em></span>
+                                    <span className="details">Category: <em>{vehicleTypeCategory}</em></span>
                                     <span className="details">Year of production: <em>{yearOfProduction}</em></span>
                                     <span className="details">Fuel: <em>{fuelType}</em></span>
+                                    <span className="details">Description: <em>{description}</em></span>
                                     <div className="main-white-button">
-                                        <Link to="/contact-us"><i className="fa fa-eye"></i> Contact Now</Link>
+                                        <Link to="/contact-us"><i className="fa fa-eye"></i> Open</Link>
                                     </div>
                                 </div>
                             </div>

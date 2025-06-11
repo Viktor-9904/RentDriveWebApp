@@ -65,12 +65,14 @@ namespace RentDrive.Services.Data
                     Id = v.Id,
                     Make = v.Make,
                     Model = v.Model,
-                    PricePerHour = v.PricePerHour,
+                    PricePerDay = v.PricePerHour,
                     ImageURL = DefaultImageURL,
                     OwnerId = v.OwnerId,
                     YearOfProduction = v.DateOfProduction.Year,
                     FuelType = v.FuelType.ToString(),
                     Description = v.Description,
+                    VehicleType = v.VehicleType.Name,
+                    VehicleTypeCategory = v.VehicleTypeCategory.CategoryName,
                 })
                 .ToArrayAsync();
 
