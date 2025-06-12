@@ -12,7 +12,7 @@
         public string Make { get; set; } = null!;
         public string Model { get; set; } = null!;
         public string Color { get; set; } = null!;
-        public decimal PricePerHour { get; set; }
+        public decimal PricePerDay { get; set; }
         public DateTime DateOfProduction { get; set; }
         public DateTime DateAdded { get; set; }
         public double CurbWeightInKg { get; set; }

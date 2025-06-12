@@ -54,9 +54,9 @@ namespace RentDrive.Data.Configuration
                 .HasComment("Vehicle's color.");
 
             builder
-                .Property(v => v.PricePerHour)
+                .Property(v => v.PricePerDay)
                 .HasColumnType("decimal(18,2)")
-                .HasComment("Price per hour for renting the vehicle.");
+                .HasComment("Price per day for renting the vehicle.");
 
             builder
                 .Property(v => v.DateOfProduction)
@@ -109,7 +109,7 @@ namespace RentDrive.Data.Configuration
                     Make = "Toyota",
                     Model = "Camry",
                     Color = "White",
-                    PricePerHour = 12.50m,
+                    PricePerDay = 32.50m,
                     DateOfProduction = new DateTime(2021, 5, 10),
                     DateAdded = new DateTime(2022, 7, 12),
                     CurbWeightInKg = 1470,
@@ -128,7 +128,7 @@ namespace RentDrive.Data.Configuration
                     Make = "Jeep",
                     Model = "Grand Cherokee",
                     Color = "Dark Green",
-                    PricePerHour = 22.00m,
+                    PricePerDay = 62.00m,
                     DateOfProduction = new DateTime(2022, 7, 20),
                     DateAdded = new DateTime(2023, 2, 22),
                     CurbWeightInKg = 2045,
@@ -147,7 +147,7 @@ namespace RentDrive.Data.Configuration
                     Make = "Volkswagen",
                     Model = "Golf",
                     Color = "Silver",
-                    PricePerHour = 10.00m,
+                    PricePerDay = 54.00m,
                     DateOfProduction = new DateTime(2021, 3, 11),
                     DateAdded = new DateTime(2024, 9, 19),
                     CurbWeightInKg = 1300,

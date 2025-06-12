@@ -37,7 +37,7 @@ namespace RentDrive.Services.Data
                     VehicleType = v.VehicleType.Name,
                     VehicleTypeCategory = v.VehicleTypeCategory.CategoryName,
                     YearOfProduction = v.DateOfProduction.Year,
-                    PricePerDay = v.PricePerHour,
+                    PricePerDay = v.PricePerDay,
                     FuelType = v.FuelType.ToString(),
                     OwnerName = v.Owner.UserName
                 })
@@ -65,7 +65,7 @@ namespace RentDrive.Services.Data
                     Id = v.Id,
                     Make = v.Make,
                     Model = v.Model,
-                    PricePerDay = v.PricePerHour,
+                    PricePerDay = v.PricePerDay,
                     ImageURL = DefaultImageURL,
                     OwnerId = v.OwnerId,
                     YearOfProduction = v.DateOfProduction.Year,
