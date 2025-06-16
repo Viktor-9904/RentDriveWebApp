@@ -1386,7 +1386,6 @@ form#contact button:hover {
 Page Heading
 --------------------------------------------- 
 */
-
 .page-heading {
   background-repeat: no-repeat;
   background-position: center center;
@@ -1409,6 +1408,36 @@ Page Heading
 }
 
 .page-heading .top-text h2 {
+  color: #fff;
+  line-height: 70px;
+  font-size: 45px;
+  font-weight: 800;
+  text-transform: capitalize;
+  margin-top: 15px;
+}
+
+.page-heading-details {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-image: url(/assets/images/heading-bg.jpg);
+  padding: 70px 0px 30px 0px;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-heading-details .top-text {
+  text-align: left;
+}
+
+.page-heading-details .top-text h6 {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.page-heading-details .top-text h2 {
   color: #fff;
   line-height: 70px;
   font-size: 45px;
@@ -1902,6 +1931,40 @@ Listing Page
     color: #2c3e50;
     margin-bottom: 0.5rem;
     display: block;
+}
+
+.vehicle-details-header-spacer {
+  padding-top: 130px;
+  padding-bottom: 30px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
+  z-index: 2;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.left-arrow {
+  left: 10px;
+}
+
+.right-arrow {
+  right: 10px;
+}
+
+.vehicle-title,
+.details div,
+.details em {
+  color: #000;
 }
 
 

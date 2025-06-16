@@ -8,7 +8,7 @@ namespace RentDrive.Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VehicleController : ControllerBase
+    public class VehicleController : BaseController
     {
         private readonly IVehicleService vehicleService;
         public VehicleController(IVehicleService vehicleService)
@@ -31,6 +31,27 @@ namespace RentDrive.Backend.Controllers
                 = await this.vehicleService.GetAllVehiclesAsync();
 
             return allVehiclesViewModels;
+        }
+        [HttpGet("{id}", Name = "GetVehicleDetailsById")]
+        public async Task<IActionResult> GetVehicleDetailsById(string id)
+        {
+            Guid vehicleGuidId = Guid.Empty;
+            bool isVehicleIdValid = IsGuidValid(id, ref vehicleGuidId);
+
+            if (!isVehicleIdValid)
+            {
+                return NotFound();
+            }
+
+            VehicleDetailsViewModel? vehicleDetails = await this.vehicleService
+                .GetVehicleDetailsByIdAsync(vehicleGuidId);
+
+            if (vehicleDetails == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(vehicleDetails);
         }
     }
 }

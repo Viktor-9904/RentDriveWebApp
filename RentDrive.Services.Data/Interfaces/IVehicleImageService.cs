@@ -9,5 +9,6 @@ namespace RentDrive.Services.Data.Interfaces
     public interface IVehicleImageService
     {
         public Task<string> GetFirstImageByVehicleIdAsync(Guid vehicleId);
+        public Task<List<string>> GetAllImagesByVehicleIdAsync(Guid id);
     }
 }

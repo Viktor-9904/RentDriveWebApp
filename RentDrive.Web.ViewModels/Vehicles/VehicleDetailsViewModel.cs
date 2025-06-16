@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace RentDrive.Web.ViewModels.Vehicles
+{
+    public class VehicleDetailsViewModel
+    {
+        public Guid Id { get; set; }
+        public string Make { get; set; } = null!;
+        public string Model { get; set; } = null!;
+        public string? OwnerName { get; set; }
+        public string VehicleType { get; set; } = null!;
+        public string VehicleTypeCategory { get; set; } = null!;
+        public string Color { get; set; } = null!;
+        public decimal PricePerDay { get; set; }
+        public DateTime DateOfProduction { get; set; }
+        public DateTime DateAdded { get; set; }
+        public double CurbWeightInKg { get; set; }
+        public int? OdoKilometers { get; set; }
+        public double? EngineDisplacement { get; set; }
+        public string? FuelType { get; set; }
+        public string? Description { get; set; }
+        public double? PowerInKiloWatts { get; set; }
+        public List<string> ImageURLS { get; set; } =
+            new List<string>();
+    }
+}

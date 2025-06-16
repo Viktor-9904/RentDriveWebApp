@@ -3,7 +3,6 @@ using Microsoft.IdentityModel.Tokens;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
-
 using static RentDrive.Common.Vehicle.VehicleValidationConstants.VehicleImages;
 
 namespace RentDrive.Services.Data
@@ -25,6 +24,16 @@ namespace RentDrive.Services.Data
                 .FirstOrDefaultAsync();
 
             return firstImageURL.IsNullOrEmpty() ? DefaultImageURL : firstImageURL!;
+        }
+        public async Task<List<string>> GetAllImagesByVehicleIdAsync(Guid id)
+        {
+            List<string> allImages = await this.vehicleImageRepository
+                .GetAllAsQueryable()
+                .Where(vi => vi.VehicleId == id)
+                .Select(vi => vi.ImageURL)
+                .ToListAsync();
+
+            return allImages;
         }
     }
 }

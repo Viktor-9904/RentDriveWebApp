@@ -7,5 +7,6 @@ namespace RentDrive.Services.Data.Interfaces
     {
         Task<IEnumerable<RecentVehicleIndexViewModel>> IndexGetTop3RecentVehiclesAsync();
         Task<IEnumerable<ListingVehicleViewModel>> GetAllVehiclesAsync();
+        Task<VehicleDetailsViewModel?> GetVehicleDetailsByIdAsync(Guid id);
     }
 }

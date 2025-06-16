@@ -89,5 +89,41 @@ namespace RentDrive.Services.Data
 
             return top3RecentVehicles;
         }
+        public async Task<VehicleDetailsViewModel?> GetVehicleDetailsByIdAsync(Guid id)
+        {
+            VehicleDetailsViewModel? vehicleDetails = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .Where(v => v.Id == id)
+                .Select(v => new VehicleDetailsViewModel()
+                {
+                    Id = v.Id,
+                    Make = v.Make,
+                    Model = v.Model,
+                    OwnerName = v.Owner.UserName,
+                    VehicleType = v.VehicleType.Name,
+                    VehicleTypeCategory = v.VehicleTypeCategory.CategoryName,
+                    Color = v.Color,
+                    PricePerDay = v.PricePerDay,
+                    DateOfProduction = v.DateOfProduction,
+                    DateAdded = v.DateAdded,
+                    CurbWeightInKg = v.CurbWeightInKg,
+                    OdoKilometers = v.OdoKilometers,
+                    EngineDisplacement = v.EngineDisplacement,
+                    FuelType = v.FuelType.ToString(),
+                    Description = v.Description,
+                    PowerInKiloWatts = v.PowerInKiloWatts,
+                })
+                .FirstOrDefaultAsync();
+
+            if (vehicleDetails == null)
+            {
+                return null;
+            }
+
+            vehicleDetails.ImageURLS = await this.vehicleImageService
+                .GetAllImagesByVehicleIdAsync(id);
+
+            return vehicleDetails;
+        }
     }
 }

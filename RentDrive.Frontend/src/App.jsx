@@ -13,6 +13,7 @@ import ContactUs from './pages/ContactUs'
 import Register from './pages/Register/Register'
 import Login from './pages/Login/Login'
 import { AccountProvider } from './context/AccountContext'
+import VehicleDetailsPage from './pages/VehicleDetailsPage'
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/api/vehicle/:id" element={<VehicleDetailsPage/>}/>
       </Routes>
 
       <Footer />
