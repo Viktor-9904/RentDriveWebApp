@@ -38,7 +38,7 @@ namespace RentDrive.Services.Data
                     VehicleTypeCategory = v.VehicleTypeCategory.CategoryName,
                     YearOfProduction = v.DateOfProduction.Year,
                     PricePerDay = v.PricePerDay,
-                    FuelType = v.FuelType.ToString(),
+                    //FuelType = v.FuelType.ToString(),
                     OwnerName = v.Owner.UserName
                 })
                 .ToListAsync();
@@ -69,7 +69,7 @@ namespace RentDrive.Services.Data
                     ImageURL = DefaultImageURL,
                     OwnerId = v.OwnerId,
                     YearOfProduction = v.DateOfProduction.Year,
-                    FuelType = v.FuelType.ToString(),
+                    //FuelType = v.FuelType.ToString(),
                     Description = v.Description,
                     VehicleType = v.VehicleType.Name,
                     VehicleTypeCategory = v.VehicleTypeCategory.CategoryName,
@@ -107,11 +107,11 @@ namespace RentDrive.Services.Data
                     DateOfProduction = v.DateOfProduction,
                     DateAdded = v.DateAdded,
                     CurbWeightInKg = v.CurbWeightInKg,
-                    OdoKilometers = v.OdoKilometers,
-                    EngineDisplacement = v.EngineDisplacement,
-                    FuelType = v.FuelType.ToString(),
+                    //OdoKilometers = v.OdoKilometers,
+                    //EngineDisplacement = v.EngineDisplacement,
+                    //FuelType = v.FuelType.ToString(),
                     Description = v.Description,
-                    PowerInKiloWatts = v.PowerInKiloWatts,
+                    //PowerInKiloWatts = v.PowerInKiloWatts,
                 })
                 .FirstOrDefaultAsync();
 

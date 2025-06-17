@@ -16,11 +16,7 @@
         public DateTime DateOfProduction { get; set; }
         public DateTime DateAdded { get; set; }
         public double CurbWeightInKg { get; set; }
-        public int OdoKilometers { get; set; }
-        public double? EngineDisplacement { get; set; }
-        public FuelType? FuelType { get; set; }
         public string? Description { get; set; }
-        public double? PowerInKiloWatts { get; set; }
         public ICollection<VehicleImages> VehicleImages { get; set; }
             = new HashSet<VehicleImages>();
     }

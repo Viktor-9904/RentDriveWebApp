@@ -69,29 +69,9 @@ namespace RentDrive.Data.Configuration
                 .HasComment("Weight of the vehicle when empty in kilograms.");
 
             builder
-                .Property(v => v.OdoKilometers)
-                .IsRequired()
-                .HasComment("Vehicle's total kilometers traveled.");
-
-            builder
-                .Property(v => v.EngineDisplacement)
-                .IsRequired()
-                .HasComment("Vehicle's engine capacity in liters.");
-
-            builder
-                .Property(v => v.FuelType)
-                .IsRequired()
-                .HasComment("Vehicle's fuel type.");
-
-            builder
                 .Property(v => v.Description)
                 .HasMaxLength(DescriptionMaxLength)
                 .HasComment("Optional description of the vehicle.");
-
-            builder
-                .Property(v => v.PowerInKiloWatts)
-                .IsRequired()
-                .HasComment("Power output of the vehicle's engine in kilowatts.");
         }
     }
     public static class VechicleSeeder
@@ -113,11 +93,7 @@ namespace RentDrive.Data.Configuration
                     DateOfProduction = new DateTime(2021, 5, 10),
                     DateAdded = new DateTime(2022, 7, 12),
                     CurbWeightInKg = 1470,
-                    OdoKilometers = 34500,
-                    EngineDisplacement = 2.5,
-                    FuelType = FuelType.Petrol,
                     Description = "Comfortable midsize sedan, ideal for long drives.",
-                    PowerInKiloWatts = 150
                 },
                 new()
                 {
@@ -132,11 +108,7 @@ namespace RentDrive.Data.Configuration
                     DateOfProduction = new DateTime(2022, 7, 20),
                     DateAdded = new DateTime(2023, 2, 22),
                     CurbWeightInKg = 2045,
-                    OdoKilometers = 27500,
-                    EngineDisplacement = 3.6,
-                    FuelType = FuelType.Petrol,
                     Description = "Spacious and off-road capable SUV.",
-                    PowerInKiloWatts = 213
                 },
                 new()
                 {
@@ -151,11 +123,7 @@ namespace RentDrive.Data.Configuration
                     DateOfProduction = new DateTime(2021, 3, 11),
                     DateAdded = new DateTime(2024, 9, 19),
                     CurbWeightInKg = 1300,
-                    OdoKilometers = 19800,
-                    EngineDisplacement = 1.4,
-                    FuelType = FuelType.Petrol,
                     Description = "Compact hatchback with great fuel economy.",
-                    PowerInKiloWatts = 103
                 }
             };
             return vehicles;
