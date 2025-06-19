@@ -72,6 +72,12 @@ namespace RentDrive.Data.Configuration
                 .Property(v => v.Description)
                 .HasMaxLength(DescriptionMaxLength)
                 .HasComment("Optional description of the vehicle.");
+
+            builder
+                .Property(v => v.FuelType)
+                .IsRequired()
+                .HasComment("Vehicle fuel type.")
+                .HasDefaultValue(FuelType.None);
         }
     }
     public static class VechicleSeeder
@@ -94,6 +100,7 @@ namespace RentDrive.Data.Configuration
                     DateAdded = new DateTime(2022, 7, 12),
                     CurbWeightInKg = 1470,
                     Description = "Comfortable midsize sedan, ideal for long drives.",
+                    FuelType = FuelType.Petrol,
                 },
                 new()
                 {
@@ -109,6 +116,7 @@ namespace RentDrive.Data.Configuration
                     DateAdded = new DateTime(2023, 2, 22),
                     CurbWeightInKg = 2045,
                     Description = "Spacious and off-road capable SUV.",
+                    FuelType= FuelType.Diesel,
                 },
                 new()
                 {
@@ -124,6 +132,7 @@ namespace RentDrive.Data.Configuration
                     DateAdded = new DateTime(2024, 9, 19),
                     CurbWeightInKg = 1300,
                     Description = "Compact hatchback with great fuel economy.",
+                    FuelType = FuelType.Petrol
                 }
             };
             return vehicles;

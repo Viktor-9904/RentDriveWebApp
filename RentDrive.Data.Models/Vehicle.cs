@@ -17,6 +17,8 @@
         public DateTime DateAdded { get; set; }
         public double CurbWeightInKg { get; set; }
         public string? Description { get; set; }
+        public FuelType FuelType { get; set; }
+            = FuelType.None;
         public ICollection<VehicleImages> VehicleImages { get; set; }
             = new List<VehicleImages>();
         public ICollection<VehicleTypePropertyValue> VehicleTypePropertyValues { get; set; }
