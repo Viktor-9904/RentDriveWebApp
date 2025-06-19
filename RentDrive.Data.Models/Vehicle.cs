@@ -18,6 +18,8 @@
         public double CurbWeightInKg { get; set; }
         public string? Description { get; set; }
         public ICollection<VehicleImages> VehicleImages { get; set; }
-            = new HashSet<VehicleImages>();
+            = new List<VehicleImages>();
+        public ICollection<VehicleTypePropertyValue> VehicleTypePropertyValue { get; set; }
+            = new List<VehicleTypePropertyValue>();
     }
 }

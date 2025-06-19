@@ -8,7 +8,9 @@ namespace RentDrive.Data.Models
         public int VehicleTypeId { get; set; }
         public VehicleType VehicleType { get; set; } = null!;
         public string Name { get; set; } = null!;
-        public AttributeValueType ValueType { get; set; }
+        public PropertyValueType ValueType { get; set; }
         public UnitOfMeasurement UnitOfMeasurement { get; set; } = UnitOfMeasurement.None;
+        public ICollection<VehicleTypePropertyValue> VehicleTypePropertyValues { get; set; }
+            = new List<VehicleTypePropertyValue>();
     }
 }

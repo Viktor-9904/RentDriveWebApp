@@ -1,6 +1,6 @@
 ﻿namespace RentDrive.Data.Models.Enums
 {
-    public enum AttributeValueType
+    public enum PropertyValueType
     {
         String,
         Int,
