@@ -5,9 +5,9 @@
         public int Id { get; set; }
         public int VehicleTypeId { get; set; }
         public VehicleType VehicleType { get; set; } = null!;
-        public string CategoryName { get; set; } = null!; // e.g. : "SUV", "Sedan", "Pickup" ...
+        public string Name { get; set; } = null!; // e.g. : "SUV", "Sedan", "Pickup" ...
         public string? Description { get; set; }
         public ICollection<Vehicle> Vehicles { get; set; }
-            = new HashSet<Vehicle>();
+            = new List<Vehicle>();
     }
 }

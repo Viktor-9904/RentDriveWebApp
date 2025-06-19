@@ -9,6 +9,8 @@ using static RentDrive.Data.Configuration.VechicleSeeder;
 using static RentDrive.Data.Configuration.VehicleTypeCategorySeeder;
 using static RentDrive.Data.Configuration.VehicleTypeSeeder;
 using static RentDrive.Data.Configuration.VehicleImageSeeder;
+using static RentDrive.Data.Configuration.VehicleTypePropertySeeder;
+using static RentDrive.Data.Configuration.VehicleTypePropertyValueSeerder;
 
 namespace RentDrive.Data
 {
@@ -25,8 +27,10 @@ namespace RentDrive.Data
 
         public DbSet<Vehicle> Vehicles { get; set; } = null!;
         public DbSet<VehicleType> VehicleTypes { get; set; } = null!;
-        public DbSet<VehicleTypeCategory> VehicleTypeClasses { get; set; } = null!;
+        public DbSet<VehicleTypeCategory> VehicleTypeCategories { get; set; } = null!;
         public DbSet<VehicleImages> VehicleImages { get; set; } = null!;
+        public DbSet<VehicleTypeProperty> VehicleTypeProperties { get; set; } = null!;
+        public DbSet<VehicleTypePropertyValue> VehicleTypePropertyValues { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +41,8 @@ namespace RentDrive.Data
             modelBuilder.Entity<VehicleTypeCategory>().HasData(SeedVehicleTypeCategories());
             modelBuilder.Entity<Vehicle>().HasData(SeedVehicles());
             modelBuilder.Entity<VehicleImages>().HasData(SeedVehicleImages());
+            modelBuilder.Entity<VehicleTypeProperty>().HasData(SeedVehicleTypeProperties());
+            modelBuilder.Entity<VehicleTypePropertyValue>().HasData(SeedVehicleTypePropertyValues());
         }
     }
 }

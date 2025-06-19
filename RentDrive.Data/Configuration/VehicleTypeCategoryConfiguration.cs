@@ -18,7 +18,7 @@ namespace RentDrive.Data.Configuration
                 .HasForeignKey(vtc => vtc.VehicleTypeId);
 
             builder
-                .Property(vtc => vtc.CategoryName)
+                .Property(vtc => vtc.Name)
                 .HasMaxLength(NameMaxLength)
                 .IsRequired()
                 .HasComment("Name of the vehicle class.");
@@ -27,6 +27,10 @@ namespace RentDrive.Data.Configuration
                 .Property(vtc => vtc.Description)
                 .HasMaxLength(DescriptionMaxLength)
                 .HasComment("Description of the vehicle class.");
+
+            builder
+                .HasIndex(vtc => new { vtc.VehicleTypeId, vtc.Name })
+                .IsUnique();
         }
     }
     public static class VehicleTypeCategorySeeder
@@ -39,42 +43,42 @@ namespace RentDrive.Data.Configuration
                 {
                     Id = 1,
                     VehicleTypeId = 1,
-                    CategoryName = "SUV",
+                    Name = "SUV",
                     Description = "Spacious and powerful car ideal for families and off-road.",
                 },
                 new()
                 {
                     Id = 2,
                     VehicleTypeId = 1,
-                    CategoryName = "Sedan",
+                    Name = "Sedan",
                     Description = "Comfortable passenger car suitable for everyday use.",
                 },
                 new()
                 {
                     Id = 3,
                     VehicleTypeId = 1,
-                    CategoryName = "Hatchback",
+                    Name = "Hatchback",
                     Description = "Compact car with a rear door that swings upward.",
                 },
                 new()
                 {
                     Id = 4,
                     VehicleTypeId = 2,
-                    CategoryName = "Pickup",
+                    Name = "Pickup",
                     Description = "Truck with an open cargo area in the back.",
                 },
                 new()
                 {
                     Id = 5,
                     VehicleTypeId = 2,
-                    CategoryName = "Box Truck",
+                    Name = "Box Truck",
                     Description = "Truck with a large, enclosed cargo area.",
                 },
                 new()
                 {
                     Id = 6,
                     VehicleTypeId = 3,
-                    CategoryName = "Naked",
+                    Name = "Naked",
                     Description = "Very good bike for everyday riding.",
                 },
             };

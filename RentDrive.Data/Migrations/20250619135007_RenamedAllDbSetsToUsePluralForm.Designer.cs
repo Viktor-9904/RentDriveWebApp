@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentDrive.Data;
 
@@ -11,9 +12,11 @@ using RentDrive.Data;
 namespace RentDrive.Data.Migrations
 {
     [DbContext(typeof(RentDriveDbContext))]
-    partial class RentDriveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250619135007_RenamedAllDbSetsToUsePluralForm")]
+    partial class RenamedAllDbSetsToUsePluralForm
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -465,24 +468,23 @@ namespace RentDrive.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(1500)
-                        .HasColumnType("nvarchar(1500)")
-                        .HasComment("Description of the vehicle class.");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasComment("Name of the vehicle class.");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1500)
+                        .HasColumnType("nvarchar(1500)")
+                        .HasComment("Description of the vehicle class.");
 
                     b.Property<int>("VehicleTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("VehicleTypeId", "Name")
-                        .IsUnique();
+                    b.HasIndex("VehicleTypeId");
 
                     b.ToTable("VehicleTypeCategories");
 
@@ -490,43 +492,43 @@ namespace RentDrive.Data.Migrations
                         new
                         {
                             Id = 1,
+                            CategoryName = "SUV",
                             Description = "Spacious and powerful car ideal for families and off-road.",
-                            Name = "SUV",
                             VehicleTypeId = 1
                         },
                         new
                         {
                             Id = 2,
+                            CategoryName = "Sedan",
                             Description = "Comfortable passenger car suitable for everyday use.",
-                            Name = "Sedan",
                             VehicleTypeId = 1
                         },
                         new
                         {
                             Id = 3,
+                            CategoryName = "Hatchback",
                             Description = "Compact car with a rear door that swings upward.",
-                            Name = "Hatchback",
                             VehicleTypeId = 1
                         },
                         new
                         {
                             Id = 4,
+                            CategoryName = "Pickup",
                             Description = "Truck with an open cargo area in the back.",
-                            Name = "Pickup",
                             VehicleTypeId = 2
                         },
                         new
                         {
                             Id = 5,
+                            CategoryName = "Box Truck",
                             Description = "Truck with a large, enclosed cargo area.",
-                            Name = "Box Truck",
                             VehicleTypeId = 2
                         },
                         new
                         {
                             Id = 6,
+                            CategoryName = "Naked",
                             Description = "Very good bike for everyday riding.",
-                            Name = "Naked",
                             VehicleTypeId = 3
                         });
                 });

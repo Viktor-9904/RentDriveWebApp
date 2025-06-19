@@ -35,7 +35,7 @@ namespace RentDrive.Services.Data
                     Make = v.Make,
                     Model = v.Model,
                     VehicleType = v.VehicleType.Name,
-                    VehicleTypeCategory = v.VehicleTypeCategory.CategoryName,
+                    VehicleTypeCategory = v.VehicleTypeCategory.Name,
                     YearOfProduction = v.DateOfProduction.Year,
                     PricePerDay = v.PricePerDay,
                     //FuelType = v.FuelType.ToString(),
@@ -72,7 +72,7 @@ namespace RentDrive.Services.Data
                     //FuelType = v.FuelType.ToString(),
                     Description = v.Description,
                     VehicleType = v.VehicleType.Name,
-                    VehicleTypeCategory = v.VehicleTypeCategory.CategoryName,
+                    VehicleTypeCategory = v.VehicleTypeCategory.Name,
                 })
                 .ToArrayAsync();
 
@@ -101,7 +101,7 @@ namespace RentDrive.Services.Data
                     Model = v.Model,
                     OwnerName = v.Owner.UserName,
                     VehicleType = v.VehicleType.Name,
-                    VehicleTypeCategory = v.VehicleTypeCategory.CategoryName,
+                    VehicleTypeCategory = v.VehicleTypeCategory.Name,
                     Color = v.Color,
                     PricePerDay = v.PricePerDay,
                     DateOfProduction = v.DateOfProduction,
