@@ -2,7 +2,7 @@
 
 namespace RentDrive.Data.Models
 {
-    public class VehicleTypeAttribute
+    public class VehicleTypeProperty
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public int VehicleTypeId { get; set; }
