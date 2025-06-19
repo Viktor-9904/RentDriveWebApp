@@ -23,5 +23,13 @@
             public const int ImageURLMaxLength = 2083;
             public const string DefaultImageURL = "images/default-image.jpg";
         }
+        public static class VehicleTypeProperty
+        {
+            public const int NameMaxLength = 50;
+        }
+        public static class VehicleTypePropertyValue
+        {
+            public const int PropertyValueMaxLength = 100;
+        }
     }
 }

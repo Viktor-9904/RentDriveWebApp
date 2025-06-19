@@ -19,7 +19,7 @@
         public string? Description { get; set; }
         public ICollection<VehicleImages> VehicleImages { get; set; }
             = new List<VehicleImages>();
-        public ICollection<VehicleTypePropertyValue> VehicleTypePropertyValue { get; set; }
+        public ICollection<VehicleTypePropertyValue> VehicleTypePropertyValues { get; set; }
             = new List<VehicleTypePropertyValue>();
     }
 }

@@ -291,7 +291,7 @@ namespace RentDrive.Data.Migrations
 
                     b.HasIndex("VehicleTypeId");
 
-                    b.ToTable("Vehicles");
+                    b.ToTable("Vehicles", (string)null);
 
                     b.HasData(
                         new
@@ -359,7 +359,7 @@ namespace RentDrive.Data.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("VehicleImages");
+                    b.ToTable("VehicleImages", (string)null);
 
                     b.HasData(
                         new
@@ -398,7 +398,7 @@ namespace RentDrive.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("VehicleTypes");
+                    b.ToTable("VehicleTypes", (string)null);
 
                     b.HasData(
                         new
@@ -474,7 +474,7 @@ namespace RentDrive.Data.Migrations
 
                     b.HasIndex("VehicleTypeId");
 
-                    b.ToTable("VehicleTypeClasses");
+                    b.ToTable("VehicleTypeClasses", (string)null);
 
                     b.HasData(
                         new
