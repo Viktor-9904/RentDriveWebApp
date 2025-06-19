@@ -5,8 +5,10 @@
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public ICollection<Vehicle> Vehicles { get; set; }
-            = new HashSet<Vehicle>();
+            = new List<Vehicle>();
         public ICollection<VehicleTypeCategory> VehicleTypeCategory { get; set; }
-            = new HashSet<VehicleTypeCategory>();
+            = new List<VehicleTypeCategory>();
+        public ICollection<VehicleTypeProperty> VehicleTypeProperty { get; set; }
+            = new List<VehicleTypeProperty>();
     }
 }
