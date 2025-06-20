@@ -12,15 +12,12 @@ namespace RentDrive.Services.Data
     {
         private readonly IRepository<Vehicle, Guid> vehicleRepository;
         private readonly IVehicleImageService vehicleImageService;
-        private readonly IUserService userService;
         public VehicleService(
             IRepository<Vehicle, Guid> vehicleRepository,
-            IVehicleImageService vehicleImageService,
-            IUserService userService)
+            IVehicleImageService vehicleImageService)
         {
             this.vehicleRepository = vehicleRepository;
             this.vehicleImageService = vehicleImageService;
-            this.userService = userService;
         }
 
         public async Task<IEnumerable<ListingVehicleViewModel>> GetAllVehiclesAsync()
@@ -68,6 +65,7 @@ namespace RentDrive.Services.Data
                     PricePerDay = v.PricePerDay,
                     ImageURL = DefaultImageURL,
                     OwnerId = v.OwnerId,
+                    OwnerName = v.Owner.UserName,
                     YearOfProduction = v.DateOfProduction.Year,
                     //FuelType = v.FuelType.ToString(),
                     Description = v.Description,
@@ -80,11 +78,6 @@ namespace RentDrive.Services.Data
             {
                 string currentVehicleImageURL = await this.vehicleImageService.GetFirstImageByVehicleIdAsync(vehicle.Id);
                 vehicle.ImageURL = currentVehicleImageURL;
-
-                string? ownerName = vehicle.OwnerId != null
-                    ? await userService.GetOwnerNameById(vehicle.OwnerId)
-                    : null;
-                vehicle.OwnerName = ownerName;
             }
 
             return top3RecentVehicles;
