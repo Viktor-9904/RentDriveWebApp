@@ -49,9 +49,9 @@ namespace RentDrive.Data.Configuration
                 {
                    Id = Guid.Parse("671fbc1d-53ef-4862-9f73-974b94ac0d25"),
                    VehicleTypeId = 1,
-                   Name = "Cubic Centimeters",
+                   Name = "Engine Displacement",
                    ValueType = PropertyValueType.Int,
-                   UnitOfMeasurement = UnitOfMeasurement.Cc,
+                   UnitOfMeasurement = UnitOfMeasurement.cc
                 },
                 new()
                 {

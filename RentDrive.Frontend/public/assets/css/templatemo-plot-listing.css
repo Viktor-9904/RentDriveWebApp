@@ -1177,7 +1177,44 @@ Recent Listing
   height: 14px;
 }
 
+.vehicle-price-card {
+    background-color: #e8f5e9;
+    border-left: 5px solid #28a745;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+}
 
+.vehicle-detail-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.vehicle-detail-value {
+    color: #555;
+}
+
+.vehicle-section {
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.property-box {
+    background-color: #f1f3f5;
+    padding: 0.75rem 1rem;
+    border-radius: 0.4rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.description-box {
+    background-color: #fff9e6;
+    border-left: 4px solid #ffc107;
+    padding: 1rem 1.25rem;
+    border-radius: 0.5rem;
+}
 
 /*
 ---------------------------------------------

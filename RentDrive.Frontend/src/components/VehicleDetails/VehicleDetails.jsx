@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function VehicleDetails() {
@@ -23,32 +23,44 @@ export default function VehicleDetails() {
     }, [id]);
 
     const handlePrevImage = () => {
-        setCurrentImageIndex(prev => (prev === 0 ? vehicle.imageURLS.length - 1 : prev - 1));
+        setCurrentImageIndex(prev =>
+            prev === 0 ? vehicle.imageURLS.length - 1 : prev - 1
+        );
     };
 
     const handleNextImage = () => {
-        setCurrentImageIndex(prev => (prev === vehicle.imageURLS.length - 1 ? 0 : prev + 1));
+        setCurrentImageIndex(prev =>
+            prev === vehicle.imageURLS.length - 1 ? 0 : prev + 1
+        );
     };
 
     if (loading) return <div className="text-center py-5">Loading vehicle details...</div>;
     if (!vehicle) return <div className="text-center py-5 text-danger">Vehicle not found.</div>;
 
-    const currentImage = vehicle.imageURLS?.[currentImageIndex];
+    const allProperties = [
+        { label: "Year", value: new Date(vehicle.dateOfProduction).getFullYear() },
+        { label: "Fuel", value: vehicle.fuelType || "N/A" },
+        { label: "Color", value: vehicle.color },
+        { label: "Type", value: vehicle.vehicleType },
+        { label: "Weight", value: `${vehicle.curbWeightInKg} kg` },
+        ...(vehicle.ownerName ? [{ label: "Owner", value: vehicle.ownerName }] : []),
+        ...vehicle.vehicleProperties.map(p => ({
+            label: p.vehicleTypePropertyName,
+            value: `${p.vehicleTypePropertyValue} ${p.unitOfMeasurement !== "None" ? p.unitOfMeasurement : ""}`.trim()
+        }))
+    ];
 
     return (
         <div className="container py-5">
             <div className="row">
-                {/* Image Section */}
-                <div className="col-md-6 position-relative text-center">
-                    <div className="position-relative border rounded p-2">
+                <div className="col-md-5">
+                    <div className="position-relative border rounded p-2 mb-3 text-center">
                         <img
                             src={`${backEndURL}${vehicle.imageURLS[currentImageIndex]}`}
                             alt={`${vehicle.make} ${vehicle.model}`}
                             className="img-fluid rounded"
                             style={{ maxHeight: "350px", objectFit: "cover", width: "100%" }}
                         />
-
-                        {/* Arrows */}
                         <button
                             onClick={handlePrevImage}
                             className="btn btn-light position-absolute top-50 start-0 translate-middle-y"
@@ -64,37 +76,36 @@ export default function VehicleDetails() {
                             ›
                         </button>
                     </div>
-                </div>
 
-                {/* Metadata Section */}
-                <div className="col-md-6">
-                    <h2 className="mb-3">{vehicle.make} {vehicle.model}</h2>
-
-                    <div className="border rounded p-3 mb-3 bg-light-subtle">
-                        <h5 className="mb-2">Details</h5>
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <p><strong>Price:</strong> {vehicle.pricePerDay.toFixed(2)} €</p>
-                                <p><strong>Year:</strong> {new Date(vehicle.dateOfProduction).getFullYear()}</p>
-                                <p><strong>Fuel:</strong> {vehicle.fuelType || "N/A"}</p>
-                                <p><strong>Color:</strong> {vehicle.color}</p>
-                                <p><strong>Odometer:</strong> {vehicle.odoKilometers ? `${vehicle.odoKilometers} km` : "N/A"}</p>
-                            </div>
-                            <div className="col-sm-6">
-                                <p><strong>Type:</strong> {vehicle.vehicleType}</p>
-                                <p><strong>Power:</strong> {vehicle.powerInKiloWatts ? `${vehicle.powerInKiloWatts} kW` : "N/A"}</p>
-                                <p><strong>Engine:</strong> {vehicle.engineDisplacement ? `${vehicle.engineDisplacement} L` : "N/A"}</p>
-                                <p><strong>Weight:</strong> {vehicle.curbWeightInKg} kg</p>
-                                <p><strong>Owner:</strong> {vehicle.ownerName || "Unknown"}</p>
-                            </div>
-                        </div>
-                        {vehicle.description && (
-                            <p className="mt-3"><strong>Description:</strong> {vehicle.description}</p>
-                        )}
+                    <div className="vehicle-price-card text-center">
+                        <h4 className="mb-1 text-success">
+                            {vehicle.pricePerDay.toFixed(2)} € / day
+                        </h4>
+                        <small className="text-muted">Rental Price</small>
                     </div>
                 </div>
-            </div>
 
+                <div className="col-md-7">
+                    <h2 className="mb-3">{vehicle.make} {vehicle.model}</h2>
+
+                    <div className="row">
+                        {allProperties.map((prop, index) => (
+                            <div key={index} className="col-sm-6">
+                                <div className="property-box">
+                                    <strong>{prop.label}:</strong> {prop.value}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {vehicle.description && (
+                        <div className="description-box mt-4">
+                            <strong>Description:</strong>
+                            <p className="mb-0">{vehicle.description}</p>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }

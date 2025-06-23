@@ -12,12 +12,15 @@ namespace RentDrive.Services.Data
     {
         private readonly IRepository<Vehicle, Guid> vehicleRepository;
         private readonly IVehicleImageService vehicleImageService;
+        private readonly IVehicleTypePropertyValueService vehicleTypePropertyValueService;
         public VehicleService(
             IRepository<Vehicle, Guid> vehicleRepository,
-            IVehicleImageService vehicleImageService)
+            IVehicleImageService vehicleImageService,
+            IVehicleTypePropertyValueService vehicleTypePropertyValueService)
         {
             this.vehicleRepository = vehicleRepository;
             this.vehicleImageService = vehicleImageService;
+            this.vehicleTypePropertyValueService = vehicleTypePropertyValueService;
         }
 
         public async Task<IEnumerable<ListingVehicleViewModel>> GetAllVehiclesAsync()
@@ -102,7 +105,7 @@ namespace RentDrive.Services.Data
                     CurbWeightInKg = v.CurbWeightInKg,
                     //OdoKilometers = v.OdoKilometers,
                     //EngineDisplacement = v.EngineDisplacement,
-                    //FuelType = v.FuelType.ToString(),
+                    FuelType = v.FuelType.ToString(),
                     Description = v.Description,
                     //PowerInKiloWatts = v.PowerInKiloWatts,
                 })
@@ -115,6 +118,9 @@ namespace RentDrive.Services.Data
 
             vehicleDetails.ImageURLS = await this.vehicleImageService
                 .GetAllImagesByVehicleIdAsync(id);
+
+            vehicleDetails.VehicleProperties = await this.vehicleTypePropertyValueService
+                .GetVehicleTypePropertyValuesByVehicleIdAsync(id);
 
             return vehicleDetails;
         }

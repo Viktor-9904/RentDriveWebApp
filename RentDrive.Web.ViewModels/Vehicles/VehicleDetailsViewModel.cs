@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RentDrive.Web.ViewModels.Vehicles
+﻿namespace RentDrive.Web.ViewModels.Vehicles
 {
     public class VehicleDetailsViewModel
     {
@@ -19,12 +13,11 @@ namespace RentDrive.Web.ViewModels.Vehicles
         public DateTime DateOfProduction { get; set; }
         public DateTime DateAdded { get; set; }
         public double CurbWeightInKg { get; set; }
-        public int? OdoKilometers { get; set; }
-        public double? EngineDisplacement { get; set; }
-        public string? FuelType { get; set; }
+        public string FuelType { get; set; } = null!;
         public string? Description { get; set; }
-        public double? PowerInKiloWatts { get; set; }
-        public List<string> ImageURLS { get; set; } =
-            new List<string>();
+        public List<string> ImageURLS { get; set; }
+            = new List<string>();
+        public List<VehicleTypePropertyValuesViewModel> VehicleProperties { get; set; }
+            = new List<VehicleTypePropertyValuesViewModel>();
     }
 }

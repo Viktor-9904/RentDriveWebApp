@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 using RentDrive.Data;
+using RentDrive.Data.Configuration;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository;
 using RentDrive.Data.Repository.Interfaces;
@@ -73,11 +75,14 @@ builder.Services.AddScoped<IRepository<VehicleType, Guid>, BaseRepository<Vehicl
 builder.Services.AddScoped<IRepository<VehicleTypeCategory, Guid>, BaseRepository<VehicleTypeCategory, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleImages, Guid>, BaseRepository<VehicleImages, Guid>>();
 builder.Services.AddScoped<IRepository<ApplicationUser, Guid>, BaseRepository<ApplicationUser, Guid>>();
+builder.Services.AddScoped<IRepository<VehicleTypeProperty, Guid>, BaseRepository<VehicleTypeProperty, Guid>>();
+builder.Services.AddScoped<IRepository<VehicleTypePropertyValue, Guid>, BaseRepository<VehicleTypePropertyValue, Guid>>();
 
 builder.Services.AddScoped<IVehicleImageService, VehicleImageService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IVehicleTypePropertyValueService, VehicleTypePropertyValueService>();
 
 WebApplication app = builder.Build();
 

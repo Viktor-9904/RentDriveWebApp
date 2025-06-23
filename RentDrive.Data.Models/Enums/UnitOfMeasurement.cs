@@ -4,31 +4,14 @@ namespace RentDrive.Data.Models.Enums
 {
     public enum UnitOfMeasurement
     {
-        [Display(Name = "None")]
         None,
-
-        [Display(Name = "kg")]
         Kg,
-
-        [Display(Name = "km")]
         Km,
-
-        [Display(Name = "M")]
         M,
-
-        [Display(Name = "cm")]
-        Cm,
-
-        [Display(Name = "cc")]
-        Cc,
-
-        [Display(Name = "L")]
+        cm,
+        cc,
         L,
-
-        [Display(Name = "ml")]
-        Ml,
-
-        [Display(Name = "kW")]
+        ml,
         kW,
 
         [Display(Name = "km/h")]
