@@ -14,16 +14,19 @@ namespace RentDrive.Services.Data
         private readonly IRepository<Vehicle, Guid> vehicleRepository;
         private readonly IVehicleTypeService vehicleTypeService;
         private readonly IVehicleImageService vehicleImageService;
+        private readonly IVehicleTypePropertyService vehicleTypePropertyService;
         private readonly IVehicleTypePropertyValueService vehicleTypePropertyValueService;
         public VehicleService(
             IRepository<Vehicle, Guid> vehicleRepository,
             IVehicleTypeService vehicleTypeService,
             IVehicleImageService vehicleImageService,
+            IVehicleTypePropertyService vehicleTypePropertyService,
             IVehicleTypePropertyValueService vehicleTypePropertyValueService)
         {
             this.vehicleRepository = vehicleRepository;
             this.vehicleTypeService = vehicleTypeService;
             this.vehicleImageService = vehicleImageService;
+            this.vehicleTypePropertyService = vehicleTypePropertyService;
             this.vehicleTypePropertyValueService = vehicleTypePropertyValueService;
         }
 
@@ -130,8 +133,14 @@ namespace RentDrive.Services.Data
         }
         public async Task<IEnumerable<VehicleTypeViewModel>> GetAllVehicleTypes()
         {
-            return await this.vehicleTypeService.GetAllVehicleTypesAsync();
+            return await this.vehicleTypeService
+                .GetAllVehicleTypesAsync();
         }
 
+        public async Task<IEnumerable<VehicleTypePropertyViewModel>> GetAllVehicleTypePropertiesAsync()
+        {
+            return await this.vehicleTypePropertyService
+                .GetAllVehicleTypePropertiesAsync();
+        }
     }
 }

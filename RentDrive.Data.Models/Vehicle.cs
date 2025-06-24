@@ -1,4 +1,6 @@
-﻿namespace RentDrive.Data.Models
+﻿using RentDrive.Common.Enums;
+
+namespace RentDrive.Data.Models
 {
     public class Vehicle
     {

@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
+using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
-using RentDrive.Data.Models.Enums;
 using static RentDrive.Common.Vehicle.VehicleValidationConstants.VehicleTypeProperty;
 
 namespace RentDrive.Data.Configuration

@@ -66,5 +66,18 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(vehicleTypes);
         }
+        [HttpGet("types/properties", Name = "GetAllVehicleTypeProperties")]
+        public async Task<IActionResult> GetAllVehicleTypeProperties()
+        {
+            IEnumerable<VehicleTypePropertyViewModel> vehicleTypeProperties = await this.vehicleService
+                .GetAllVehicleTypePropertiesAsync();
+
+            if (vehicleTypeProperties == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(vehicleTypeProperties);
+        }
     }
 }

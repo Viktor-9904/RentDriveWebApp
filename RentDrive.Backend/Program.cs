@@ -84,6 +84,7 @@ builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IVehicleTypePropertyValueService, VehicleTypePropertyValueService>();
+builder.Services.AddScoped<IVehicleTypePropertyService, VehicleTypePropertyService>();
 builder.Services.AddScoped<IVehicleTypeService, VehicleTypeService>();
 
 WebApplication app = builder.Build();

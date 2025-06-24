@@ -1,4 +1,4 @@
-﻿namespace RentDrive.Data.Models.Enums
+﻿namespace RentDrive.Common.Enums
 {
     public enum PropertyValueType
     {

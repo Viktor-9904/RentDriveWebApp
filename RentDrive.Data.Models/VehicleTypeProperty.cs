@@ -1,4 +1,4 @@
-﻿using RentDrive.Data.Models.Enums;
+﻿using RentDrive.Common.Enums;
 
 namespace RentDrive.Data.Models
 {

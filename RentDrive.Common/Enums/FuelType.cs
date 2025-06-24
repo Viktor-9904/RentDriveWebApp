@@ -1,4 +1,4 @@
-﻿namespace RentDrive.Data.Models
+﻿namespace RentDrive.Common.Enums
 {
     public enum FuelType
     {
