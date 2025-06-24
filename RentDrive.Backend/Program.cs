@@ -77,12 +77,14 @@ builder.Services.AddScoped<IRepository<VehicleImages, Guid>, BaseRepository<Vehi
 builder.Services.AddScoped<IRepository<ApplicationUser, Guid>, BaseRepository<ApplicationUser, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleTypeProperty, Guid>, BaseRepository<VehicleTypeProperty, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleTypePropertyValue, Guid>, BaseRepository<VehicleTypePropertyValue, Guid>>();
+builder.Services.AddScoped<IRepository<VehicleType, int>, BaseRepository<VehicleType, int>>();
 
 builder.Services.AddScoped<IVehicleImageService, VehicleImageService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IVehicleTypePropertyValueService, VehicleTypePropertyValueService>();
+builder.Services.AddScoped<IVehicleTypeService, VehicleTypeService>();
 
 WebApplication app = builder.Build();
 

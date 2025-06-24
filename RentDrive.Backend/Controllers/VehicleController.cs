@@ -27,8 +27,8 @@ namespace RentDrive.Backend.Controllers
         [HttpGet("all", Name = "GetAllVehicles")]
         public async Task<IEnumerable<ListingVehicleViewModel>> GetAllVehicles()
         {
-            IEnumerable<ListingVehicleViewModel> allVehiclesViewModels 
-                = await this.vehicleService.GetAllVehiclesAsync();
+            IEnumerable<ListingVehicleViewModel> allVehiclesViewModels = await this.vehicleService
+                .GetAllVehiclesAsync();
 
             return allVehiclesViewModels;
         }
@@ -52,6 +52,19 @@ namespace RentDrive.Backend.Controllers
             }
 
             return Ok(vehicleDetails);
+        }
+        [HttpGet("types", Name = "GetAllVehicleTypes")]
+        public async Task<IActionResult> GetAllVehicleTypes()
+        {
+            IEnumerable<VehicleTypeViewModel> vehicleTypes = await this.vehicleService
+                .GetAllVehicleTypes();
+
+            if (vehicleTypes == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(vehicleTypes);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
@@ -11,14 +12,17 @@ namespace RentDrive.Services.Data
     public class VehicleService : IVehicleService
     {
         private readonly IRepository<Vehicle, Guid> vehicleRepository;
+        private readonly IVehicleTypeService vehicleTypeService;
         private readonly IVehicleImageService vehicleImageService;
         private readonly IVehicleTypePropertyValueService vehicleTypePropertyValueService;
         public VehicleService(
             IRepository<Vehicle, Guid> vehicleRepository,
+            IVehicleTypeService vehicleTypeService,
             IVehicleImageService vehicleImageService,
             IVehicleTypePropertyValueService vehicleTypePropertyValueService)
         {
             this.vehicleRepository = vehicleRepository;
+            this.vehicleTypeService = vehicleTypeService;
             this.vehicleImageService = vehicleImageService;
             this.vehicleTypePropertyValueService = vehicleTypePropertyValueService;
         }
@@ -124,5 +128,10 @@ namespace RentDrive.Services.Data
 
             return vehicleDetails;
         }
+        public async Task<IEnumerable<VehicleTypeViewModel>> GetAllVehicleTypes()
+        {
+            return await this.vehicleTypeService.GetAllVehicleTypesAsync();
+        }
+
     }
 }
