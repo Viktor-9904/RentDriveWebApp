@@ -4,11 +4,12 @@ export default function useAllVehicles() {
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const backEndURL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
-                const response = await fetch("https://localhost:7299/api/vehicle/all");
+                const response = await fetch(`${backEndURL}/api/vehicle/all`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
