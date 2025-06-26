@@ -7,14 +7,14 @@ export default function VehicleTypePropertyManager() {
 
     const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
     const { vehicleTypeProperties, loadingVehicleTypeProperties, errorVehicleTypeProperties } = useAllVehicleTypeProperties();
-    const [selectedTypeId, setSelectedTypeId] = useState(null);
+    const [selectedTypeId, setSelectedTypeId] = useState("");
     const [filteredProperties, setFilteredProperties] = useState([]);
 
     useEffect(() => {
-        if (vehicleTypes && vehicleTypes.length > 0) {
+        if (vehicleTypes.length > 0 && selectedTypeId === "") {
             setSelectedTypeId(vehicleTypes[0].id);
         }
-    }, [vehicleTypes]);
+    }, [vehicleTypes, selectedTypeId]);
 
     useEffect(() => {
         if (vehicleTypeProperties && selectedTypeId !== null) {
@@ -34,7 +34,7 @@ export default function VehicleTypePropertyManager() {
                 <select
                     className="form-select"
                     value={selectedTypeId}
-                    onChange={(e) => setSelectedTypeId(parseInt(e.target.value))}
+                    onChange={(e) => setSelectedTypeId(Number(e.target.value))}
                 >
                     {vehicleTypes.map(type => (
                         <option key={type.id} value={type.id}>
@@ -50,7 +50,7 @@ export default function VehicleTypePropertyManager() {
                 </button>
             </div>
 
-            <PropertyTable filteredProperties={filteredProperties}/>
+            <PropertyTable filteredProperties={filteredProperties} />
         </div>
     );
 }
