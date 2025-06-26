@@ -75,6 +75,22 @@ namespace RentDrive.Data.Configuration
                    Name = "Power in KiloWatts",
                    ValueType = PropertyValueType.Double,
                    UnitOfMeasurement = UnitOfMeasurement.kW,
+                },
+                new()
+                {
+                   Id = Guid.Parse("b924497e-006a-4d20-899f-66fde6c94ec8"),
+                   VehicleTypeId = 3,
+                   Name = "Engine Displacement",
+                   ValueType = PropertyValueType.Int,
+                   UnitOfMeasurement = UnitOfMeasurement.cc
+                },
+                new()
+                {
+                   Id = Guid.Parse("6b197695-891b-492a-8935-a54a500742c2"),
+                   VehicleTypeId = 3,
+                   Name = "Power in KiloWatts",
+                   ValueType = PropertyValueType.Double,
+                   UnitOfMeasurement = UnitOfMeasurement.kW,
                 }
             };
 
