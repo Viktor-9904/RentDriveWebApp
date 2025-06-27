@@ -9,7 +9,7 @@ export default function useAllVehicleTypeProperties() {
     useEffect(() => {
         const fetchVehicleTypeProperties = async () => {
             try {
-                const response = await fetch(`${backEndURL}/api/vehicle/types/properties`);
+                const response = await fetch(`${backEndURL}/api/vehicletypeproperty/types/properties`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }

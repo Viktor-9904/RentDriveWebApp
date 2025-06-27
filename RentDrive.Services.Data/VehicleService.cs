@@ -131,16 +131,5 @@ namespace RentDrive.Services.Data
 
             return vehicleDetails;
         }
-        public async Task<IEnumerable<VehicleTypeViewModel>> GetAllVehicleTypes()
-        {
-            return await this.vehicleTypeService
-                .GetAllVehicleTypesAsync();
-        }
-
-        public async Task<IEnumerable<VehicleTypePropertyViewModel>> GetAllVehicleTypePropertiesAsync()
-        {
-            return await this.vehicleTypePropertyService
-                .GetAllVehicleTypePropertiesAsync();
-        }
     }
 }

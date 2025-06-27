@@ -16,7 +16,7 @@ namespace RentDrive.Backend.Controllers
             this.vehicleService = vehicleService;
         }
 
-        [HttpGet("recent", Name = "RecentVehicles")]
+        [HttpGet("recent")]
         public async Task<IEnumerable<RecentVehicleIndexViewModel>> GetRecentVehicles()
         {
             IEnumerable<RecentVehicleIndexViewModel> recentVehiclesViewModels
@@ -24,7 +24,7 @@ namespace RentDrive.Backend.Controllers
 
             return recentVehiclesViewModels;
         }
-        [HttpGet("all", Name = "GetAllVehicles")]
+        [HttpGet("all")]
         public async Task<IEnumerable<ListingVehicleViewModel>> GetAllVehicles()
         {
             IEnumerable<ListingVehicleViewModel> allVehiclesViewModels = await this.vehicleService
@@ -32,7 +32,7 @@ namespace RentDrive.Backend.Controllers
 
             return allVehiclesViewModels;
         }
-        [HttpGet("{id}", Name = "GetVehicleDetailsById")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicleDetailsById(string id)
         {
             Guid vehicleGuidId = Guid.Empty;
@@ -52,32 +52,6 @@ namespace RentDrive.Backend.Controllers
             }
 
             return Ok(vehicleDetails);
-        }
-        [HttpGet("types", Name = "GetAllVehicleTypes")]
-        public async Task<IActionResult> GetAllVehicleTypes()
-        {
-            IEnumerable<VehicleTypeViewModel> vehicleTypes = await this.vehicleService
-                .GetAllVehicleTypes();
-
-            if (vehicleTypes == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(vehicleTypes);
-        }
-        [HttpGet("types/properties", Name = "GetAllVehicleTypeProperties")]
-        public async Task<IActionResult> GetAllVehicleTypeProperties()
-        {
-            IEnumerable<VehicleTypePropertyViewModel> vehicleTypeProperties = await this.vehicleService
-                .GetAllVehicleTypePropertiesAsync();
-
-            if (vehicleTypeProperties == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(vehicleTypeProperties);
         }
     }
 }

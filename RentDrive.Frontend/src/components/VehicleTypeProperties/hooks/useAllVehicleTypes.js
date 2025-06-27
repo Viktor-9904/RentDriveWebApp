@@ -9,7 +9,7 @@ export default function useAllVehicleTypes() {
     useEffect(() => {
         const fetchvehicleTypes = async () => {
             try {
-                const response = await fetch(`${backEndURL}/api/vehicle/types`);
+                const response = await fetch(`${backEndURL}/api/vehicletype/types`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
