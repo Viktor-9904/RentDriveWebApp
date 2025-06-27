@@ -1,4 +1,4 @@
-﻿using RentDrive.Web.ViewModels.Vehicles;
+﻿using RentDrive.Web.ViewModels.Vehicle;
 
 namespace RentDrive.Services.Data.Interfaces
 {

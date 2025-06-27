@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+
 using RentDrive.Services.Data.Interfaces;
-using RentDrive.Web.ViewModels.Vehicles;
+using RentDrive.Web.ViewModels.VehicleType;
 
 namespace RentDrive.Backend.Controllers
 {

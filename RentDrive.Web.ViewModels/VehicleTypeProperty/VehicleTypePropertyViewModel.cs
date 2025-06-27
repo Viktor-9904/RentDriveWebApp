@@ -1,6 +1,6 @@
 ﻿using RentDrive.Common.Enums;
 
-namespace RentDrive.Web.ViewModels.Vehicles
+namespace RentDrive.Web.ViewModels.VehicleTypeProperty
 {
     public class VehicleTypePropertyViewModel
     {

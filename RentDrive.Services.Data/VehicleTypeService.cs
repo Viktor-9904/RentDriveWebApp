@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
-using RentDrive.Web.ViewModels.Vehicles;
+using RentDrive.Web.ViewModels.VehicleType;
+
 
 namespace RentDrive.Services.Data
 {
