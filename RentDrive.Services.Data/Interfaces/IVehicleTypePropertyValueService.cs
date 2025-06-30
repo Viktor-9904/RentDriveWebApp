@@ -1,4 +1,5 @@
 ﻿using RentDrive.Web.ViewModels.Vehicle;
+using RentDrive.Web.ViewModels.VehicleTypeProperty;
 
 namespace RentDrive.Services.Data.Interfaces
 {

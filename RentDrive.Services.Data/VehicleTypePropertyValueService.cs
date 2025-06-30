@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Vehicle;
+using RentDrive.Web.ViewModels.VehicleTypeProperty;
 
 namespace RentDrive.Services.Data
 {
@@ -21,7 +23,7 @@ namespace RentDrive.Services.Data
                 .GetAllAsQueryable()
                 .Include(vtpv => vtpv.VehicleTypeProperty)
                 .Where(vtpv => vtpv.VehicleId == vehicleId)
-                .Select(vtpv=> new VehicleTypePropertyValuesViewModel()
+                .Select(vtpv => new VehicleTypePropertyValuesViewModel()
                 {
                     PropertyId = vtpv.VehicleTypePropertyId,
                     VehicleTypePropertyName = vtpv.VehicleTypeProperty.Name,

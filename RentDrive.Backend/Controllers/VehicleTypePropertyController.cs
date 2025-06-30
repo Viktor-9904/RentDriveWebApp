@@ -27,5 +27,13 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(vehicleTypeProperties);
         }
+        [HttpGet("value-and-unit-enums")]
+        public IActionResult GetValueAndUnitEnums()
+        {
+            EnumOptionsViewModel enumOptions = this.vehicleTypePropertyService
+                .GetEnumOptions();
+
+            return Ok(enumOptions);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
@@ -30,6 +31,30 @@ namespace RentDrive.Services.Data
                 .ToListAsync();
 
             return vehicleTypeProperties;
+        }
+        public EnumOptionsViewModel GetEnumOptions()
+        {
+            IEnumerable<ValueTypeViewModel> valueTypes = Enum.GetValues(typeof(PropertyValueType))
+                .Cast<PropertyValueType>()
+                .Select(v => new ValueTypeViewModel
+                {
+                    Id = (int)v,
+                    Name = v.ToString()
+                });
+
+            IEnumerable<UnitOfMeasurementViewModel> units = Enum.GetValues(typeof(UnitOfMeasurement))
+                .Cast<UnitOfMeasurement>()
+                .Select(u => new UnitOfMeasurementViewModel
+                {
+                    Id = (int)u,
+                    Name = u.ToString()
+                });
+
+            return new EnumOptionsViewModel
+            {
+                ValueTypes = valueTypes,
+                UnitOfMeasurements = units
+            };
         }
     }
 }
