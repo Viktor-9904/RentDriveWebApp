@@ -1,8 +1,11 @@
 import { useState } from "react";
+import DeleteConfirmationModal from "./DeleteConfrimationModal";
 
 export default function PropertyTable({ filteredProperties, valueAndUnitEnums, onPropertyUpdated }) {
     const backEndURL = import.meta.env.VITE_API_URL;
     const [properties, setProperties] = useState(filteredProperties);
+    const [propertyToDelete, setPropertyToDelete] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const [editValues, setEditValues] = useState({
         name: '',
@@ -24,6 +27,11 @@ export default function PropertyTable({ filteredProperties, valueAndUnitEnums, o
             ...prev,
             [field]: value
         }));
+    };
+
+    const handleDeleteClick = (property) => {
+        setPropertyToDelete(property);
+        setShowDeleteModal(true);
     };
 
     const handleCancelClick = () => {
@@ -58,122 +66,155 @@ export default function PropertyTable({ filteredProperties, valueAndUnitEnums, o
             alert(error.message);
         }
     };
-    
+
+    const confirmDelete = async () => {
+        console.log("deleting")
+        try {
+            const response = await fetch(`${backEndURL}/api/vehicletypeproperty/delete/${propertyToDelete.id}`, {
+                method: "DELETE"
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to delete property");
+            }
+
+            setProperties(prev =>
+                prev.filter(p => p.id !== propertyToDelete.id)
+            );
+
+            setShowModal(false);
+            setPropertyToDelete(null);
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
     return (
-        <div className="table-responsive">
-            <table className="table table-bordered table-hover align-middle">
-                <thead className="table-light">
-                    <tr>
-                        <th>Property Name</th>
-                        <th>Value Type</th>
-                        <th>Unit</th>
-                        <th style={{ width: "180px" }}>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredProperties.map((prop) => {
-                        const isEditing = editingId === prop.id;
+        <>
+            <div className="table-responsive">
+                <table className="table table-bordered table-hover align-middle">
+                    <thead className="table-light">
+                        <tr>
+                            <th>Property Name</th>
+                            <th>Value Type</th>
+                            <th>Unit</th>
+                            <th style={{ width: "180px" }}>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredProperties.map((prop) => {
+                            const isEditing = editingId === prop.id;
 
-                        return (
-                            <tr key={prop.id}>
-                                <td>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={isEditing ? editValues.name : prop.name}
-                                        readOnly={!isEditing}
-                                        onChange={(e) => handleChange("name", e.target.value)}
-                                    />
-                                </td>
-                                <td>
-                                    {isEditing ? (
-                                        <select
-                                            className="form-select"
-                                            value={editValues.valueType}
-                                            onChange={(e) => handleChange("valueType", e.target.value)}
-                                        >
-                                            <option value="">Select Value Type</option>
-                                            {valueAndUnitEnums?.valueTypes?.map(vt => (
-                                                <option key={vt.id} value={vt.name}>
-                                                    {vt.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    ) : (
+                            return (
+                                <tr key={prop.id}>
+                                    <td>
                                         <input
                                             type="text"
                                             className="form-control"
-                                            value={prop.valueType}
-                                            readOnly
+                                            value={isEditing ? editValues.name : prop.name}
+                                            readOnly={!isEditing}
+                                            onChange={(e) => handleChange("name", e.target.value)}
                                         />
-                                    )}
-                                </td>
-                                <td>
-                                    {isEditing ? (
-                                        <select
-                                            className="form-select"
-                                            value={editValues.unitOfMeasurement}
-                                            onChange={(e) => handleChange("unitOfMeasurement", e.target.value)}
-                                        >
-                                            <option value="">Select Unit</option>
-                                            {valueAndUnitEnums?.unitOfMeasurements?.map(uom => (
-                                                <option key={uom.id} value={uom.name}>
-                                                    {uom.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    ) : (
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            value={prop.unitOfMeasurement}
-                                            readOnly
-                                        />
-                                    )}
-                                </td>
-                                <td className="text-center">
-                                    {isEditing ? (
-                                        <>
-                                            <button
-                                                className="btn btn-success btn-sm me-2"
-                                                onClick={handleSaveClick}
+                                    </td>
+                                    <td>
+                                        {isEditing ? (
+                                            <select
+                                                className="form-select"
+                                                value={editValues.valueType}
+                                                onChange={(e) => handleChange("valueType", e.target.value)}
                                             >
-                                                Save
-                                            </button>
-                                            <button
-                                                className="btn btn-secondary btn-sm"
-                                                onClick={handleCancelClick} // Cancel edit
+                                                <option value="">Select Value Type</option>
+                                                {valueAndUnitEnums?.valueTypes?.map(vt => (
+                                                    <option key={vt.id} value={vt.name}>
+                                                        {vt.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        ) : (
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                value={prop.valueType}
+                                                readOnly
+                                            />
+                                        )}
+                                    </td>
+                                    <td>
+                                        {isEditing ? (
+                                            <select
+                                                className="form-select"
+                                                value={editValues.unitOfMeasurement}
+                                                onChange={(e) => handleChange("unitOfMeasurement", e.target.value)}
                                             >
-                                                Cancel
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <button
-                                                className="btn btn-outline-primary btn-sm me-2"
-                                                onClick={() => handleEditClick(prop)}
-                                            >
-                                                Edit
-                                            </button>
-                                            <button className="btn btn-outline-danger btn-sm">
-                                                Delete
-                                            </button>
-                                        </>
-                                    )}
+                                                <option value="">Select Unit</option>
+                                                {valueAndUnitEnums?.unitOfMeasurements?.map(uom => (
+                                                    <option key={uom.id} value={uom.name}>
+                                                        {uom.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        ) : (
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                value={prop.unitOfMeasurement}
+                                                readOnly
+                                            />
+                                        )}
+                                    </td>
+                                    <td className="text-center">
+                                        {isEditing ? (
+                                            <>
+                                                <button
+                                                    className="btn btn-success btn-sm me-2"
+                                                    onClick={handleSaveClick}
+                                                >
+                                                    Save
+                                                </button>
+                                                <button
+                                                    className="btn btn-secondary btn-sm"
+                                                    onClick={handleCancelClick} // Cancel edit
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button
+                                                    className="btn btn-outline-primary btn-sm me-2"
+                                                    onClick={() => handleEditClick(prop)}
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    className="btn btn-outline-danger btn-sm"
+                                                    onClick={() => handleDeleteClick(prop)}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </>
+                                        )}
 
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                        {filteredProperties.length === 0 && (
+                            <tr>
+                                <td colSpan="4" className="text-center text-muted">
+                                    No properties defined for this vehicle type.
                                 </td>
                             </tr>
-                        );
-                    })}
-                    {filteredProperties.length === 0 && (
-                        <tr>
-                            <td colSpan="4" className="text-center text-muted">
-                                No properties defined for this vehicle type.
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
-        </div>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+            <DeleteConfirmationModal
+                show={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                onConfirm={confirmDelete}
+                itemName={propertyToDelete?.name}
+            />
+        </>
     );
 }
