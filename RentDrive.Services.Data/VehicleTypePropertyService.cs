@@ -69,7 +69,7 @@ namespace RentDrive.Services.Data
 
             if (propertyEntity == null)
             {
-                return false; // Or throw if preferred
+                return false;
             }
 
             propertyEntity.Name = viewModel.Name;
@@ -77,6 +77,19 @@ namespace RentDrive.Services.Data
             propertyEntity.UnitOfMeasurement = viewModel.UnitOfMeasurement;
 
             bool result = await this.vehicleTypePropertyRepository.UpdateAsync(propertyEntity);
+
+            if (result)
+            {
+                await this.vehicleTypePropertyRepository.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DeletePropertyByIdAsync(Guid id)
+        {
+            bool result = await this.vehicleTypePropertyRepository.DeleteByIdAsync(id);
 
             if (result)
             {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import DeleteConfirmationModal from "./DeleteConfrimationModal";
 
-export default function PropertyTable({ filteredProperties, valueAndUnitEnums, onPropertyUpdated }) {
+export default function PropertyTable({ filteredProperties, valueAndUnitEnums, onPropertyUpdated, onDeleteSuccess}) {
     const backEndURL = import.meta.env.VITE_API_URL;
     const [properties, setProperties] = useState(filteredProperties);
     const [propertyToDelete, setPropertyToDelete] = useState(null);
@@ -70,6 +70,7 @@ export default function PropertyTable({ filteredProperties, valueAndUnitEnums, o
     const confirmDelete = async () => {
         console.log("deleting")
         try {
+            console.log(propertyToDelete.id)
             const response = await fetch(`${backEndURL}/api/vehicletypeproperty/delete/${propertyToDelete.id}`, {
                 method: "DELETE"
             });
@@ -82,8 +83,10 @@ export default function PropertyTable({ filteredProperties, valueAndUnitEnums, o
                 prev.filter(p => p.id !== propertyToDelete.id)
             );
 
-            setShowModal(false);
+            onDeleteSuccess(propertyToDelete.id)
+            setShowDeleteModal(false);
             setPropertyToDelete(null);
+            
         } catch (err) {
             alert(err.message);
         }

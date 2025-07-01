@@ -36,6 +36,9 @@ export default function VehicleTypePropertyManager() {
             )
         );
     };
+    const handleDeleteProperty = (id) => {
+        setFilteredProperties(prev => prev.filter(p => p.id !== id));
+    };
 
     return (
         <div className="container py-5">
@@ -66,6 +69,7 @@ export default function VehicleTypePropertyManager() {
                 filteredProperties={filteredProperties}
                 valueAndUnitEnums={valueAndUnitEnums}
                 onPropertyUpdated={handlePropertyUpdated}
+                onDeleteSuccess={handleDeleteProperty}
             />
 
         </div>

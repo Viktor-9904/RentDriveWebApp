@@ -30,7 +30,6 @@ namespace RentDrive.Backend.Controllers
         [HttpPut("edit/{id}")]
         public async Task<IActionResult> EditPropertyById([FromBody] EditVehicleTypePropertyViewModel viewModel)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -40,6 +39,19 @@ namespace RentDrive.Backend.Controllers
                 .EditPropertyAsync(viewModel);
 
             if (!wasPropertyUpdated)
+            {
+                return NotFound();
+            }
+
+            return Ok();
+        }
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeletePropertyById(Guid id)
+        {
+            bool wasPropertyDeleted = await this.vehicleTypePropertyService
+                .DeletePropertyByIdAsync(id);
+
+            if (!wasPropertyDeleted)
             {
                 return NotFound();
             }
