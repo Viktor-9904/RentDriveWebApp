@@ -6,5 +6,6 @@ namespace RentDrive.Services.Data.Interfaces
     {
         Task<IEnumerable<VehicleTypePropertyViewModel>> GetAllVehicleTypePropertiesAsync();
         EnumOptionsViewModel GetEnumOptions();
+        Task<bool> EditPropertyAsync(EditVehicleTypePropertyViewModel viewModel);
     }
 }

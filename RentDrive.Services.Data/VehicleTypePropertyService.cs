@@ -56,5 +56,35 @@ namespace RentDrive.Services.Data
                 UnitOfMeasurements = units
             };
         }
+        public async Task<bool> EditPropertyAsync(EditVehicleTypePropertyViewModel viewModel)
+        {
+            if (!Enum.IsDefined<PropertyValueType>(viewModel.ValueType) ||
+                !Enum.IsDefined<UnitOfMeasurement>(viewModel.UnitOfMeasurement))
+            {
+                return false;
+            }
+
+            VehicleTypeProperty? propertyEntity = await this.vehicleTypePropertyRepository
+                .GetByIdAsync(viewModel.Id);
+
+            if (propertyEntity == null)
+            {
+                return false; // Or throw if preferred
+            }
+
+            propertyEntity.Name = viewModel.Name;
+            propertyEntity.ValueType = viewModel.ValueType;
+            propertyEntity.UnitOfMeasurement = viewModel.UnitOfMeasurement;
+
+            bool result = await this.vehicleTypePropertyRepository.UpdateAsync(propertyEntity);
+
+            if (result)
+            {
+                await this.vehicleTypePropertyRepository.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
     }
 }

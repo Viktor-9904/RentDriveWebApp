@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
+
+import PropertyTable from "./PropertyTable";
+
 import useAllVehicleTypes from "./hooks/useAllVehicleTypes";
 import useAllVehicleTypeProperties from "./hooks/useAllVehicleTypeProperties";
-import PropertyTable from "./PropertyTable";
+import useAllvalueAndUnitEnums from "./hooks/useValueAndUnitEnums";
 
 export default function VehicleTypePropertyManager() {
 
     const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
     const { vehicleTypeProperties, loadingVehicleTypeProperties, errorVehicleTypeProperties } = useAllVehicleTypeProperties();
+    const { valueAndUnitEnums, loadingValueAndUnitEnums, errorValueAndUnitEnums } = useAllvalueAndUnitEnums();
     const [selectedTypeId, setSelectedTypeId] = useState("");
     const [filteredProperties, setFilteredProperties] = useState([]);
 
@@ -24,6 +28,14 @@ export default function VehicleTypePropertyManager() {
             setFilteredProperties(filtered);
         }
     }, [vehicleTypeProperties, selectedTypeId]);
+
+    const handlePropertyUpdated = (updatedProperty) => {
+        setFilteredProperties(prev =>
+            prev.map(p =>
+                p.id === updatedProperty.id ? updatedProperty : p
+            )
+        );
+    };
 
     return (
         <div className="container py-5">
@@ -50,7 +62,12 @@ export default function VehicleTypePropertyManager() {
                 </button>
             </div>
 
-            <PropertyTable filteredProperties={filteredProperties} />
+            <PropertyTable
+                filteredProperties={filteredProperties}
+                valueAndUnitEnums={valueAndUnitEnums}
+                onPropertyUpdated={handlePropertyUpdated}
+            />
+
         </div>
     );
 }

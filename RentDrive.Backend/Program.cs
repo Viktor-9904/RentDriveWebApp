@@ -1,16 +1,16 @@
+using System.Net;
+using System.Text.Json.Serialization;
+
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 using RentDrive.Data;
-using RentDrive.Data.Configuration;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data;
 using RentDrive.Services.Data.Interfaces;
-using System.Net;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
@@ -55,7 +55,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         };
     });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>

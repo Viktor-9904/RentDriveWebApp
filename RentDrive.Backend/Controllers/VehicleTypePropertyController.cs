@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using RentDrive.Common.Enums;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.VehicleTypeProperty;
 
@@ -26,6 +26,25 @@ namespace RentDrive.Backend.Controllers
             }
 
             return Ok(vehicleTypeProperties);
+        }
+        [HttpPut("edit/{id}")]
+        public async Task<IActionResult> EditPropertyById([FromBody] EditVehicleTypePropertyViewModel viewModel)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            bool wasPropertyUpdated = await this.vehicleTypePropertyService
+                .EditPropertyAsync(viewModel);
+
+            if (!wasPropertyUpdated)
+            {
+                return NotFound();
+            }
+
+            return Ok();
         }
         [HttpGet("value-and-unit-enums")]
         public IActionResult GetValueAndUnitEnums()
