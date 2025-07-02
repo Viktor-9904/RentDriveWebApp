@@ -86,7 +86,6 @@ namespace RentDrive.Services.Data
 
             return false;
         }
-
         public async Task<bool> DeletePropertyByIdAsync(Guid id)
         {
             bool result = await this.vehicleTypePropertyRepository.DeleteByIdAsync(id);
