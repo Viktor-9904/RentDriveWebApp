@@ -1,25 +1,17 @@
 import { useState } from "react";
-<<<<<<< Updated upstream
+import DeleteConfirmationModal from "./DeleteConfrimationModal";
 
-export default function PropertyTable({ filteredProperties, valueAndUnitEnums, onPropertyUpdated }) {
+export default function PropertyTable({ filteredProperties, valueAndUnitEnums, onPropertyUpdated, onDeleteSuccess}) {
     const backEndURL = import.meta.env.VITE_API_URL;
     const [properties, setProperties] = useState(filteredProperties);
+    const [propertyToDelete, setPropertyToDelete] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const [editValues, setEditValues] = useState({
         name: '',
         valueType: '',
         unitOfMeasurement: ''
     });
-=======
-import DeleteConfirmationModal from "./DeleteConfrimationModal";
-import { EditIcon } from "lucide-react";
-
-export default function PropertyTable({ setFilteredProperties, filteredProperties, valueAndUnitEnums, onPropertyUpdated, onDeleteSuccess, setEditingId, editingId, setEditValues, editValues, selectedTypeId }) {
-    const backEndURL = import.meta.env.VITE_API_URL;
-    const [properties, setProperties] = useState(filteredProperties);
-    const [propertyToDelete, setPropertyToDelete] = useState(null);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
->>>>>>> Stashed changes
 
     const handleEditClick = (prop) => {
         setEditingId(prop.id);
@@ -80,9 +72,6 @@ export default function PropertyTable({ setFilteredProperties, filteredPropertie
             alert(error.message);
         }
     };
-<<<<<<< Updated upstream
-    
-=======
 
     const confirmDelete = async () => {
         console.log("deleting")
@@ -103,13 +92,12 @@ export default function PropertyTable({ setFilteredProperties, filteredPropertie
             onDeleteSuccess(propertyToDelete.id)
             setShowDeleteModal(false);
             setPropertyToDelete(null);
-
+            
         } catch (err) {
             alert(err.message);
         }
     };
 
->>>>>>> Stashed changes
     return (
         <div className="table-responsive">
             <table className="table table-bordered table-hover align-middle">

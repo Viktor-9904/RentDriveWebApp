@@ -43,13 +43,10 @@ export default function VehicleTypePropertyManager() {
             )
         );
     };
-<<<<<<< Updated upstream
-=======
 
     const handleDeleteProperty = (id) => {
         setFilteredProperties(prev => prev.filter(p => p.id !== id));
     };
->>>>>>> Stashed changes
 
     const handleAddNewProperty = () => {
         const tempId = `temp-${Date.now()}`;
@@ -102,15 +99,12 @@ export default function VehicleTypePropertyManager() {
                 filteredProperties={filteredProperties}
                 valueAndUnitEnums={valueAndUnitEnums}
                 onPropertyUpdated={handlePropertyUpdated}
-<<<<<<< Updated upstream
-=======
                 onDeleteSuccess={handleDeleteProperty}
                 setEditingId={setEditingId}
                 editingId={editingId}
                 setEditValues={setEditValues}
                 editValues={editValues}
                 selectedTypeId={selectedTypeId}
->>>>>>> Stashed changes
             />
 
         </div>
