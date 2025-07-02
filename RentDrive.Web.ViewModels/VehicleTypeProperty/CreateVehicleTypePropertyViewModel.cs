@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RentDrive.Web.ViewModels.VehicleTypeProperty
 {
-    public class EditVehicleTypePropertyViewModel
+    public class CreateVehicleTypePropertyViewModel
     {
         [Required]
-        public Guid Id { get; set; }
-        [Required]
         public string Name { get; set; } = null!;
+        [Required]
+        public int VehicleTypeId { get; set; }
         [Required]
         public PropertyValueType ValueType { get; set; }
         [Required]

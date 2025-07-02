@@ -1,4 +1,5 @@
 import { useState } from "react";
+<<<<<<< Updated upstream
 
 export default function PropertyTable({ filteredProperties, valueAndUnitEnums, onPropertyUpdated }) {
     const backEndURL = import.meta.env.VITE_API_URL;
@@ -9,13 +10,24 @@ export default function PropertyTable({ filteredProperties, valueAndUnitEnums, o
         valueType: '',
         unitOfMeasurement: ''
     });
+=======
+import DeleteConfirmationModal from "./DeleteConfrimationModal";
+import { EditIcon } from "lucide-react";
+
+export default function PropertyTable({ setFilteredProperties, filteredProperties, valueAndUnitEnums, onPropertyUpdated, onDeleteSuccess, setEditingId, editingId, setEditValues, editValues, selectedTypeId }) {
+    const backEndURL = import.meta.env.VITE_API_URL;
+    const [properties, setProperties] = useState(filteredProperties);
+    const [propertyToDelete, setPropertyToDelete] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+>>>>>>> Stashed changes
 
     const handleEditClick = (prop) => {
         setEditingId(prop.id);
         setEditValues({
             name: prop.name,
             valueType: prop.valueType,
-            unitOfMeasurement: prop.unitOfMeasurement
+            unitOfMeasurement: prop.unitOfMeasurement,
+            isNew: false,
         });
     };
 
@@ -27,8 +39,14 @@ export default function PropertyTable({ filteredProperties, valueAndUnitEnums, o
     };
 
     const handleCancelClick = () => {
+
+        if (editValues.isNew) {
+        setFilteredProperties(prev =>
+            prev.filter(prop => prop.id !== editingId)
+        );
+    }
         setEditingId(null);
-        setEditValues({ name: '', valueType: '', unitOfMeasurement: '' });
+        setEditValues({ name: '', valueType: '', unitOfMeasurement: '', isNew: false });
     };
 
     const handleSaveClick = async () => {
@@ -38,10 +56,14 @@ export default function PropertyTable({ filteredProperties, valueAndUnitEnums, o
                 name: editValues.name,
                 valueType: editValues.valueType,
                 unitOfMeasurement: editValues.unitOfMeasurement,
+                isNew: editValues.isNew,
+                vehicleTypeId: selectedTypeId
             };
 
-            const response = await fetch(`${backEndURL}/api/vehicletypeproperty/edit/${editingId}`, {
-                method: 'PUT',
+            console.log("payload - ", payload)
+
+            const response = await fetch(`${backEndURL}/api/vehicletypeproperty/${editValues.isNew ? 'create' : 'edit'}${editValues.isNew ? '' : '/' + editingId}`, {
+                method: editValues.isNew ? 'POST' : 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
             });
@@ -58,7 +80,36 @@ export default function PropertyTable({ filteredProperties, valueAndUnitEnums, o
             alert(error.message);
         }
     };
+<<<<<<< Updated upstream
     
+=======
+
+    const confirmDelete = async () => {
+        console.log("deleting")
+        try {
+            console.log(propertyToDelete.id)
+            const response = await fetch(`${backEndURL}/api/vehicletypeproperty/delete/${propertyToDelete.id}`, {
+                method: "DELETE"
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to delete property");
+            }
+
+            setProperties(prev =>
+                prev.filter(p => p.id !== propertyToDelete.id)
+            );
+
+            onDeleteSuccess(propertyToDelete.id)
+            setShowDeleteModal(false);
+            setPropertyToDelete(null);
+
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+>>>>>>> Stashed changes
     return (
         <div className="table-responsive">
             <table className="table table-bordered table-hover align-middle">
