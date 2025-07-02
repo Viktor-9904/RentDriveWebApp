@@ -36,17 +36,6 @@ export default function PropertyTable({
     }));
   };
 
-    const handleDeleteClick = (property) => {
-        setPropertyToDelete(property);
-        setShowDeleteModal(true);
-    };
-
-    const handleCancelClick = () => {
-
-        if (editValues.isNew) {
-        setFilteredProperties(prev =>
-            prev.filter(prop => prop.id !== editingId)
-        );
   const handleCancelClick = () => {
     if (editValues.isNew) {
       setFilteredProperties((prev) =>
@@ -211,7 +200,7 @@ export default function PropertyTable({
                         </button>
                         <button
                           className="btn btn-secondary btn-sm"
-                          onClick={handleCancelClick} // Cancel edit
+                          onClick={handleCancelClick}
                         >
                           Cancel
                         </button>
