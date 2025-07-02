@@ -27,6 +27,13 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(vehicleTypeProperties);
         }
+        [HttpPost("create")]
+        public async Task<IActionResult> Create([FromBody] CreateVehicleTypePropertyViewModel viewModel)
+        {
+
+            ;
+            return Ok();
+        }
         [HttpPut("edit/{id}")]
         public async Task<IActionResult> EditPropertyById([FromBody] EditVehicleTypePropertyViewModel viewModel)
         {

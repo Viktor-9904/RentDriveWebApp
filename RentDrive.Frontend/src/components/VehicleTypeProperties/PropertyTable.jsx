@@ -18,7 +18,8 @@ export default function PropertyTable({ filteredProperties, valueAndUnitEnums, o
         setEditValues({
             name: prop.name,
             valueType: prop.valueType,
-            unitOfMeasurement: prop.unitOfMeasurement
+            unitOfMeasurement: prop.unitOfMeasurement,
+            isNew: false,
         });
     };
 
@@ -35,8 +36,14 @@ export default function PropertyTable({ filteredProperties, valueAndUnitEnums, o
     };
 
     const handleCancelClick = () => {
+
+        if (editValues.isNew) {
+        setFilteredProperties(prev =>
+            prev.filter(prop => prop.id !== editingId)
+        );
+    }
         setEditingId(null);
-        setEditValues({ name: '', valueType: '', unitOfMeasurement: '' });
+        setEditValues({ name: '', valueType: '', unitOfMeasurement: '', isNew: false });
     };
 
     const handleSaveClick = async () => {
@@ -46,10 +53,14 @@ export default function PropertyTable({ filteredProperties, valueAndUnitEnums, o
                 name: editValues.name,
                 valueType: editValues.valueType,
                 unitOfMeasurement: editValues.unitOfMeasurement,
+                isNew: editValues.isNew,
+                vehicleTypeId: selectedTypeId
             };
 
-            const response = await fetch(`${backEndURL}/api/vehicletypeproperty/edit/${editingId}`, {
-                method: 'PUT',
+            console.log("payload - ", payload)
+
+            const response = await fetch(`${backEndURL}/api/vehicletypeproperty/${editValues.isNew ? 'create' : 'edit'}${editValues.isNew ? '' : '/' + editingId}`, {
+                method: editValues.isNew ? 'POST' : 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
             });
