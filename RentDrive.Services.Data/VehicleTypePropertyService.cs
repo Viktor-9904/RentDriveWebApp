@@ -11,9 +11,14 @@ namespace RentDrive.Services.Data
     public class VehicleTypePropertyService : IVehicleTypePropertyService
     {
         private readonly IRepository<VehicleTypeProperty, Guid> vehicleTypePropertyRepository;
-        public VehicleTypePropertyService(IRepository<VehicleTypeProperty, Guid> vehicleTypePropertyRepository)
+        private readonly IVehicleTypeService vehicleTypeService;
+
+        public VehicleTypePropertyService(
+            IRepository<VehicleTypeProperty, Guid> vehicleTypePropertyRepository,
+            IVehicleTypeService vehicleTypeService)
         {
             this.vehicleTypePropertyRepository = vehicleTypePropertyRepository;
+            this.vehicleTypeService = vehicleTypeService;
         }
 
         public async Task<IEnumerable<VehicleTypePropertyViewModel>> GetAllVehicleTypePropertiesAsync()
@@ -69,7 +74,7 @@ namespace RentDrive.Services.Data
 
             if (propertyEntity == null)
             {
-                return false; // Or throw if preferred
+                return false;
             }
 
             propertyEntity.Name = viewModel.Name;
@@ -97,6 +102,36 @@ namespace RentDrive.Services.Data
             }
 
             return false;
+        }
+
+        public async Task<bool> CreateVehicleTypeProperty(CreateVehicleTypePropertyViewModel viewModel)
+        {
+            bool vehicleTypeExists = await this.vehicleTypeService
+                .Exists(viewModel.VehicleTypeId);
+
+            if (!vehicleTypeExists)
+            {
+                return false;
+            }
+
+            if (!Enum.IsDefined<PropertyValueType>(viewModel.ValueType) ||
+                !Enum.IsDefined<UnitOfMeasurement>(viewModel.UnitOfMeasurement))
+            {
+                return false;
+            }
+
+            VehicleTypeProperty vehicleTypeProperty = new VehicleTypeProperty()
+            {
+                Name = viewModel.Name,
+                VehicleTypeId = viewModel.VehicleTypeId,
+                ValueType = viewModel.ValueType,
+                UnitOfMeasurement = viewModel.UnitOfMeasurement,
+            };
+
+            await vehicleTypePropertyRepository.AddAsync(vehicleTypeProperty);
+            await vehicleTypePropertyRepository.SaveChangesAsync();
+
+            return true;
         }
     }
 }

@@ -30,8 +30,19 @@ namespace RentDrive.Backend.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CreateVehicleTypePropertyViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            ;
+            bool wasPropertyCreated = await this.vehicleTypePropertyService
+                .CreateVehicleTypeProperty(viewModel);
+
+            if (!wasPropertyCreated)
+            {
+                return BadRequest("Failed to create VehicleTypeProperty.");
+            }
+
             return Ok();
         }
         [HttpPut("edit/{id}")]
