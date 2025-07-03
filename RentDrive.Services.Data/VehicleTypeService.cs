@@ -15,6 +15,14 @@ namespace RentDrive.Services.Data
         {
             this.vehicleTypeRepository = vehicleTypeRepository;
         }
+
+        public async Task<bool> Exists(int vehicleTypeId)
+        {
+            return await this.vehicleTypeRepository
+                .GetAllAsQueryable()
+                .AnyAsync(vt => vt.Id == vehicleTypeId);
+        }
+
         public async Task<IEnumerable<VehicleTypeViewModel>> GetAllVehicleTypesAsync()
         {
             List<VehicleTypeViewModel> vehicleTypes = await this.vehicleTypeRepository
