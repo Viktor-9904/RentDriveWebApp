@@ -14,7 +14,9 @@ namespace RentDrive.Backend.Controllers
     {
         private readonly IAccountService accountService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(
+            IAccountService accountService,
+            IBaseService baseService) : base(baseService)
         {
             this.accountService = accountService;
         }

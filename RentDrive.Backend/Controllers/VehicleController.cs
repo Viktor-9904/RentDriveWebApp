@@ -11,7 +11,9 @@ namespace RentDrive.Backend.Controllers
     public class VehicleController : BaseController
     {
         private readonly IVehicleService vehicleService;
-        public VehicleController(IVehicleService vehicleService)
+        public VehicleController(
+            IVehicleService vehicleService,
+            IBaseService baseService) : base(baseService)
         {
             this.vehicleService = vehicleService;
         }
