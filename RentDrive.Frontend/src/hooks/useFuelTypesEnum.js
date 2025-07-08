@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function useFuelTypes() {
+export default function useFuelTypesEnum() {
     const [fuelTypeEnum, setFuelTypeEnum] = useState([])
     const [loadingfuelTypeEnum, setLoading] = useState(true)
     const [errorfuelTypeEnum, setError] = useState(null)

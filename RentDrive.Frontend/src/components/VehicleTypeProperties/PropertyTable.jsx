@@ -1,11 +1,11 @@
 import { useState } from "react";
 import DeleteConfirmationModal from "./DeleteConfrimationModal";
-import { EditIcon } from "lucide-react";
 
 export default function PropertyTable({
   setFilteredProperties,
   filteredProperties,
-  valueAndUnitEnums,
+  valueTypes,
+  unitOfMeasurements,
   onPropertyUpdated,
   onDeleteSuccess,
   setEditingId,
@@ -149,7 +149,7 @@ export default function PropertyTable({
                         onChange={(e) => handleChange("valueType", e.target.value)}
                       >
                         <option value="">Select Value Type</option>
-                        {valueAndUnitEnums?.valueTypes?.map((vt) => (
+                        {valueTypes?.map((vt) => (
                           <option key={vt.id} value={vt.name}>
                             {vt.name}
                           </option>
@@ -174,7 +174,7 @@ export default function PropertyTable({
                         }
                       >
                         <option value="">Select Unit</option>
-                        {valueAndUnitEnums?.unitOfMeasurements?.map((uom) => (
+                        {unitOfMeasurements?.map((uom) => (
                           <option key={uom.id} value={uom.name}>
                             {uom.name}
                           </option>

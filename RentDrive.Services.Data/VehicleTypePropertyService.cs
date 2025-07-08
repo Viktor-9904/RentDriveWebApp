@@ -37,30 +37,6 @@ namespace RentDrive.Services.Data
 
             return vehicleTypeProperties;
         }
-        public EnumOptionsViewModel GetEnumOptions()
-        {
-            IEnumerable<ValueTypeViewModel> valueTypes = Enum.GetValues(typeof(PropertyValueType))
-                .Cast<PropertyValueType>()
-                .Select(v => new ValueTypeViewModel
-                {
-                    Id = (int)v,
-                    Name = v.ToString()
-                });
-
-            IEnumerable<UnitOfMeasurementViewModel> units = Enum.GetValues(typeof(UnitOfMeasurement))
-                .Cast<UnitOfMeasurement>()
-                .Select(u => new UnitOfMeasurementViewModel
-                {
-                    Id = (int)u,
-                    Name = u.ToString()
-                });
-
-            return new EnumOptionsViewModel
-            {
-                ValueTypes = valueTypes,
-                UnitOfMeasurements = units
-            };
-        }
         public async Task<bool> EditPropertyAsync(EditVehicleTypePropertyViewModel viewModel)
         {
             if (!Enum.IsDefined<PropertyValueType>(viewModel.ValueType) ||

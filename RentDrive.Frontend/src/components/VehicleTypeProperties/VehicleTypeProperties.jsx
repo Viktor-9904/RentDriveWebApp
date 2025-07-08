@@ -4,13 +4,17 @@ import PropertyTable from "./PropertyTable";
 
 import useAllVehicleTypes from "../Vehicles/hooks/useAllVehicleTypes";
 import useAllVehicleTypeProperties from "../Vehicles/hooks/useAllVehicleTypeProperties";
-import useAllvalueAndUnitEnums from "../Vehicles/hooks/useValueAndUnitEnums";
+import useValueTypesEnum from "../../hooks/useValueTypesEnum";
+import useUnitsEnum from "../../hooks/useUnitsEnum";
 
 export default function VehicleTypePropertyManager() {
 
     const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
     const { vehicleTypeProperties, loadingVehicleTypeProperties, errorVehicleTypeProperties } = useAllVehicleTypeProperties();
-    const { valueAndUnitEnums, loadingValueAndUnitEnums, errorValueAndUnitEnums } = useAllvalueAndUnitEnums();
+
+    const { valueTypeEnum, loadingValueTypeEnum, errorValueTypeEnum } = useValueTypesEnum();
+    const { unitsEnum, loadingUnitsEnum, errorUnitsEnum } = useUnitsEnum();
+
     const [selectedTypeId, setSelectedTypeId] = useState("");
     const [editingId, setEditingId] = useState(null);
     const [editValues, setEditValues] = useState({
@@ -97,7 +101,8 @@ export default function VehicleTypePropertyManager() {
             <PropertyTable
                 setFilteredProperties={setFilteredProperties}
                 filteredProperties={filteredProperties}
-                valueAndUnitEnums={valueAndUnitEnums}
+                valueTypes={valueTypeEnum}
+                unitOfMeasurements={unitsEnum}
                 onPropertyUpdated={handlePropertyUpdated}
                 onDeleteSuccess={handleDeleteProperty}
                 setEditingId={setEditingId}

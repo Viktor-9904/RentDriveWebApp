@@ -2,14 +2,18 @@ import React, { useEffect, useState } from "react";
 
 import useAllVehicleTypes from "../hooks/useAllVehicleTypes";
 import useAllVehicleTypeProperties from "../hooks/useAllVehicleTypeProperties";
-import useAllvalueAndUnitEnums from "../hooks/useValueAndUnitEnums";
-import useFuelTypes from "../hooks/useFuelTypes";
+// import useAllvalueAndUnitEnums from "../hooks/useValueAndUnitEnums";
+import useFuelTypes from "../../../hooks/useFuelTypesEnum";
+import useValueTypesEnum from "../../../hooks/useValueTypesEnum";
+import useUnitsEnum from "../../../hooks/useUnitsEnum";
 
 
 export default function CreateVehicleForm() {
   const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
   const { vehicleTypeProperties, loadingVehicleTypeProperties, errorVehicleTypeProperties } = useAllVehicleTypeProperties();
-  const { valueAndUnitEnums, loadingValueAndUnitEnums, errorValueAndUnitEnums } = useAllvalueAndUnitEnums();
+  // const { valueAndUnitEnums, loadingValueAndUnitEnums, errorValueAndUnitEnums } = useAllvalueAndUnitEnums();
+  const { valueTypeEnum, loadingValueTypeEnum, errorValueTypeEnum } = useValueTypesEnum();
+  const { unitsEnum, loadingUnitsEnum, errorUnitsEnum } = useUnitsEnum();
   const { fuelTypeEnum, loadingfuelTypeEnum, errorfuelTypeEnum } = useFuelTypes();
   const [selectedTypeId, setSelectedTypeId] = useState("");
   const [filteredProperties, setFilteredProperties] = useState([]);

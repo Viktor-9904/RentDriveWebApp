@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Enums;
+using RentDrive.Web.ViewModels.VehicleTypeProperty;
 using System.Threading.Tasks;
 
 namespace RentDrive.Backend.Controllers
@@ -15,12 +16,28 @@ namespace RentDrive.Backend.Controllers
             this.baseService = baseService;
         }
         [HttpGet("fuel-types")]
-        public async Task<IActionResult> GetFuelTypeEnum()
+        public IActionResult GetFuelTypesEnum()
         {
             IEnumerable<FuelTypeEnumViewModel> fuelTypes = this.baseService
                 .GetFuelTypesEnum();
 
             return Ok(fuelTypes);
+        }
+        [HttpGet("value-types")]
+        public IActionResult GetValueTypesEnum()
+        {
+            IEnumerable<ValueTypeViewModel> valueTypes = this.baseService
+                .GetValueTypesEnum();
+
+            return Ok(valueTypes);
+        }
+        [HttpGet("units")]
+        public IActionResult GetUnitsEnum()
+        {
+            IEnumerable<UnitOfMeasurementViewModel> units = this.baseService
+                .GetUnitsEnum();
+
+            return Ok(units);
         }
         protected bool IsGuidValid(string id, ref Guid guidId)
         {
