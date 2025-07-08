@@ -15,6 +15,7 @@ import Register from './pages/Register/Register'
 import Login from './pages/Login/Login'
 import VehicleDetailsPage from './pages/VehicleDetailsPage'
 import VehicleTypeProperties from './pages/VehicleTypeProperties'
+import CreateVehicle from './pages/CreateVehicle'
 
 import { AccountProvider } from './context/AccountContext'
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/api/vehicle/:id" element={<VehicleDetailsPage/>}/>
         <Route path="/manage-vehicle-type-properties" element={<VehicleTypeProperties/>}/>
+        <Route path="/manage-vehicles/create" element={<CreateVehicle/>}/>
       </Routes>
 
       <Footer />

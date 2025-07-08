@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 
 import PropertyTable from "./PropertyTable";
 
-import useAllVehicleTypes from "./hooks/useAllVehicleTypes";
-import useAllVehicleTypeProperties from "./hooks/useAllVehicleTypeProperties";
-import useAllvalueAndUnitEnums from "./hooks/useValueAndUnitEnums";
+import useAllVehicleTypes from "../Vehicles/hooks/useAllVehicleTypes";
+import useAllVehicleTypeProperties from "../Vehicles/hooks/useAllVehicleTypeProperties";
+import useAllvalueAndUnitEnums from "../Vehicles/hooks/useValueAndUnitEnums";
 
 export default function VehicleTypePropertyManager() {
 

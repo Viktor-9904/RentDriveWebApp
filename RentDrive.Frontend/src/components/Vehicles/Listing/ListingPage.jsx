@@ -1,5 +1,5 @@
 import ListingPageItem from './ListingPageItem';
-import useAllVehicles from './hooks/useAllVehicles';
+import useAllVehicles from '../hooks/useAllVehicles';
 
 export default function ListingPage() {
 
