@@ -163,6 +163,7 @@ export default function CreateVehicleForm() {
           value={baseData.pricePerDay}
           onChange={handleBaseChange}
           required
+          min={1}
         />
       </label>
 
@@ -205,6 +206,7 @@ export default function CreateVehicleForm() {
           value={baseData.curbWeight}
           onChange={handleBaseChange}
           required
+          min={1}
         />
       </label>
 
