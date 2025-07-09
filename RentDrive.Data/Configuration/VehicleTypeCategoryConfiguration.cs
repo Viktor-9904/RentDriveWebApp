@@ -26,6 +26,7 @@ namespace RentDrive.Data.Configuration
             builder
                 .Property(vtc => vtc.Description)
                 .HasMaxLength(DescriptionMaxLength)
+                .IsRequired()
                 .HasComment("Description of the vehicle class.");
 
             builder
