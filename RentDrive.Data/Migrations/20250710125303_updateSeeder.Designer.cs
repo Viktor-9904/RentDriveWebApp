@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentDrive.Data;
 
@@ -11,9 +12,11 @@ using RentDrive.Data;
 namespace RentDrive.Data.Migrations
 {
     [DbContext(typeof(RentDriveDbContext))]
-    partial class RentDriveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250710125303_updateSeeder")]
+    partial class updateSeeder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -304,56 +307,6 @@ namespace RentDrive.Data.Migrations
                     b.HasIndex("VehicleTypeId");
 
                     b.ToTable("Vehicles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
-                            Color = "White",
-                            CurbWeightInKg = 1470.0,
-                            DateAdded = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateOfProduction = new DateTime(2021, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Comfortable midsize sedan, ideal for long drives.",
-                            FuelType = 1,
-                            IsDeleted = false,
-                            Make = "Toyota",
-                            Model = "Camry",
-                            PricePerDay = 32.50m,
-                            VehicleTypeCategoryId = 2,
-                            VehicleTypeId = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
-                            Color = "Dark Green",
-                            CurbWeightInKg = 2045.0,
-                            DateAdded = new DateTime(2023, 2, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateOfProduction = new DateTime(2022, 7, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Spacious and off-road capable SUV.",
-                            FuelType = 2,
-                            IsDeleted = false,
-                            Make = "Jeep",
-                            Model = "Grand Cherokee",
-                            PricePerDay = 62.00m,
-                            VehicleTypeCategoryId = 1,
-                            VehicleTypeId = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
-                            Color = "Silver",
-                            CurbWeightInKg = 1300.0,
-                            DateAdded = new DateTime(2024, 9, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateOfProduction = new DateTime(2021, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Compact hatchback with great fuel economy.",
-                            FuelType = 1,
-                            IsDeleted = false,
-                            Make = "Volkswagen",
-                            Model = "Golf",
-                            PricePerDay = 54.00m,
-                            VehicleTypeCategoryId = 3,
-                            VehicleTypeId = 1
-                        });
                 });
 
             modelBuilder.Entity("RentDrive.Data.Models.VehicleImage", b =>
@@ -378,26 +331,6 @@ namespace RentDrive.Data.Migrations
                     b.HasIndex("VehicleId");
 
                     b.ToTable("VehicleImages");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("a35616f3-67b2-4d66-95cd-78fae80883fa"),
-                            ImageURL = "images/vehicles/Vehicle-1.png",
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de")
-                        },
-                        new
-                        {
-                            Id = new Guid("47725763-dc3a-485b-9f12-26df29497dd1"),
-                            ImageURL = "images/vehicles/Vehicle-3.jpg",
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743")
-                        },
-                        new
-                        {
-                            Id = new Guid("1d989d71-afdb-4741-8851-dedc44ffe964"),
-                            ImageURL = "images/vehicles/Vehicle-2.jpg",
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4")
-                        });
                 });
 
             modelBuilder.Entity("RentDrive.Data.Models.VehicleType", b =>
@@ -417,53 +350,6 @@ namespace RentDrive.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VehicleTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Car"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Truck"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Motorcycle"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Bicycle"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Electric Scooter"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "All Terrain Vehicle (ATV)"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Camper Trailer"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Recreational Vehicle"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Limousine"
-                        });
                 });
 
             modelBuilder.Entity("RentDrive.Data.Models.VehicleTypeCategory", b =>
@@ -495,50 +381,6 @@ namespace RentDrive.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("VehicleTypeCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Spacious and powerful car ideal for families and off-road.",
-                            Name = "SUV",
-                            VehicleTypeId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Comfortable passenger car suitable for everyday use.",
-                            Name = "Sedan",
-                            VehicleTypeId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Compact car with a rear door that swings upward.",
-                            Name = "Hatchback",
-                            VehicleTypeId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Truck with an open cargo area in the back.",
-                            Name = "Pickup",
-                            VehicleTypeId = 2
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "Truck with a large, enclosed cargo area.",
-                            Name = "Box Truck",
-                            VehicleTypeId = 2
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Description = "Very good bike for everyday riding.",
-                            Name = "Naked",
-                            VehicleTypeId = 3
-                        });
                 });
 
             modelBuilder.Entity("RentDrive.Data.Models.VehicleTypeProperty", b =>
@@ -573,56 +415,6 @@ namespace RentDrive.Data.Migrations
                     b.HasIndex("VehicleTypeId");
 
                     b.ToTable("VehicleTypeProperties");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("671fbc1d-53ef-4862-9f73-974b94ac0d25"),
-                            Name = "Engine Displacement",
-                            UnitOfMeasurement = 5,
-                            ValueType = 1,
-                            VehicleTypeId = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("13aaad5c-624c-4361-a863-6ff301f5c63d"),
-                            Name = "Door Count",
-                            UnitOfMeasurement = 0,
-                            ValueType = 1,
-                            VehicleTypeId = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("77ab0d68-a40a-413a-9b4a-aa30716609db"),
-                            Name = "Seat Count",
-                            UnitOfMeasurement = 0,
-                            ValueType = 1,
-                            VehicleTypeId = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("dd348516-a1dc-4336-b6c8-fb885b7afd0f"),
-                            Name = "Power in KiloWatts",
-                            UnitOfMeasurement = 8,
-                            ValueType = 2,
-                            VehicleTypeId = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("b924497e-006a-4d20-899f-66fde6c94ec8"),
-                            Name = "Engine Displacement",
-                            UnitOfMeasurement = 5,
-                            ValueType = 1,
-                            VehicleTypeId = 3
-                        },
-                        new
-                        {
-                            Id = new Guid("6b197695-891b-492a-8935-a54a500742c2"),
-                            Name = "Power in KiloWatts",
-                            UnitOfMeasurement = 8,
-                            ValueType = 2,
-                            VehicleTypeId = 3
-                        });
                 });
 
             modelBuilder.Entity("RentDrive.Data.Models.VehicleTypePropertyValue", b =>
@@ -651,92 +443,6 @@ namespace RentDrive.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("VehicleTypePropertyValues");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("4bdc05a2-559f-412c-994a-69c1ac6ab24f"),
-                            PropertyValue = "2487",
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
-                            VehicleTypePropertyId = new Guid("671fbc1d-53ef-4862-9f73-974b94ac0d25")
-                        },
-                        new
-                        {
-                            Id = new Guid("53c60eee-041b-4cf7-828f-43c0c3000305"),
-                            PropertyValue = "4",
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
-                            VehicleTypePropertyId = new Guid("13aaad5c-624c-4361-a863-6ff301f5c63d")
-                        },
-                        new
-                        {
-                            Id = new Guid("c9951dc1-d840-42b4-854e-44104883613f"),
-                            PropertyValue = "5",
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
-                            VehicleTypePropertyId = new Guid("77ab0d68-a40a-413a-9b4a-aa30716609db")
-                        },
-                        new
-                        {
-                            Id = new Guid("e0c89c2c-28ad-496d-bee9-17da515dee11"),
-                            PropertyValue = "151",
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
-                            VehicleTypePropertyId = new Guid("dd348516-a1dc-4336-b6c8-fb885b7afd0f")
-                        },
-                        new
-                        {
-                            Id = new Guid("92820a2c-2324-4279-aff9-8e606f868200"),
-                            PropertyValue = "3604",
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
-                            VehicleTypePropertyId = new Guid("671fbc1d-53ef-4862-9f73-974b94ac0d25")
-                        },
-                        new
-                        {
-                            Id = new Guid("ea03bee5-44ac-4140-90e4-5932694920b7"),
-                            PropertyValue = "4",
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
-                            VehicleTypePropertyId = new Guid("13aaad5c-624c-4361-a863-6ff301f5c63d")
-                        },
-                        new
-                        {
-                            Id = new Guid("838bb66e-a194-4b05-a35d-397746dbc375"),
-                            PropertyValue = "7",
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
-                            VehicleTypePropertyId = new Guid("77ab0d68-a40a-413a-9b4a-aa30716609db")
-                        },
-                        new
-                        {
-                            Id = new Guid("43049eae-e00f-48c0-94a1-dbcd66f1b892"),
-                            PropertyValue = "218",
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
-                            VehicleTypePropertyId = new Guid("dd348516-a1dc-4336-b6c8-fb885b7afd0f")
-                        },
-                        new
-                        {
-                            Id = new Guid("dfd548e3-0542-435e-b80e-b349a0e86c79"),
-                            PropertyValue = "1395",
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
-                            VehicleTypePropertyId = new Guid("671fbc1d-53ef-4862-9f73-974b94ac0d25")
-                        },
-                        new
-                        {
-                            Id = new Guid("226d11c2-6ace-482d-8c05-052ae6a36df5"),
-                            PropertyValue = "5",
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
-                            VehicleTypePropertyId = new Guid("13aaad5c-624c-4361-a863-6ff301f5c63d")
-                        },
-                        new
-                        {
-                            Id = new Guid("e400d83c-9533-426f-b6ce-5916ce24f510"),
-                            PropertyValue = "5",
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
-                            VehicleTypePropertyId = new Guid("77ab0d68-a40a-413a-9b4a-aa30716609db")
-                        },
-                        new
-                        {
-                            Id = new Guid("deb2022f-58a6-46de-93de-78266eb453b2"),
-                            PropertyValue = "110",
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
-                            VehicleTypePropertyId = new Guid("dd348516-a1dc-4336-b6c8-fb885b7afd0f")
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

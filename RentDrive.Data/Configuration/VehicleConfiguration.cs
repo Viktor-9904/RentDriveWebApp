@@ -18,6 +18,12 @@ namespace RentDrive.Data.Configuration
                 .HasComment("The owner's Id of the vehicle. Null if the vehicle is company-owned.");
 
             builder
+                .Property(v => v.IsDeleted)
+                .IsRequired()
+                .HasComment("Indicates whether the vehicle is soft deleted.")
+                .HasDefaultValue(false);
+
+            builder
                 .HasOne(v => v.VehicleType)
                 .WithMany(vt => vt.Vehicles)
                 .HasForeignKey(v => v.VehicleTypeId)
@@ -90,6 +96,7 @@ namespace RentDrive.Data.Configuration
                 new()
                 {
                     Id = Guid.Parse("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
+                    IsDeleted = false,
                     OwnerId = null,
                     VehicleTypeId = 1,
                     VehicleTypeCategoryId = 2,
@@ -106,6 +113,7 @@ namespace RentDrive.Data.Configuration
                 new()
                 {
                     Id = Guid.Parse("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
+                    IsDeleted = false,
                     OwnerId = null,
                     VehicleTypeId = 1,
                     VehicleTypeCategoryId = 1,
@@ -122,6 +130,7 @@ namespace RentDrive.Data.Configuration
                 new()
                 {
                     Id = Guid.Parse("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
+                    IsDeleted = false,
                     OwnerId = null,
                     VehicleTypeId = 1,
                     VehicleTypeCategoryId = 3,

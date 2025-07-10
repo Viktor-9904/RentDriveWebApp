@@ -4,7 +4,6 @@ import useAllVehicles from '../hooks/useAllVehicles';
 export default function ListingPage() {
 
     const { vehicles, loading, error } = useAllVehicles();
-    console.log(vehicles)
 
     return (
         <div className="listing-page">

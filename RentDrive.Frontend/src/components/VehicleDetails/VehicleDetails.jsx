@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DeleteConfirmationModal from "../Vehicles/DeleteConfirmationModal";
 
@@ -8,6 +8,7 @@ export default function VehicleDetails() {
     const [loading, setLoading] = useState(true);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const navigate = useNavigate();
 
     const backEndURL = import.meta.env.VITE_API_URL;
 
@@ -46,8 +47,22 @@ export default function VehicleDetails() {
     };
 
     const confirmDelete = async () => {
-        setShowDeleteModal(false)
-    }
+        try {
+            const response = await fetch(
+                `${backEndURL}/api/vehicle/delete/${vehicle.id}`,
+                {
+                    method: "DELETE",
+                }
+            );
+            if (!response.ok) {
+                throw new Error("Failed to delete property");
+            }
+            setShowDeleteModal(false);
+            navigate("/listing")
+        } catch (err) {
+            alert(err.message);
+        }
+    };
 
 
     if (loading) return <div className="text-center py-5">Loading vehicle details...</div>;

@@ -20,7 +20,6 @@ export default function ListingPageItem({
                 <div className="vehicle-listing-item listing-item d-flex flex-column h-100">
                     <div className="left-image mb-3 text-center">
                         <img
-                            {...console.log(imageURL)}
                             src={`${backEndURL}/${imageURL}`}
                             alt={`${make} ${model}`}
                             className="img-fluid rounded border"

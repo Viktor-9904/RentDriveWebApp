@@ -5,6 +5,7 @@ namespace RentDrive.Data.Models
     public class Vehicle
     {
         public Guid Id { get; set; } = Guid.NewGuid();
+        public bool IsDeleted { get; set; } = false;
         public Guid? OwnerId { get; set; }
         public ApplicationUser? Owner { get; set; }
         public int VehicleTypeId { get; set; }

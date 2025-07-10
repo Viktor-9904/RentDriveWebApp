@@ -73,5 +73,18 @@ namespace RentDrive.Backend.Controllers
 
             return Ok();
         }
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            bool wasVehicleSuccessfullySoftDeleted = await this.vehicleService
+                .SoftDeleteVehicleByIdAsync(id);
+
+            if (!wasVehicleSuccessfullySoftDeleted)
+            {
+                return BadRequest("Failed to remove Vehicle");
+            }
+
+            return Ok();
+        }
     }
 }

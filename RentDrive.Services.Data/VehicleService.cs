@@ -188,5 +188,22 @@ namespace RentDrive.Services.Data
 
             return true;
         }
+
+        public async Task<bool> SoftDeleteVehicleByIdAsync(Guid id)
+        {
+            Vehicle vehicleToDelete = await this.vehicleRepository
+                .GetByIdAsync(id);
+
+            if (vehicleToDelete == null)
+            {
+                return false;
+            }
+
+            vehicleToDelete.IsDeleted = true;
+
+            await vehicleRepository.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
