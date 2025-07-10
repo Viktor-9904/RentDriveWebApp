@@ -42,5 +42,37 @@ namespace RentDrive.Services.Data.Interfaces
 
             return units;
         }
+        public bool IsValueTypeValid(PropertyValueType valueType, string value, out string error)
+        {
+            error = null;
+
+            switch (valueType)
+            {
+                case PropertyValueType.Int:
+                    if (!int.TryParse(value, out _))
+                    {
+                        error = "Must be an integer.";
+                        return false;
+                    }
+                    break;
+                case PropertyValueType.Double:
+                    if (!double.TryParse(value, out _))
+                    {
+                        error = "Must be a double number.";
+                        return false;
+                    }
+                    break;
+                case PropertyValueType.Boolean:
+                    if (!bool.TryParse(value, out _))
+                    {
+                        error = "Must be true or false.";
+                        return false;
+                    }
+                    break;
+            }
+
+            return true;
+        }
+
     }
 }

@@ -1,21 +1,28 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import useAllVehicleTypes from "../hooks/useAllVehicleTypes";
 import useAllVehicleTypeProperties from "../hooks/useAllVehicleTypeProperties";
-// import useAllvalueAndUnitEnums from "../hooks/useValueAndUnitEnums";
 import useFuelTypes from "../../../hooks/useFuelTypesEnum";
 import useValueTypesEnum from "../../../hooks/useValueTypesEnum";
 import useUnitsEnum from "../../../hooks/useUnitsEnum";
+import useAllVehicleCategories from "../hooks/useAllVehicleCategories";
 
 
 export default function CreateVehicleForm() {
+  const backEndURL = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+
   const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
   const { vehicleTypeProperties, loadingVehicleTypeProperties, errorVehicleTypeProperties } = useAllVehicleTypeProperties();
-  // const { valueAndUnitEnums, loadingValueAndUnitEnums, errorValueAndUnitEnums } = useAllvalueAndUnitEnums();
+  const { vehicleCategories, loadingVehicleCategories, errorVehicleCategories } = useAllVehicleCategories();
+
   const { valueTypeEnum, loadingValueTypeEnum, errorValueTypeEnum } = useValueTypesEnum();
   const { unitsEnum, loadingUnitsEnum, errorUnitsEnum } = useUnitsEnum();
   const { fuelTypeEnum, loadingfuelTypeEnum, errorfuelTypeEnum } = useFuelTypes();
-  const [selectedTypeId, setSelectedTypeId] = useState("");
+
+  const [selectedTypeId, setSelectedTypeId] = useState("")
+  const [selectedCategoryTypeId, setSelectedCategoryTypeId] = useState("");
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [vehicleTypePropertyValues, setVehicleTypePropertyValues] = useState({});
   const [images, setImages] = useState([]);
@@ -31,6 +38,7 @@ export default function CreateVehicleForm() {
     description: "",
     fuelType: fuelTypeEnum[0],
     vehicleTypeId: "",
+    vehicleTypeCategoryId: "",
     vehicleTypePropertyValues: {}
   });
 
@@ -57,7 +65,6 @@ export default function CreateVehicleForm() {
     }
   }, [vehicleTypeProperties, selectedTypeId]);
 
-
   useEffect(() => {
     if (vehicleTypeProperties && selectedTypeId !== null) {
       const filtered = vehicleTypeProperties.filter(
@@ -71,6 +78,7 @@ export default function CreateVehicleForm() {
         ...prev,
         vehicleTypeId: selectedTypeId,
       }));
+      setSelectedCategoryTypeId("")
     }
   }, [vehicleTypeProperties, selectedTypeId]);
 
@@ -95,18 +103,55 @@ export default function CreateVehicleForm() {
     setImages((prev) => [...prev, ...newPreviews]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log("Base Data:", baseData);
-    console.log("Vehicle Type Properties:", vehicleTypePropertyValues);
-    console.log("Images:", images.map((img) => img.file));
 
     if (images.length === 0) {
       alert("Please upload at least one image.");
       return;
     }
+
+    const formData = new FormData();
+
+    formData.append("Make", baseData.make);
+    formData.append("Model", baseData.model);
+    formData.append("Color", baseData.color);
+    formData.append("PricePerDay", baseData.pricePerDay);
+    formData.append("FuelType", baseData.fuelType);
+    formData.append("DateOfProduction", new Date(baseData.dateOfProduction).toISOString());
+    formData.append("CurbWeightInKg", baseData.curbWeight);
+    formData.append("Description", baseData.description);
+    formData.append("VehicleTypeId", selectedTypeId);
+    formData.append("VehicleTypeCategoryId", selectedCategoryTypeId);
+
+    if (vehicleTypePropertyValues) {
+      Object.entries(vehicleTypePropertyValues).forEach(([propertyId, value], index) => {
+        formData.append(`PropertyValues[${index}].PropertyId`, propertyId);
+        formData.append(`PropertyValues[${index}].Value`, String(value));
+      });
+    }
+
+    images.forEach((img) => {
+      formData.append("Images", img.file);
+    });
+
+    try {
+      const response = await fetch(`${backEndURL}/api/vehicle/create`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save vehicle");
+      }
+
+      navigate('/listing');
+    } catch (error) {
+      alert(error.message);
+      console.error("Error uploading vehicle:", error);
+    }
   };
+
 
   const handleVehicleTypePropertyChange = (propId, value) => {
     setVehicleTypePropertyValues((prev) => ({
@@ -226,6 +271,7 @@ export default function CreateVehicleForm() {
           <select
             className="form-select"
             value={selectedTypeId}
+            required
             onChange={(e) => setSelectedTypeId(Number(e.target.value))}
           >
             <option value="" disabled hidden>
@@ -241,6 +287,31 @@ export default function CreateVehicleForm() {
 
         {selectedTypeId && sortedProperties.length > 0 && (
           <div className="vehicle-type-properties">
+
+            {selectedTypeId && vehicleCategories && (
+              <label className="vehicle-type-label">
+                Vehicle Category:
+                <select
+                  className="form-select"
+                  value={selectedCategoryTypeId}
+                  required
+                  onChange={(e) => setSelectedCategoryTypeId(Number(e.target.value))}
+                >
+                  <option value="" disabled hidden>
+                    -- Select Vehicle Category --
+                  </option>
+                  {vehicleCategories
+                    .filter(category => category.vehicleTypeId === selectedTypeId)
+                    .map(category => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                </select>
+              </label>
+            )}
+
+
             {sortedProperties.map((prop) => {
               let inputType = "text";
 

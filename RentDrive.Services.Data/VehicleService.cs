@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using RentDrive.Data.Migrations;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Vehicle;
-
+using RentDrive.Web.ViewModels.VehicleTypePropertyValue;
 using static RentDrive.Common.Vehicle.VehicleValidationConstants.VehicleImages;
 
 namespace RentDrive.Services.Data
@@ -12,19 +13,26 @@ namespace RentDrive.Services.Data
     public class VehicleService : IVehicleService
     {
         private readonly IRepository<Vehicle, Guid> vehicleRepository;
-        private readonly IVehicleTypeService vehicleTypeService;
+        private readonly IRepository<VehicleTypeProperty, Guid> vehicleTypePropertyRepository;
+        private readonly IRepository<VehicleTypePropertyValue, Guid> vehicleTypePropertyValueRepository;
+
+        private readonly IBaseService baseService;
         private readonly IVehicleImageService vehicleImageService;
         private readonly IVehicleTypePropertyService vehicleTypePropertyService;
         private readonly IVehicleTypePropertyValueService vehicleTypePropertyValueService;
         public VehicleService(
             IRepository<Vehicle, Guid> vehicleRepository,
-            IVehicleTypeService vehicleTypeService,
+            IRepository<VehicleTypeProperty, Guid> vehicleTypePropertyRepository,
+            IRepository<VehicleTypePropertyValue, Guid> vehicleTypePropertyValueRepository,
+            IBaseService baseService,
             IVehicleImageService vehicleImageService,
             IVehicleTypePropertyService vehicleTypePropertyService,
             IVehicleTypePropertyValueService vehicleTypePropertyValueService)
         {
             this.vehicleRepository = vehicleRepository;
-            this.vehicleTypeService = vehicleTypeService;
+            this.vehicleTypePropertyRepository = vehicleTypePropertyRepository;
+            this.vehicleTypePropertyValueRepository = vehicleTypePropertyValueRepository;
+            this.baseService = baseService;
             this.vehicleImageService = vehicleImageService;
             this.vehicleTypePropertyService = vehicleTypePropertyService;
             this.vehicleTypePropertyValueService = vehicleTypePropertyValueService;
@@ -77,7 +85,7 @@ namespace RentDrive.Services.Data
                     OwnerId = v.OwnerId,
                     OwnerName = v.Owner.UserName,
                     YearOfProduction = v.DateOfProduction.Year,
-                    //FuelType = v.FuelType.ToString(),
+                    FuelType = v.FuelType.ToString(),
                     Description = v.Description,
                     VehicleType = v.VehicleType.Name,
                     VehicleTypeCategory = v.VehicleTypeCategory.Name,
@@ -130,6 +138,55 @@ namespace RentDrive.Services.Data
                 .GetVehicleTypePropertyValuesByVehicleIdAsync(id);
 
             return vehicleDetails;
+        }
+
+        public async Task<bool> CreateVehicle(VehicleCreateFormViewModel viewModel)
+        {
+            bool hasValidPropertyValueTypes = await this.vehicleTypePropertyService
+                .ValidateVehicleTypeProperties(viewModel.VehicleTypeId, viewModel.PropertyValues);
+
+            if (!hasValidPropertyValueTypes)
+            {
+                return false;
+            }
+
+            Vehicle newVehicle = new Vehicle()
+            {
+                OwnerId = null, // todo: implement owner if a user is putting personal vehicle for rent
+                VehicleTypeId = viewModel.VehicleTypeId,
+                VehicleTypeCategoryId = viewModel.VehicleTypeCategoryId,
+                Make = viewModel.Make,
+                Model = viewModel.Model,
+                Color = viewModel.Color,
+                DateOfProduction = viewModel.DateOfProduction,
+                CurbWeightInKg = viewModel.CurbWeightInKg,
+                Description = viewModel.Description,
+                DateAdded = DateTime.UtcNow,
+                PricePerDay = viewModel.PricePerDay,
+                FuelType = viewModel.FuelType,
+            };
+
+            await vehicleRepository.AddAsync(newVehicle);
+
+            bool successfullyAddedPropertyValues = await this.vehicleTypePropertyValueService
+                .AddVehicleTypePropertyValuesAsync(newVehicle.Id, viewModel.PropertyValues);
+
+            if (!successfullyAddedPropertyValues)
+            {
+                return false;
+            }
+
+            bool successfullyAddedVehicleImages = await this.vehicleImageService
+                .AddImagesAsync(viewModel.Images, newVehicle.Id);
+
+            if (!successfullyAddedVehicleImages)
+            {
+                return false;
+            }
+
+            await this.vehicleRepository.SaveChangesAsync();
+
+            return true;
         }
     }
 }

@@ -77,7 +77,7 @@ builder.Services.AddScoped<IRepository<ApplicationUser, Guid>, BaseRepository<Ap
 builder.Services.AddScoped<IRepository<Vehicle, Guid>, BaseRepository<Vehicle, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleType, Guid>, BaseRepository<VehicleType, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleTypeCategory, Guid>, BaseRepository<VehicleTypeCategory, Guid>>();
-builder.Services.AddScoped<IRepository<VehicleImages, Guid>, BaseRepository<VehicleImages, Guid>>();
+builder.Services.AddScoped<IRepository<VehicleImage, Guid>, BaseRepository<VehicleImage, Guid>>();
 builder.Services.AddScoped<IRepository<ApplicationUser, Guid>, BaseRepository<ApplicationUser, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleTypeProperty, Guid>, BaseRepository<VehicleTypeProperty, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleTypePropertyValue, Guid>, BaseRepository<VehicleTypePropertyValue, Guid>>();

@@ -28,7 +28,7 @@ namespace RentDrive.Data
         public DbSet<Vehicle> Vehicles { get; set; } = null!;
         public DbSet<VehicleType> VehicleTypes { get; set; } = null!;
         public DbSet<VehicleTypeCategory> VehicleTypeCategories { get; set; } = null!;
-        public DbSet<VehicleImages> VehicleImages { get; set; } = null!;
+        public DbSet<VehicleImage> VehicleImages { get; set; } = null!;
         public DbSet<VehicleTypeProperty> VehicleTypeProperties { get; set; } = null!;
         public DbSet<VehicleTypePropertyValue> VehicleTypePropertyValues { get; set; } = null!;
 
@@ -40,7 +40,7 @@ namespace RentDrive.Data
             modelBuilder.Entity<VehicleType>().HasData(SeedVehicleTypes());
             modelBuilder.Entity<VehicleTypeCategory>().HasData(SeedVehicleTypeCategories());
             modelBuilder.Entity<Vehicle>().HasData(SeedVehicles());
-            modelBuilder.Entity<VehicleImages>().HasData(SeedVehicleImages());
+            modelBuilder.Entity<VehicleImage>().HasData(SeedVehicleImages());
             modelBuilder.Entity<VehicleTypeProperty>().HasData(SeedVehicleTypeProperties());
             modelBuilder.Entity<VehicleTypePropertyValue>().HasData(SeedVehicleTypePropertyValues());
         }

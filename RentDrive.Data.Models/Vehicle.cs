@@ -21,8 +21,8 @@ namespace RentDrive.Data.Models
         public string? Description { get; set; }
         public FuelType FuelType { get; set; }
             = FuelType.None;
-        public ICollection<VehicleImages> VehicleImages { get; set; }
-            = new List<VehicleImages>();
+        public ICollection<VehicleImage> VehicleImages { get; set; }
+            = new List<VehicleImage>();
         public ICollection<VehicleTypePropertyValue> VehicleTypePropertyValues { get; set; }
             = new List<VehicleTypePropertyValue>();
     }

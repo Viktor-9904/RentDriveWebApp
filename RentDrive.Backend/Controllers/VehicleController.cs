@@ -55,5 +55,23 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(vehicleDetails);
         }
+        [HttpPost("create")]
+        public async Task<IActionResult> Create([FromForm] VehicleCreateFormViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            bool wasVehicleCreated = await this.vehicleService
+                .CreateVehicle(viewModel);
+
+            if (!wasVehicleCreated)
+            {
+                return BadRequest("Failed to create Vehicle.");
+            }
+
+            return Ok();
+        }
     }
 }

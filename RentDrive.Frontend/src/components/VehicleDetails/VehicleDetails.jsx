@@ -56,7 +56,8 @@ export default function VehicleDetails() {
                 <div className="col-md-5">
                     <div className="position-relative border rounded p-2 mb-3 text-center">
                         <img
-                            src={`${backEndURL}${vehicle.imageURLS[currentImageIndex]}`}
+                            {...console.log(vehicle.imageURLS[0])}
+                            src={`${backEndURL}/${vehicle.imageURLS[currentImageIndex]}`}
                             alt={`${vehicle.make} ${vehicle.model}`}
                             className="img-fluid rounded"
                             style={{ maxHeight: "350px", objectFit: "cover", width: "100%" }}

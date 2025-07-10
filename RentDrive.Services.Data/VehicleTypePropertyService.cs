@@ -5,6 +5,7 @@ using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.VehicleTypeProperty;
+using RentDrive.Web.ViewModels.VehicleTypePropertyValue;
 
 namespace RentDrive.Services.Data
 {
@@ -12,13 +13,16 @@ namespace RentDrive.Services.Data
     {
         private readonly IRepository<VehicleTypeProperty, Guid> vehicleTypePropertyRepository;
         private readonly IVehicleTypeService vehicleTypeService;
+        private readonly IBaseService baseService;
 
         public VehicleTypePropertyService(
             IRepository<VehicleTypeProperty, Guid> vehicleTypePropertyRepository,
-            IVehicleTypeService vehicleTypeService)
+            IVehicleTypeService vehicleTypeService,
+            IBaseService baseService)
         {
             this.vehicleTypePropertyRepository = vehicleTypePropertyRepository;
             this.vehicleTypeService = vehicleTypeService;
+            this.baseService = baseService;
         }
 
         public async Task<IEnumerable<VehicleTypePropertyViewModel>> GetAllVehicleTypePropertiesAsync()
@@ -107,6 +111,36 @@ namespace RentDrive.Services.Data
             await vehicleTypePropertyRepository.AddAsync(vehicleTypeProperty);
             await vehicleTypePropertyRepository.SaveChangesAsync();
 
+            return true;
+        }
+
+        public async Task<bool> ValidateVehicleTypeProperties(int VehicleTypeId, IEnumerable<CreateFormVehicleTypePropertyValueViewModel> propertyValues)
+        {
+            List<VehicleTypeProperty>? expectedProperties = await this.vehicleTypePropertyRepository
+                .GetAllAsQueryable()
+                .Where(vtp => vtp.VehicleTypeId == VehicleTypeId)
+                .ToListAsync();
+
+            if (expectedProperties.Count == 0)
+            {
+                return false;
+            }
+
+            foreach (VehicleTypeProperty currentExpectedProperty in expectedProperties)
+            {
+                CreateFormVehicleTypePropertyValueViewModel? submittedValue = propertyValues
+                    .FirstOrDefault(vm => vm.PropertyId == currentExpectedProperty.Id);
+
+                if (submittedValue == null)
+                {
+                    return false;
+                }
+
+                if (!this.baseService.IsValueTypeValid(currentExpectedProperty.ValueType, submittedValue.Value, out string? error))
+                {
+                    return false;
+                }
+            }
             return true;
         }
     }

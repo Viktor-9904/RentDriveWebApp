@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using Microsoft.AspNetCore.Http;
+
 using RentDrive.Common.Enums;
 using RentDrive.Web.ViewModels.VehicleTypePropertyValue;
 
@@ -26,7 +28,12 @@ namespace RentDrive.Web.ViewModels.Vehicle
         [Required]
         public int VehicleTypeId { get; set; }
         [Required]
+        public int VehicleTypeCategoryId { get; set; }
+        [Required]
         public IEnumerable<CreateFormVehicleTypePropertyValueViewModel> PropertyValues { get; set; }
             = new List<CreateFormVehicleTypePropertyValueViewModel>();
+        [Required]
+        public List<IFormFile> Images { get; set; } 
+            = new List<IFormFile>();
     }
 }

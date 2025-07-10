@@ -24,7 +24,7 @@ export default function RecentListingsItem({
                         <div className="col-lg-12">
                             <div className="listing-item">
                                 <div className="left-image">
-                                    <Link to="#"><img src={`${backEndURL}${imageURL}`} alt="" /></Link>
+                                    <Link to="#"><img src={`${backEndURL}/${imageURL}`} alt="" /></Link>
                                 </div>
                                 <div className="right-content align-self-center">
                                     <Link to="#"><h4>{`${make} - ${model}`}</h4></Link>

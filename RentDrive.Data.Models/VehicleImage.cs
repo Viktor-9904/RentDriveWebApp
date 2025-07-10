@@ -1,6 +1,6 @@
 ﻿namespace RentDrive.Data.Models
 {
-    public class VehicleImages
+    public class VehicleImage
     {
         public Guid Id { get; set; }
         public Guid VehicleId { get; set; }
