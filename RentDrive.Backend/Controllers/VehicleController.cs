@@ -50,7 +50,7 @@ namespace RentDrive.Backend.Controllers
 
             if (vehicleDetails == null)
             {
-                return NotFound();
+                return BadRequest(ModelState);
             }
 
             return Ok(vehicleDetails);

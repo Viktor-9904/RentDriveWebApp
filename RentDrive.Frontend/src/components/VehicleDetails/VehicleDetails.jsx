@@ -12,18 +12,34 @@ export default function VehicleDetails() {
 
     const backEndURL = import.meta.env.VITE_API_URL;
 
-    useEffect(() => {
-        fetch(`${backEndURL}/api/vehicle/${id}`)
-            .then(res => res.json())
-            .then(data => {
-                setVehicle(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error("Failed to load vehicle:", err);
-                setLoading(false);
-            });
-    }, [id]);
+
+useEffect(() => {
+    const fetchVehicleDetails = async () => {
+        try {
+            const response = await fetch(
+                `${backEndURL}/api/vehicles/${id}`,
+                {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
+
+            if (!response.ok) {
+                navigate("/listing");
+                throw new Error("Failed to fetch vehicle details.");
+            }
+
+            const data = await response.json();
+            setVehicle(data);
+            setLoading(false)
+        } catch (error) {
+            console.error(error);
+            setLoading(false)
+        }
+    };
+
+    fetchVehicleDetails();
+}, [id, backEndURL, navigate]);
 
     const handlePrevImage = () => {
         setCurrentImageIndex(prev =>

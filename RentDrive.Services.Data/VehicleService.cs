@@ -42,6 +42,7 @@ namespace RentDrive.Services.Data
         {
             IEnumerable<ListingVehicleViewModel> allVehicles = await this.vehicleRepository
                 .GetAllAsQueryable()
+                .Where(v => !v.IsDeleted)
                 .OrderBy(v => v.Make)
                 .ThenBy(v => v.Model)
                 .Select(v => new ListingVehicleViewModel()
@@ -53,7 +54,7 @@ namespace RentDrive.Services.Data
                     VehicleTypeCategory = v.VehicleTypeCategory.Name,
                     YearOfProduction = v.DateOfProduction.Year,
                     PricePerDay = v.PricePerDay,
-                    //FuelType = v.FuelType.ToString(),
+                    FuelType = v.FuelType.ToString(),
                     OwnerName = v.Owner.UserName
                 })
                 .ToListAsync();
@@ -71,6 +72,7 @@ namespace RentDrive.Services.Data
         {
             IEnumerable<RecentVehicleIndexViewModel> top3RecentVehicles = await this.vehicleRepository
                 .GetAllAsQueryable()
+                .Where(v => !v.IsDeleted)
                 .OrderByDescending(v => v.DateAdded)
                 .ThenBy(v => v.Make)
                 .ThenBy(v => v.Model)
@@ -104,7 +106,7 @@ namespace RentDrive.Services.Data
         {
             VehicleDetailsViewModel? vehicleDetails = await this.vehicleRepository
                 .GetAllAsQueryable()
-                .Where(v => v.Id == id)
+                .Where(v => v.Id == id && !v.IsDeleted)
                 .Select(v => new VehicleDetailsViewModel()
                 {
                     Id = v.Id,
