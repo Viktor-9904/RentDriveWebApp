@@ -1,45 +1,16 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DeleteConfirmationModal from "../Vehicles/DeleteConfirmationModal";
+import useVehicleDetails from "../Vehicles/hooks/useVehicleDetails";
 
 export default function VehicleDetails() {
     const { id } = useParams();
-    const [vehicle, setVehicle] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { vehicle, loadingVehicle, errorVehicle } = useVehicleDetails(id);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const navigate = useNavigate();
 
     const backEndURL = import.meta.env.VITE_API_URL;
-
-
-useEffect(() => {
-    const fetchVehicleDetails = async () => {
-        try {
-            const response = await fetch(
-                `${backEndURL}/api/vehicle/${id}`,
-                {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" },
-                }
-            );
-
-            if (!response.ok) {
-                navigate("/listing");
-                throw new Error("Failed to fetch vehicle details.");
-            }
-
-            const data = await response.json();
-            setVehicle(data);
-            setLoading(false)
-        } catch (error) {
-            console.error(error);
-            setLoading(false)
-        }
-    };
-
-    fetchVehicleDetails();
-}, [id, backEndURL, navigate]);
 
     const handlePrevImage = () => {
         setCurrentImageIndex(prev =>
@@ -81,7 +52,7 @@ useEffect(() => {
     };
 
 
-    if (loading) return <div className="text-center py-5">Loading vehicle details...</div>;
+    if (loadingVehicle) return <div className="text-center py-5">LoadingVehicle vehicle details...</div>;
     if (!vehicle) return <div className="text-center py-5 text-danger">Vehicle not found.</div>;
 
     const allProperties = [
