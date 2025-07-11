@@ -17,7 +17,7 @@ useEffect(() => {
     const fetchVehicleDetails = async () => {
         try {
             const response = await fetch(
-                `${backEndURL}/api/vehicles/${id}`,
+                `${backEndURL}/api/vehicle/${id}`,
                 {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
