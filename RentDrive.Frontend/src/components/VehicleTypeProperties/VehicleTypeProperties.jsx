@@ -6,9 +6,11 @@ import useAllVehicleTypes from "../Vehicles/hooks/useAllVehicleTypes";
 import useAllVehicleTypeProperties from "../Vehicles/hooks/useAllVehicleTypeProperties";
 import useValueTypesEnum from "../../hooks/useValueTypesEnum";
 import useUnitsEnum from "../../hooks/useUnitsEnum";
+import useAllVehicles from "../Vehicles/hooks/useAllVehicles";
 
 export default function VehicleTypePropertyManager() {
 
+    const { vehicles, loading, error } = useAllVehicles();
     const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
     const { vehicleTypeProperties, loadingVehicleTypeProperties, errorVehicleTypeProperties } = useAllVehicleTypeProperties();
 

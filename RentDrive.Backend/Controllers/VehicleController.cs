@@ -55,6 +55,19 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(vehicleDetails);
         }
+        [HttpGet("edit/{id}")]
+        public async Task<IActionResult> GetEditVehicleDetailsById(Guid id)
+        {
+            VehicleEditFormViewModel? vehicleDetails = await this.vehicleService
+                .GetEditVehicleDetailsByIdAsync(id);
+
+            if (vehicleDetails == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok(vehicleDetails);
+        }
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromForm] VehicleCreateFormViewModel viewModel)
         {

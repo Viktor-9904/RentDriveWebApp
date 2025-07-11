@@ -18,6 +18,7 @@ import VehicleTypeProperties from './pages/VehicleTypeProperties'
 import CreateVehicle from './pages/CreateVehicle'
 
 import { AccountProvider } from './context/AccountContext'
+import EditVehicle from './pages/EditVehicle'
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/api/vehicle/:id" element={<VehicleDetailsPage/>}/>
         <Route path="/manage-vehicle-type-properties" element={<VehicleTypeProperties/>}/>
         <Route path="/manage-vehicles/create" element={<CreateVehicle/>}/>
+        <Route path="/manage-vehicles/edit/:id" element={<EditVehicle/>}/>
       </Routes>
 
       <Footer />

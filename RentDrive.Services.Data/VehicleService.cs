@@ -113,7 +113,9 @@ namespace RentDrive.Services.Data
                     Make = v.Make,
                     Model = v.Model,
                     OwnerName = v.Owner.UserName,
+                    VehicleTypeId = v.VehicleTypeId,
                     VehicleType = v.VehicleType.Name,
+                    VehicleTypeCategoryId = v.VehicleTypeCategoryId,
                     VehicleTypeCategory = v.VehicleTypeCategory.Name,
                     Color = v.Color,
                     PricePerDay = v.PricePerDay,
@@ -206,6 +208,44 @@ namespace RentDrive.Services.Data
             await vehicleRepository.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<VehicleEditFormViewModel?> GetEditVehicleDetailsByIdAsync(Guid id)
+        {
+            VehicleEditFormViewModel? editVehicle = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .Where(v => v.Id == id && !v.IsDeleted)
+                .Select(v => new VehicleEditFormViewModel()
+                {
+                    Id = v.Id,
+                    Make = v.Make,
+                    Model = v.Model,
+                    FuelTypeEnum = v.FuelType,
+                    VehicleTypeId = v.VehicleTypeId,
+                    VehicleType = v.VehicleType.Name,
+                    VehicleTypeCategoryId = v.VehicleTypeCategoryId,
+                    VehicleTypeCategory = v.VehicleTypeCategory.Name,
+                    Color = v.Color,
+                    PricePerDay = v.PricePerDay,
+                    DateOfProduction = v.DateOfProduction,
+                    DateAdded = v.DateAdded,
+                    CurbWeightInKg = v.CurbWeightInKg,
+                    Description = v.Description,
+                })
+                .FirstOrDefaultAsync();
+
+            if (editVehicle == null)
+            {
+                return null;
+            }
+
+            editVehicle.VehicleProperties = await this.vehicleTypePropertyValueService
+                .GetVehicleTypePropertyValuesByVehicleIdAsync(id);
+
+            editVehicle.ImageURLs = await this.vehicleImageService
+                .GetAllImagesByVehicleIdAsync(id);
+
+            return editVehicle;
         }
     }
 }
