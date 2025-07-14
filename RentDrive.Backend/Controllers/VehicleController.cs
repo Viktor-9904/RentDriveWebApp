@@ -68,6 +68,29 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(vehicleDetails);
         }
+        [HttpPut("edit/{id}")]
+        public async Task<IActionResult> UpdateVehicle(Guid id, [FromForm] VehicleEditFormViewModel viewModel)
+        {
+            if (id != viewModel.Id)
+            {
+                return BadRequest("Mismatched ID");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            bool wasVehicleUpdated = await this.vehicleService
+                .UpdateVehicle(viewModel);
+
+            if (!wasVehicleUpdated)
+            {
+                return BadRequest("Failed to update Vehicle.");
+            }
+
+            return Ok();
+        }
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromForm] VehicleCreateFormViewModel viewModel)
         {

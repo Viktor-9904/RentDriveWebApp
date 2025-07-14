@@ -10,6 +10,7 @@ namespace RentDrive.Services.Data.Interfaces
         Task<VehicleDetailsViewModel?> GetVehicleDetailsByIdAsync(Guid id);
         Task<VehicleEditFormViewModel?> GetEditVehicleDetailsByIdAsync(Guid id);
         Task<bool> CreateVehicle(VehicleCreateFormViewModel viewModel);
+        Task<bool> UpdateVehicle(VehicleEditFormViewModel viewModel);
         Task<bool> SoftDeleteVehicleByIdAsync(Guid id);
     }
 }

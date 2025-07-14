@@ -19,7 +19,7 @@ namespace RentDrive.Data.Models
         public DateTime DateOfProduction { get; set; }
         public DateTime DateAdded { get; set; }
         public double CurbWeightInKg { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; } = null!;
         public FuelType FuelType { get; set; }
             = FuelType.None;
         public ICollection<VehicleImage> VehicleImages { get; set; }

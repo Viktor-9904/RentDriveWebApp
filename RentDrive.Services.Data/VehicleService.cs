@@ -143,7 +143,58 @@ namespace RentDrive.Services.Data
 
             return vehicleDetails;
         }
+        public async Task<bool> SoftDeleteVehicleByIdAsync(Guid id)
+        {
+            Vehicle vehicleToDelete = await this.vehicleRepository
+                .GetByIdAsync(id);
 
+            if (vehicleToDelete == null)
+            {
+                return false;
+            }
+
+            vehicleToDelete.IsDeleted = true;
+
+            await vehicleRepository.SaveChangesAsync();
+
+            return true;
+        }
+        public async Task<VehicleEditFormViewModel?> GetEditVehicleDetailsByIdAsync(Guid id)
+        {
+            VehicleEditFormViewModel? editVehicle = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .Where(v => v.Id == id && !v.IsDeleted)
+                .Select(v => new VehicleEditFormViewModel()
+                {
+                    Id = v.Id,
+                    Make = v.Make,
+                    Model = v.Model,
+                    FuelType = v.FuelType,
+                    VehicleTypeId = v.VehicleTypeId,
+                    VehicleType = v.VehicleType.Name,
+                    VehicleTypeCategoryId = v.VehicleTypeCategoryId,
+                    VehicleTypeCategory = v.VehicleTypeCategory.Name,
+                    Color = v.Color,
+                    PricePerDay = v.PricePerDay,
+                    DateOfProduction = v.DateOfProduction,
+                    CurbWeightInKg = v.CurbWeightInKg,
+                    Description = v.Description,
+                })
+                .FirstOrDefaultAsync();
+
+            if (editVehicle == null)
+            {
+                return null;
+            }
+
+            editVehicle.VehicleTypePropertyValues = await this.vehicleTypePropertyValueService
+                .GetVehicleTypePropertyValuesByVehicleIdAsync(id);
+
+            editVehicle.ImageURLs = await this.vehicleImageService
+                .GetAllImagesByVehicleIdAsync(id);
+
+            return editVehicle;
+        }
         public async Task<bool> CreateVehicle(VehicleCreateFormViewModel viewModel)
         {
             bool hasValidPropertyValueTypes = await this.vehicleTypePropertyService
@@ -193,59 +244,59 @@ namespace RentDrive.Services.Data
             return true;
         }
 
-        public async Task<bool> SoftDeleteVehicleByIdAsync(Guid id)
+        public async Task<bool> UpdateVehicle(VehicleEditFormViewModel viewModel)
         {
-            Vehicle vehicleToDelete = await this.vehicleRepository
-                .GetByIdAsync(id);
+            bool hasValidPropertyValueTypes = await this.vehicleTypePropertyService
+                .ValidateVehicleTypeProperties(viewModel.VehicleTypeId, viewModel.VehicleTypePropertyInputValues);
 
-            if (vehicleToDelete == null)
+            if (!hasValidPropertyValueTypes)
             {
                 return false;
             }
 
-            vehicleToDelete.IsDeleted = true;
+            Vehicle vehicleToUpdate = await this.vehicleRepository
+                .GetByIdAsync(viewModel.Id);
 
-            await vehicleRepository.SaveChangesAsync();
+            if (vehicleToUpdate == null)
+            {
+                return false;
+            }
+
+            vehicleToUpdate.Make = viewModel.Make;
+            vehicleToUpdate.Model = viewModel.Model;
+            vehicleToUpdate.Color = viewModel.Color;
+            vehicleToUpdate.PricePerDay = viewModel.PricePerDay;
+            vehicleToUpdate.DateOfProduction = viewModel.DateOfProduction;
+            vehicleToUpdate.CurbWeightInKg = viewModel.CurbWeightInKg;
+            vehicleToUpdate.Description = viewModel.Description;
+            vehicleToUpdate.FuelType = viewModel.FuelType;
+
+            bool successfullyAddedPropertyValues = await this.vehicleTypePropertyValueService
+                .UpdateVehicleTypePropertyValuesAsync(vehicleToUpdate.Id, viewModel.VehicleTypePropertyInputValues);
+
+            if (!successfullyAddedPropertyValues)
+            {
+                return false;
+            }
+
+            bool hasNewImages = viewModel.NewImages.Count > 0;
+
+            if (hasNewImages)
+            {
+                bool successfullyAddedVehicleImages = await this.vehicleImageService
+                    .AddImagesAsync(viewModel.NewImages, vehicleToUpdate.Id);
+
+                if (!successfullyAddedVehicleImages)
+                {
+                    return false;
+                }
+
+            }
+
+            await this.vehicleRepository.SaveChangesAsync();
 
             return true;
         }
 
-        public async Task<VehicleEditFormViewModel?> GetEditVehicleDetailsByIdAsync(Guid id)
-        {
-            VehicleEditFormViewModel? editVehicle = await this.vehicleRepository
-                .GetAllAsQueryable()
-                .Where(v => v.Id == id && !v.IsDeleted)
-                .Select(v => new VehicleEditFormViewModel()
-                {
-                    Id = v.Id,
-                    Make = v.Make,
-                    Model = v.Model,
-                    FuelTypeEnum = v.FuelType,
-                    VehicleTypeId = v.VehicleTypeId,
-                    VehicleType = v.VehicleType.Name,
-                    VehicleTypeCategoryId = v.VehicleTypeCategoryId,
-                    VehicleTypeCategory = v.VehicleTypeCategory.Name,
-                    Color = v.Color,
-                    PricePerDay = v.PricePerDay,
-                    DateOfProduction = v.DateOfProduction,
-                    DateAdded = v.DateAdded,
-                    CurbWeightInKg = v.CurbWeightInKg,
-                    Description = v.Description,
-                })
-                .FirstOrDefaultAsync();
-
-            if (editVehicle == null)
-            {
-                return null;
-            }
-
-            editVehicle.VehicleProperties = await this.vehicleTypePropertyValueService
-                .GetVehicleTypePropertyValuesByVehicleIdAsync(id);
-
-            editVehicle.ImageURLs = await this.vehicleImageService
-                .GetAllImagesByVehicleIdAsync(id);
-
-            return editVehicle;
-        }
     }
 }

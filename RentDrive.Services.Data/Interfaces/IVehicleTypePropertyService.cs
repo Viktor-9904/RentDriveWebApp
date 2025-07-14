@@ -9,6 +9,6 @@ namespace RentDrive.Services.Data.Interfaces
         Task<bool> CreateVehicleTypeProperty(CreateVehicleTypePropertyViewModel viewModel);
         Task<bool> EditPropertyAsync(EditVehicleTypePropertyViewModel viewModel);
         Task<bool> DeletePropertyByIdAsync(Guid id);
-        Task<bool> ValidateVehicleTypeProperties(int vehicleTypeId, IEnumerable<CreateFormVehicleTypePropertyValueViewModel> propertyValues);
+        Task<bool> ValidateVehicleTypeProperties(int vehicleTypeId, IEnumerable<VehicleTypePropertyValueInputViewModel> propertyValues);
     }
 }

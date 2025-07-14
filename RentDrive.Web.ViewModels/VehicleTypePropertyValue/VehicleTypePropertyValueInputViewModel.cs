@@ -2,11 +2,11 @@
 
 namespace RentDrive.Web.ViewModels.VehicleTypePropertyValue
 {
-    public class CreateFormVehicleTypePropertyValueViewModel
+    public class VehicleTypePropertyValueInputViewModel
     {
         [Required]
         public Guid PropertyId { get; set; }
-        [Required]
+        [Required] 
         public string Value { get; set; } = null!;
     }
 }

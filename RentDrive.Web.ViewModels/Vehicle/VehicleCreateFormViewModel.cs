@@ -30,8 +30,8 @@ namespace RentDrive.Web.ViewModels.Vehicle
         [Required]
         public int VehicleTypeCategoryId { get; set; }
         [Required]
-        public IEnumerable<CreateFormVehicleTypePropertyValueViewModel> PropertyValues { get; set; }
-            = new List<CreateFormVehicleTypePropertyValueViewModel>();
+        public IEnumerable<VehicleTypePropertyValueInputViewModel> PropertyValues { get; set; }
+            = new List<VehicleTypePropertyValueInputViewModel>();
         [Required]
         public List<IFormFile> Images { get; set; } 
             = new List<IFormFile>();

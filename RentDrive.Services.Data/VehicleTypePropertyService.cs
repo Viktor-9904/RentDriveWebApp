@@ -114,7 +114,7 @@ namespace RentDrive.Services.Data
             return true;
         }
 
-        public async Task<bool> ValidateVehicleTypeProperties(int VehicleTypeId, IEnumerable<CreateFormVehicleTypePropertyValueViewModel> propertyValues)
+        public async Task<bool> ValidateVehicleTypeProperties(int VehicleTypeId, IEnumerable<VehicleTypePropertyValueInputViewModel> propertyValues)
         {
             List<VehicleTypeProperty>? expectedProperties = await this.vehicleTypePropertyRepository
                 .GetAllAsQueryable()
@@ -128,7 +128,7 @@ namespace RentDrive.Services.Data
 
             foreach (VehicleTypeProperty currentExpectedProperty in expectedProperties)
             {
-                CreateFormVehicleTypePropertyValueViewModel? submittedValue = propertyValues
+                VehicleTypePropertyValueInputViewModel? submittedValue = propertyValues
                     .FirstOrDefault(vm => vm.PropertyId == currentExpectedProperty.Id);
 
                 if (submittedValue == null)

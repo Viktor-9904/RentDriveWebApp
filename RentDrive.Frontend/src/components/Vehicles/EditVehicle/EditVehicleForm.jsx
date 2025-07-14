@@ -37,7 +37,7 @@ export default function EditVehicleForm() {
 
   useEffect(() => {
     if (!vehicle) return;
-
+  
     setBaseData({
       make: vehicle.make,
       model: vehicle.model,
@@ -46,10 +46,10 @@ export default function EditVehicleForm() {
       dateOfProduction: vehicle.dateOfProduction.split("T")[0],
       curbWeight: vehicle.curbWeightInKg.toString(),
       description: vehicle.description,
-      fuelType: vehicle.fuelTypeEnum || "",
+      fuelType: vehicle.fuelType || "",
       vehicleType: vehicle.vehicleType,
       vehicleTypeCategory: vehicle.vehicleTypeCategory,
-      vehicleTypePropertyValues: vehicle.vehicleProperties
+      vehicleTypePropertyValues: vehicle.vehicleTypePropertyValues
     });
 
     if (vehicle.imageURLs && vehicle.imageURLs.length > 0) {
@@ -62,8 +62,7 @@ export default function EditVehicleForm() {
     setNewImages([]);
     setSelectedTypeId(vehicle.vehicleTypeId);
     setSelectedCategoryTypeId(vehicle.vehicleTypeCategoryId);
-    console.log(vehicle)
-
+    
   }, [vehicle, selectedTypeId, selectedCategoryTypeId]);
 
   const handleBaseChange = (e) => {
@@ -96,6 +95,7 @@ export default function EditVehicleForm() {
     }
     const formData = new FormData();
 
+    formData.append("Id", id)
     formData.append("Make", baseData.make);
     formData.append("Model", baseData.model);
     formData.append("Color", baseData.color);
@@ -107,23 +107,26 @@ export default function EditVehicleForm() {
     formData.append("VehicleTypeId", selectedTypeId);
     formData.append("VehicleTypeCategoryId", selectedCategoryTypeId);
 
-    formData.append("ExistingImageUrls", JSON.stringify(existingImages.map(img => img.url)));
+    // formData.append("ExistingImageUrls", JSON.stringify(existingImages.map(img => img.url)));
 
     newImages.forEach(img => {
-      formData.append("Images", img.file);
+      formData.append("NewImages", img.file);
     });
 
 
     if (baseData.vehicleTypePropertyValues) {
       baseData.vehicleTypePropertyValues.forEach((prop, index) => {
-        formData.append(`PropertyValues[${index}].PropertyId`, prop.propertyId);
-        formData.append(`PropertyValues[${index}].Value`, String(prop.vehicleTypePropertyValue));
+        formData.append(`VehicleTypePropertyInputValues[${index}].PropertyId`, prop.propertyId);
+        formData.append(`VehicleTypePropertyInputValues[${index}].Value`, String(prop.vehicleTypePropertyValue));
       });
     }
 
     try {
-      const response = await fetch(`${backEndURL}/api/vehicle/create`, {
-        method: "POST",
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+      const response = await fetch(`${backEndURL}/api/vehicle/edit/${id}`, {
+        method: "Put",
         body: formData,
       });
 
