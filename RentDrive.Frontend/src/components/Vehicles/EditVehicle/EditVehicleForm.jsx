@@ -129,7 +129,7 @@ export default function EditVehicleForm() {
         method: "Put",
         body: formData,
       });
-
+      
       if (!response.ok) {
         throw new Error("Failed to save vehicle");
       }
@@ -139,6 +139,10 @@ export default function EditVehicleForm() {
       alert(error.message);
       console.error("Error uploading vehicle:", error);
     }
+  };
+
+   const handleCancel = () => {
+    navigate(`/api/vehicle/${id}`)
   };
 
   return (
@@ -353,7 +357,12 @@ export default function EditVehicleForm() {
         />
       </div>
 
-      {selectedTypeId && <button type="submit">Update Vehicle</button>}
+      {selectedTypeId && (
+        <div className="form-buttons">
+          <button type="submit">Update Vehicle</button>
+          <button type="button" onClick={handleCancel}>Cancel</button>
+        </div>
+      )}
     </form>
   );
 }

@@ -164,6 +164,9 @@ export default function CreateVehicleForm() {
     }));
   };
 
+  const handleCancel = () => {
+    navigate(`/listing`)
+  };
 
   return (
     <form onSubmit={handleSubmit} className="create-vehicle-form">
@@ -394,7 +397,12 @@ export default function CreateVehicleForm() {
         />
       </div>
 
-      {selectedTypeId && <button type="submit">Create Vehicle</button>}
+      {selectedTypeId && (
+        <div className="form-buttons">
+          <button type="submit">Create Vehicle</button>
+          <button type="button" onClick={handleCancel}>Cancel</button>
+        </div>
+      )}
     </form>
   );
 }
