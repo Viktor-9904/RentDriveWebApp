@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteConfirmationModal from "./DeleteConfrimationModal";
 import VehicleTypeTableItem from "./VehicleTypeTableItem";
 
-export default function VehicleTypeTable({ vehicleTypes }) {
-  const [vehicleTypeToDelete, setVehicleTypeToDelete] = useState(null);
+export default function VehicleTypeTable({
+  vehicleTypes
+}) {
+
+  const backEndURL = import.meta.env.VITE_API_URL;
+  const [vehicleTypeToDelete, setvehicleTypeToDeleteId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [localVehicleTypes, setLocalVehicleTypes] = useState(vehicleTypes);
+
+  useEffect(() => {
+    setLocalVehicleTypes(vehicleTypes);
+  }, [vehicleTypes]);
+
 
   const handleEditClick = (id) => {
 
@@ -13,16 +23,35 @@ export default function VehicleTypeTable({ vehicleTypes }) {
   const handleCancelClick = () => {
   };
 
-  const handleSaveClick = (id, updatedData) => {
+  const handleSaveClick = () => {
 
   };
 
   const handleDeleteClick = (type) => {
-    setVehicleTypeToDelete(type);
+    setvehicleTypeToDeleteId(type);
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
+    try {
+      const response = await fetch(
+        `${backEndURL}/api/vehicletype/delete/${vehicleTypeToDelete.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete vehicle type");
+      }
+
+      setLocalVehicleTypes(prev => prev.filter(vt => vt.id !== vehicleTypeToDelete.id));
+      setShowDeleteModal(false);
+
+    } catch (err) {
+      alert(err.message);
+    }
+
     setShowDeleteModal(false);
   };
 
@@ -37,8 +66,8 @@ export default function VehicleTypeTable({ vehicleTypes }) {
             </tr>
           </thead>
           <tbody>
-            {vehicleTypes.length > 0 ? (
-              vehicleTypes.map((type) => (
+            {localVehicleTypes.length > 0 ? (
+              localVehicleTypes.map((type) => (
                 <VehicleTypeTableItem
                   key={type.id}
                   type={type}

@@ -6,5 +6,6 @@ namespace RentDrive.Services.Data.Interfaces
     {
         public Task<IEnumerable<VehicleTypeViewModel>> GetAllVehicleTypesAsync();
         public Task<bool> Exists(int vehicleTypeId);
+        public Task<bool> DeleteVehicleTypeByIdAsync(int id);
     }
 }
