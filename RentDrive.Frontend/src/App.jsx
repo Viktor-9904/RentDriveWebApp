@@ -16,9 +16,10 @@ import Login from './pages/Login/Login'
 import VehicleDetailsPage from './pages/VehicleDetailsPage'
 import VehicleTypeProperties from './pages/VehicleTypeProperties'
 import CreateVehicle from './pages/CreateVehicle'
+import EditVehicle from './pages/EditVehicle'
+import ManageVehicleTypes from './pages/ManageVehicleTypes'
 
 import { AccountProvider } from './context/AccountContext'
-import EditVehicle from './pages/EditVehicle'
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <Route path="/manage-vehicle-type-properties" element={<VehicleTypeProperties/>}/>
         <Route path="/manage-vehicles/create" element={<CreateVehicle/>}/>
         <Route path="/manage-vehicles/edit/:id" element={<EditVehicle/>}/>
+        <Route path="/manage/vehicle-types" element={<ManageVehicleTypes/>}/>
       </Routes>
 
       <Footer />

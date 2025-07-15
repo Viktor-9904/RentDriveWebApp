@@ -69,7 +69,7 @@ namespace RentDrive.Backend.Controllers
             return Ok(vehicleDetails);
         }
         [HttpPut("edit/{id}")]
-        public async Task<IActionResult> UpdateVehicle(Guid id, [FromForm] VehicleEditFormViewModel viewModel)
+        public async Task<IActionResult> UpdateVehicle(Guid id, [FromForm] VehicleEditFormViewModel viewModel) //TODO: Fix updating vehicle when older vehicle does not contain a newly created vehicleTypeProperty.
         {
             if (id != viewModel.Id)
             {
