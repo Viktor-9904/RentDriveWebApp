@@ -17,6 +17,12 @@ namespace RentDrive.Data.Configuration
                 .HasMaxLength(NameMaxLength)
                 .IsRequired()
                 .HasComment("Name of the vehicle type.");
+
+            builder
+                .Property(vt => vt.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false)
+                .HasComment("Is vehicle type soft deleted");
         }
     }
 
@@ -29,47 +35,65 @@ namespace RentDrive.Data.Configuration
                 new()
                 {
                     Id = 1,
-                    Name = "Car"
+                    Name = "Car",
+                    IsDeleted = false,
+
                 },
                 new()
                 {
                     Id = 2,
-                    Name = "Truck"
+                    Name = "Truck",
+                    IsDeleted = false,
+
                 },
                 new()
                 {
                     Id = 3,
-                    Name = "Motorcycle"
+                    Name = "Motorcycle",
+                    IsDeleted = false,
+
                 },
                 new()
                 {
                     Id = 4,
-                    Name = "Bicycle"
+                    Name = "Bicycle",
+                    IsDeleted = false,
+
                 },
                 new()
                 {
                     Id = 5,
-                    Name = "Electric Scooter"
+                    Name = "Electric Scooter",
+                    IsDeleted = false,
+
                 },
                 new()
                 {
                     Id = 6,
-                    Name = "All Terrain Vehicle (ATV)"
+                    Name = "All Terrain Vehicle (ATV)",
+                    IsDeleted = false,
+
                 },
                 new()
                 {
                     Id = 7,
-                    Name = "Camper Trailer"
+                    Name = "Camper Trailer",
+                    IsDeleted = false,
+
                 },
                 new()
                 {
                     Id = 8,
-                    Name = "Recreational Vehicle"
+                    Name = "Recreational Vehicle",
+                    IsDeleted = false,
+
                 },
                 new()
                 {
                     Id = 9,
-                    Name = "Limousine"
+                    Name = "Limousine",
+                    IsDeleted = false,
+
                 }
             };
             return vehicleTypes;

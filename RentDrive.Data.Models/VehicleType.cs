@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
+        public bool IsDeleted { get; set; } = false;
         public ICollection<Vehicle> Vehicles { get; set; }
             = new List<Vehicle>();
         public ICollection<VehicleTypeCategory> VehicleTypeCategory { get; set; }
