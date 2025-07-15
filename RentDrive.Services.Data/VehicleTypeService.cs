@@ -71,7 +71,7 @@ namespace RentDrive.Services.Data
             return true;
         }
 
-        public async Task<bool> EditVehicleType(VehicleTypeEditFormViewModel viewModel)
+        public async Task<VehicleTypeEditFormViewModel?> EditVehicleType(VehicleTypeEditFormViewModel viewModel)
         {
             VehicleType? vehicleType = await this.vehicleTypeRepository
                 .GetAllAsQueryable()
@@ -81,13 +81,47 @@ namespace RentDrive.Services.Data
 
             if (vehicleType == null)
             {
-                return false;
+                return null;
             }
 
             vehicleType.Name = viewModel.Name;
             await this.vehicleTypeRepository.SaveChangesAsync();
 
-            return true;
+            return new VehicleTypeEditFormViewModel()
+            {
+                Id = vehicleType.Id,
+                Name = vehicleType.Name
+            };
+        }
+
+        public async Task<VehicleTypeCreateFormViewModel?> CreateNewVehicleType(VehicleTypeCreateFormViewModel viewModel)
+        {
+            bool alreadyExists = await this.vehicleTypeRepository
+                .GetAllAsQueryable()
+                .AnyAsync(vt =>
+                    vt.Name == viewModel.Name &&
+                    vt.IsDeleted == false);
+
+            if (alreadyExists)
+            {
+                return null;
+            }
+
+            VehicleType newVehicleType = new VehicleType()
+            {
+                Name = viewModel.Name
+            };
+
+            await this.vehicleTypeRepository.AddAsync(newVehicleType);
+            await this.vehicleTypeRepository.SaveChangesAsync();
+
+            viewModel.Id = newVehicleType.Id;
+
+            return new VehicleTypeCreateFormViewModel
+            {
+                Id = newVehicleType.Id,
+                Name = newVehicleType.Name
+            };
         }
     }
 }

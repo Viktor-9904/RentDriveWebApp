@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core.Pipeline;
+using Microsoft.AspNetCore.Mvc;
 
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.VehicleType;
@@ -49,15 +50,33 @@ namespace RentDrive.Backend.Controllers
                 return BadRequest("ID mismatch");
             }
 
-            bool vehicleTypesuccessfullyEdited = await this.vehicleTypeService
+            VehicleTypeEditFormViewModel? editedVehicleType = await this.vehicleTypeService
                 .EditVehicleType(viewModel);
 
-            if (!vehicleTypesuccessfullyEdited)
+            if (editedVehicleType == null)
             {
                 return BadRequest();
             }
 
-            return Ok();
+            return Ok(editedVehicleType);
+        }
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateVehicleType([FromBody] VehicleTypeCreateFormViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            VehicleTypeCreateFormViewModel? newVehicleType = await this.vehicleTypeService
+                .CreateNewVehicleType(viewModel);
+
+            if (newVehicleType == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(newVehicleType);
         }
     }
 }

@@ -2,50 +2,83 @@ import { useEffect, useState } from "react";
 import DeleteConfirmationModal from "./DeleteConfrimationModal";
 import VehicleTypeTableItem from "./VehicleTypeTableItem";
 
-export default function VehicleTypeTable({ vehicleTypes }) {
+export default function VehicleTypeTable({
+  vehicleTypes,
+  isNew,
+  setIsNew,
+  newTypeName,
+  setNewTypeName,
+}) {
   const backEndURL = import.meta.env.VITE_API_URL;
 
   const [vehicleTypeToDelete, setVehicleTypeToDelete] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [localVehicleTypes, setLocalVehicleTypes] = useState(vehicleTypes);
-  const [editModel, setEditModel] = useState(null);
+  const [inputModel, setInputModel] = useState(null);
 
   useEffect(() => {
     setLocalVehicleTypes(vehicleTypes);
   }, [vehicleTypes]);
 
   const handleEditClick = (type) => {
-    setEditModel({ id: type.id, name: type.name });
+    setInputModel({
+      id: type.id,
+      name: type.name,
+    });
   };
 
   const handleCancelClick = () => {
-    setEditModel(null);
+    setInputModel(null);
   };
 
-  const handleSaveClick = async () => {
-    if (!editModel?.name.trim()) {
+const handleSaveClick = async () => {
+  try {
+    const payload = {
+      id: inputModel?.id,
+      name: isNew ? newTypeName?.trim() : inputModel?.name?.trim(),
+      isNew: isNew,
+    };
+
+    console.log(payload)
+
+    if (!payload.name) {
       alert("Name cannot be empty.");
       return;
     }
 
-    try {
-      const response = await fetch(`${backEndURL}/api/vehicletype/edit/${editModel.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editModel),
-      });
+    console.log("payload - ", payload);
 
-      if (!response.ok) throw new Error("Failed to edit vehicle type");
+    const url = `${backEndURL}/api/vehicletype/${payload.isNew ? "create" : "edit"}${payload.isNew ? "" : "/" + payload.id}`;
+    const method = payload.isNew ? "POST" : "PUT";
 
-      setLocalVehicleTypes(prev =>
-        prev.map(vt => vt.id === editModel.id ? { ...vt, name: editModel.name } : vt)
-      );
+    const response = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-      setEditModel(null);
-    } catch (err) {
-      alert(err.message);
+    if (!response.ok) {
+      throw new Error(`Failed to ${payload.isNew ? "add" : "edit"} vehicle type`);
     }
-  };
+
+    const savedType = await response.json();
+
+    setLocalVehicleTypes((prev) => {
+      if (payload.isNew) {
+        return [...prev, savedType];
+      } else {
+        return prev.map((vt) => (vt.id === savedType.id ? savedType : vt));
+      }
+    });
+
+    setInputModel(null);
+    setIsNew(false);
+    setNewTypeName("");
+
+  } catch (error) {
+    alert(error.message);
+  }
+};
 
   const handleDeleteClick = (type) => {
     setVehicleTypeToDelete(type);
@@ -63,9 +96,7 @@ export default function VehicleTypeTable({ vehicleTypes }) {
 
       if (!response.ok) throw new Error("Failed to delete vehicle type");
 
-      setLocalVehicleTypes(prev =>
-        prev.filter(vt => vt.id !== vehicleTypeToDelete.id)
-      );
+      setLocalVehicleTypes((prev) => prev.filter((vt) => vt.id !== vehicleTypeToDelete.id));
       setShowDeleteModal(false);
     } catch (err) {
       alert(err.message);
@@ -90,8 +121,8 @@ export default function VehicleTypeTable({ vehicleTypes }) {
                 <VehicleTypeTableItem
                   key={type.id}
                   type={type}
-                  editModel={editModel}
-                  setEditModel={setEditModel}
+                  inputModel={inputModel}
+                  setInputModel={setInputModel}
                   onEditClick={handleEditClick}
                   onSaveClick={handleSaveClick}
                   onCancelClick={handleCancelClick}
@@ -102,6 +133,38 @@ export default function VehicleTypeTable({ vehicleTypes }) {
               <tr>
                 <td colSpan="2" className="text-center text-muted">
                   No vehicle types defined.
+                </td>
+              </tr>
+            )}
+            {isNew && (
+              <tr className="text-center">
+                <td>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={newTypeName}
+                    onChange={(e) => setNewTypeName(e.target.value)}
+                    placeholder="Enter vehicle type name"
+                    required
+                  />
+                </td>
+                <td>
+                  <button
+                    className="btn btn-success btn-sm me-2"
+                    onClick={handleSaveClick}
+                    disabled={!newTypeName.trim()}
+                  >
+                    Save
+                  </button>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => {
+                      setIsNew(false);
+                      setNewTypeName("");
+                    }}
+                  >
+                    Cancel
+                  </button>
                 </td>
               </tr>
             )}

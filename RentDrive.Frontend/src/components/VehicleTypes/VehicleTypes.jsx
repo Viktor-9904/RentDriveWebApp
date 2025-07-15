@@ -4,27 +4,27 @@ import useAllVehicleTypes from "../Vehicles/hooks/useAllVehicleTypes";
 import VehicleTypeTable from "./VehicleTypeTable";
 
 export default function VehicleTypes() {
+  const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
+  const [isNew, setIsNew] = useState(false);
+  const [newTypeName, setNewTypeName] = useState("");
 
-    const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
+  return (
+    <div className="container py-5">
+      <h2 className="mb-4">Manage Vehicle Types</h2>
 
-    const handleAddNewProperty = () => {
+      <div className="d-flex justify-content-end mb-3">
+        <button className="btn btn-success" onClick={() => setIsNew(true)}>
+          + Add New Type
+        </button>
+      </div>
 
-    };
-
-    return (
-        <div className="container py-5">
-            <h2 className="mb-4">Manage Vehicle Types</h2>
-
-            <div className="d-flex justify-content-end mb-3">
-                <button className="btn btn-success" onClick={handleAddNewProperty}>
-                    + Add New Type
-                </button>
-            </div>
-
-            <VehicleTypeTable
-                vehicleTypes={vehicleTypes}
-            />
-
-        </div>
-    );
+      <VehicleTypeTable
+        vehicleTypes={vehicleTypes}
+        isNew={isNew}
+        setIsNew={setIsNew}
+        newTypeName={newTypeName}
+        setNewTypeName={setNewTypeName}
+      />
+    </div>
+  );
 }
