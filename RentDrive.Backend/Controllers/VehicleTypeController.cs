@@ -40,5 +40,24 @@ namespace RentDrive.Backend.Controllers
 
             return Ok();
         }
+        [HttpPut("edit/{id}")]
+        public async Task<IActionResult> EditVehicleType(int id, [FromBody] VehicleTypeEditFormViewModel viewModel)
+        {
+
+            if (id != viewModel.Id)
+            {
+                return BadRequest("ID mismatch");
+            }
+
+            bool vehicleTypesuccessfullyEdited = await this.vehicleTypeService
+                .EditVehicleType(viewModel);
+
+            if (!vehicleTypesuccessfullyEdited)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
     }
 }

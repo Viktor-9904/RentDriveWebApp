@@ -2,33 +2,53 @@ import { useEffect, useState } from "react";
 import DeleteConfirmationModal from "./DeleteConfrimationModal";
 import VehicleTypeTableItem from "./VehicleTypeTableItem";
 
-export default function VehicleTypeTable({
-  vehicleTypes
-}) {
-
+export default function VehicleTypeTable({ vehicleTypes }) {
   const backEndURL = import.meta.env.VITE_API_URL;
-  const [vehicleTypeToDelete, setvehicleTypeToDeleteId] = useState(null);
+
+  const [vehicleTypeToDelete, setVehicleTypeToDelete] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [localVehicleTypes, setLocalVehicleTypes] = useState(vehicleTypes);
+  const [editModel, setEditModel] = useState(null);
 
   useEffect(() => {
     setLocalVehicleTypes(vehicleTypes);
   }, [vehicleTypes]);
 
-
-  const handleEditClick = (id) => {
-
+  const handleEditClick = (type) => {
+    setEditModel({ id: type.id, name: type.name });
   };
 
   const handleCancelClick = () => {
+    setEditModel(null);
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
+    if (!editModel?.name.trim()) {
+      alert("Name cannot be empty.");
+      return;
+    }
 
+    try {
+      const response = await fetch(`${backEndURL}/api/vehicletype/edit/${editModel.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editModel),
+      });
+
+      if (!response.ok) throw new Error("Failed to edit vehicle type");
+
+      setLocalVehicleTypes(prev =>
+        prev.map(vt => vt.id === editModel.id ? { ...vt, name: editModel.name } : vt)
+      );
+
+      setEditModel(null);
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   const handleDeleteClick = (type) => {
-    setvehicleTypeToDeleteId(type);
+    setVehicleTypeToDelete(type);
     setShowDeleteModal(true);
   };
 
@@ -41,13 +61,12 @@ export default function VehicleTypeTable({
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to delete vehicle type");
-      }
+      if (!response.ok) throw new Error("Failed to delete vehicle type");
 
-      setLocalVehicleTypes(prev => prev.filter(vt => vt.id !== vehicleTypeToDelete.id));
+      setLocalVehicleTypes(prev =>
+        prev.filter(vt => vt.id !== vehicleTypeToDelete.id)
+      );
       setShowDeleteModal(false);
-
     } catch (err) {
       alert(err.message);
     }
@@ -71,6 +90,8 @@ export default function VehicleTypeTable({
                 <VehicleTypeTableItem
                   key={type.id}
                   type={type}
+                  editModel={editModel}
+                  setEditModel={setEditModel}
                   onEditClick={handleEditClick}
                   onSaveClick={handleSaveClick}
                   onCancelClick={handleCancelClick}
