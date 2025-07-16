@@ -7,6 +7,7 @@
         public VehicleType VehicleType { get; set; } = null!;
         public string Name { get; set; } = null!; // e.g. : "SUV", "Sedan", "Pickup" ...
         public string Description { get; set; } = null!;
+        public bool IsDeleted { get; set; } = false;
         public ICollection<Vehicle> Vehicles { get; set; }
             = new List<Vehicle>();
     }
