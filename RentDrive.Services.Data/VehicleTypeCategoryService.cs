@@ -62,5 +62,32 @@ namespace RentDrive.Services.Data
 
             return true;
         }
+
+        public async Task<VehicleTypeCategoryEditFormViewModel?> EditCategory(VehicleTypeCategoryEditFormViewModel viewModel)
+        {
+            VehicleTypeCategory? category = await this.vehicleTypeCategoryRepository
+                .GetAllAsQueryable()
+                .FirstOrDefaultAsync(vtc =>
+                    vtc.Id == viewModel.Id &&
+                    vtc.IsDeleted == false);
+
+            if (category == null)
+            {
+                return null;
+            }
+
+            category.Name = viewModel.Name;
+            category.Description = viewModel.Description;
+
+            await this.vehicleRepository.SaveChangesAsync();
+
+            return new VehicleTypeCategoryEditFormViewModel()
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description,
+                VehicleTypeId = category.VehicleTypeId,
+            };
+        }
     }
 }
