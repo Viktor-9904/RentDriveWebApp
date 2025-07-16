@@ -11,14 +11,19 @@ namespace RentDrive.Services.Data
     {
 
         private readonly IRepository<VehicleTypeCategory, int> vehicleTypeCategoryRepository;
-        public VehicleTypeCategoryService(IRepository<VehicleTypeCategory, int> vehicleTypeCategoryRepository)
+        private readonly IRepository<Vehicle, Guid> vehicleRepository;
+        public VehicleTypeCategoryService(
+            IRepository<VehicleTypeCategory, int> vehicleTypeCategoryRepository,
+            IRepository<Vehicle, Guid> vehicleRepository)
         {
             this.vehicleTypeCategoryRepository = vehicleTypeCategoryRepository;
+            this.vehicleRepository = vehicleRepository;
         }
         public async Task<IEnumerable<VehicleTypeCategoryViewModel>> GetAllCategories()
         {
             IEnumerable<VehicleTypeCategoryViewModel> allCategories = await this.vehicleTypeCategoryRepository
                 .GetAllAsQueryable()
+                .Where(vtc => vtc.IsDeleted == false)
                 .Select(vtc => new VehicleTypeCategoryViewModel()
                 {
                     Id = vtc.Id,
@@ -29,6 +34,33 @@ namespace RentDrive.Services.Data
                 .ToListAsync();
 
             return allCategories;
+        }
+        public async Task<bool> DeleteByIdAsync(int id)
+        {
+            VehicleTypeCategory? category = await this.vehicleTypeCategoryRepository
+                .GetAllAsQueryable()
+                .FirstOrDefaultAsync(vtc =>
+                    vtc.Id == id &&
+                    vtc.IsDeleted == false);
+
+            if (category == null)
+            {
+                return false;
+            }
+
+            bool currentlyInUse = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .AnyAsync(v => v.VehicleTypeCategoryId == id);
+
+            if (currentlyInUse)
+            {
+                return false;
+            }
+
+            category.IsDeleted = true;
+            await this.vehicleTypeCategoryRepository.SaveChangesAsync();
+
+            return true;
         }
     }
 }

@@ -30,5 +30,18 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(allCategories);
         }
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteVehicleTypeCategoryById(int id)
+        {
+            bool wasVehicleTypeCategorySuccessfullyDeleted = await this.vehicleTypeCategoryService
+                .DeleteByIdAsync(id);
+
+            if (!wasVehicleTypeCategorySuccessfullyDeleted)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
     }
 }

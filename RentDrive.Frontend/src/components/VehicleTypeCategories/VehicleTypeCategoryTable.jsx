@@ -58,7 +58,7 @@ export default function VehicleTypeCategoryTable({
       if (!response.ok) {
         throw new Error(`Failed to ${isNew ? "add" : "edit"} vehicle type category`);
       }
-      
+
       const savedCategory = await response.json();
 
       setLocalCategories((prev) =>
@@ -84,7 +84,9 @@ export default function VehicleTypeCategoryTable({
         method: "DELETE",
       });
 
-      if (!response.ok) throw new Error("Delete failed");
+      if (!response.ok) {
+        throw new Error("Delete failed");
+      }
 
       setLocalCategories((prev) => prev.filter((c) => c.id !== categoryToDelete.id));
     } catch (err) {
