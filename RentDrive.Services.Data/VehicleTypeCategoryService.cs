@@ -89,5 +89,37 @@ namespace RentDrive.Services.Data
                 VehicleTypeId = category.VehicleTypeId,
             };
         }
+
+        public async Task<VehicleTypeCategoryCreateFormViewModel?> CreateCategory(VehicleTypeCategoryCreateFormViewModel viewModel)
+        {
+            bool alreadyExists = await this.vehicleTypeCategoryRepository
+                .GetAllAsQueryable()
+                .AnyAsync(vtc =>
+                    vtc.Id == viewModel.Id &&
+                    vtc.IsDeleted == false);
+
+            if (alreadyExists)
+            {
+                return null;
+            }
+
+            VehicleTypeCategory newCategory = new VehicleTypeCategory()
+            {
+                Name = viewModel.Name,
+                Description = viewModel.Description,
+                VehicleTypeId = viewModel.VehicleTypeId,
+            };
+
+            await this.vehicleTypeCategoryRepository.AddAsync(newCategory);
+            await this.vehicleTypeCategoryRepository.SaveChangesAsync();
+
+            return new VehicleTypeCategoryCreateFormViewModel()
+            {
+                Id = newCategory.Id,
+                Name = newCategory.Name,
+                Description = newCategory.Description,
+                VehicleTypeId = newCategory.VehicleTypeId,
+            };
+        }
     }
 }

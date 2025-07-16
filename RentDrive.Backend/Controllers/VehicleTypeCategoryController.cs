@@ -61,5 +61,23 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(editedCategory);
         }
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateVehicleTypeCategory(VehicleTypeCategoryCreateFormViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            VehicleTypeCategoryCreateFormViewModel? newVehicleTypeCategory = await this.vehicleTypeCategoryService
+                .CreateCategory(viewModel);
+
+            if (newVehicleTypeCategory == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(newVehicleTypeCategory);
+        }
     }
 }
