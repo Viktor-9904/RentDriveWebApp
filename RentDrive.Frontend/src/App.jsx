@@ -18,6 +18,7 @@ import VehicleTypeProperties from './pages/VehicleTypeProperties'
 import CreateVehicle from './pages/CreateVehicle'
 import EditVehicle from './pages/EditVehicle'
 import ManageVehicleTypes from './pages/ManageVehicleTypes'
+import ManageVehicleTypeCategories from './pages/ManageVehicleTypeCategories'
 
 import { AccountProvider } from './context/AccountContext'
 
@@ -40,6 +41,7 @@ function App() {
         <Route path="/manage-vehicles/create" element={<CreateVehicle/>}/>
         <Route path="/manage-vehicles/edit/:id" element={<EditVehicle/>}/>
         <Route path="/manage/vehicle-types" element={<ManageVehicleTypes/>}/>
+        <Route path="/manage/vehicle-type-categories" element={<ManageVehicleTypeCategories/>}/>
       </Routes>
 
       <Footer />
