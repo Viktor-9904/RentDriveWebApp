@@ -83,6 +83,7 @@ builder.Services.AddScoped<IRepository<VehicleTypeProperty, Guid>, BaseRepositor
 builder.Services.AddScoped<IRepository<VehicleTypePropertyValue, Guid>, BaseRepository<VehicleTypePropertyValue, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleType, int>, BaseRepository<VehicleType, int>>();
 builder.Services.AddScoped<IRepository<VehicleTypeCategory, int>, BaseRepository<VehicleTypeCategory, int>>();
+builder.Services.AddScoped<IRepository<Rental, Guid>, BaseRepository<Rental, Guid>>();
 
 builder.Services.AddScoped<IVehicleImageService, VehicleImageService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
@@ -93,6 +94,7 @@ builder.Services.AddScoped<IVehicleTypePropertyService, VehicleTypePropertyServi
 builder.Services.AddScoped<IVehicleTypeService, VehicleTypeService>();
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IVehicleTypeCategoryService, VehicleTypeCategoryService>();
+builder.Services.AddScoped<IRentalService, RentalService>();
 
 WebApplication app = builder.Build();
 
