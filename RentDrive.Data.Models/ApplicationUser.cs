@@ -13,5 +13,7 @@ namespace RentDrive.Data.Models
         public bool IsCompanyEmployee { get; set; }
         public ICollection<Vehicle> Vehicles { get; set; }
             = new HashSet<Vehicle>();
+        public ICollection<Rental> Rentals { get; set; } 
+            = new List<Rental>();
     }
 }
