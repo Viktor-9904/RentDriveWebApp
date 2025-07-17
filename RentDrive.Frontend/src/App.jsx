@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router'
+import { Routes, Route, Outlet } from 'react-router'
 
 import './App.css'
 
@@ -22,6 +22,22 @@ import ManageVehicleTypeCategories from './pages/ManageVehicleTypeCategories'
 
 import { AccountProvider } from './context/AccountContext'
 
+function ManageLayout() {
+  return (
+    <div>
+      <Outlet />
+    </div>
+  )
+}
+
+function VehiclesLayout() {
+  return (
+    <div>
+      <Outlet />
+    </div>
+  )
+}
+
 function App() {
   return (
     <AccountProvider>
@@ -36,17 +52,27 @@ function App() {
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/api/vehicle/:id" element={<VehicleDetailsPage/>}/>
-        <Route path="/manage-vehicle-type-properties" element={<VehicleTypeProperties/>}/>
-        <Route path="/manage-vehicles/create" element={<CreateVehicle/>}/>
-        <Route path="/manage-vehicles/edit/:id" element={<EditVehicle/>}/>
-        <Route path="/manage/vehicle-types" element={<ManageVehicleTypes/>}/>
-        <Route path="/manage/vehicle-type-categories" element={<ManageVehicleTypeCategories/>}/>
+        <Route path="/api/vehicle/:id" element={<VehicleDetailsPage />} />
+
+        <Route path="/manage" element={<ManageLayout />}>
+        
+          <Route path="vehicle-type-properties" element={<VehicleTypeProperties />} />
+          <Route path="vehicle-types" element={<ManageVehicleTypes />} />
+          <Route path="vehicle-type-categories" element={<ManageVehicleTypeCategories />} />
+
+          <Route path="vehicles" element={<VehiclesLayout />}>
+            <Route path="create" element={<CreateVehicle />} />
+            <Route path="edit/:id" element={<EditVehicle />} />
+          </Route>
+          
+        </Route>
+
       </Routes>
 
       <Footer />
     </AccountProvider>
   )
 }
+
 
 export default App

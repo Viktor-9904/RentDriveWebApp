@@ -433,9 +433,9 @@ header
 
 .header-area .main-nav .nav li.has-sub ul.sub-menu {
   position: absolute;
-  width: 200px;
+  width: 240px;
   box-shadow: 0 2px 28px 0 rgba(0, 0, 0, 0.06);
-  overflow: hidden;
+  overflow: visible;
   top: 40px;
   opacity: 0;
   transition: all .3s;
@@ -1083,6 +1083,15 @@ Recent Listing
 
 .recent-listing .item .right-content ul.rate li:last-child {
   margin-left: 10px;
+}
+
+.recent-listing .item .right-content ul.rate,
+.listing-page .item .right-content ul.rate {
+  color: #444;
+}
+
+.recent-listing .item .right-content ul.rate li i {
+  color: #f5a623;
 }
 
 .recent-listing .item .right-content h4 {

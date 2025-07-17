@@ -26,7 +26,7 @@ export default function VehicleDetails() {
 
     const handleEdit = () => {
         console.log("Edit button clicked");
-        navigate(`/manage-vehicles/edit/${id}`)
+        navigate(`/manage/vehicles/edit/${id}`)
     };
 
     const handleDelete = () => {
