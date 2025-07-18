@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentDrive.Data;
 
@@ -11,9 +12,11 @@ using RentDrive.Data;
 namespace RentDrive.Data.Migrations
 {
     [DbContext(typeof(RentDriveDbContext))]
-    partial class RentDriveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250718103925_AddedRentalSeeder")]
+    partial class AddedRentalSeeder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -271,10 +274,6 @@ namespace RentDrive.Data.Migrations
                     b.Property<Guid>("VehicleId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("VehiclePricePerDay")
-                        .HasColumnType("decimal(18,2)")
-                        .HasComment("Vehicle price per day.");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RenterId");
@@ -293,9 +292,8 @@ namespace RentDrive.Data.Migrations
                             RenterId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
                             StartDate = new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
-                            TotalPrice = 130.00m,
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
-                            VehiclePricePerDay = 32.50m
+                            TotalPrice = 162.50m,
+                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de")
                         },
                         new
                         {
@@ -306,8 +304,7 @@ namespace RentDrive.Data.Migrations
                             StartDate = new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 0,
                             TotalPrice = 162.50m,
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
-                            VehiclePricePerDay = 32.50m
+                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de")
                         },
                         new
                         {
@@ -318,8 +315,7 @@ namespace RentDrive.Data.Migrations
                             StartDate = new DateTime(2025, 7, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 0,
                             TotalPrice = 162.50m,
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
-                            VehiclePricePerDay = 32.50m
+                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de")
                         },
                         new
                         {
@@ -330,9 +326,8 @@ namespace RentDrive.Data.Migrations
                             RenterId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
                             StartDate = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
-                            TotalPrice = 372.00m,
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
-                            VehiclePricePerDay = 62.00m
+                            TotalPrice = 434.00m,
+                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743")
                         },
                         new
                         {
@@ -342,9 +337,8 @@ namespace RentDrive.Data.Migrations
                             RenterId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a"),
                             StartDate = new DateTime(2025, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 0,
-                            TotalPrice = 310.00m,
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
-                            VehiclePricePerDay = 62.00m
+                            TotalPrice = 372.00m,
+                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743")
                         },
                         new
                         {
@@ -354,9 +348,8 @@ namespace RentDrive.Data.Migrations
                             RenterId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
                             StartDate = new DateTime(2025, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 0,
-                            TotalPrice = 310.00m,
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
-                            VehiclePricePerDay = 62.00m
+                            TotalPrice = 372.00m,
+                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743")
                         },
                         new
                         {
@@ -368,8 +361,7 @@ namespace RentDrive.Data.Migrations
                             StartDate = new DateTime(2025, 7, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             TotalPrice = 270.00m,
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
-                            VehiclePricePerDay = 54.00m
+                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4")
                         },
                         new
                         {
@@ -380,8 +372,7 @@ namespace RentDrive.Data.Migrations
                             StartDate = new DateTime(2025, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 0,
                             TotalPrice = 270.00m,
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
-                            VehiclePricePerDay = 54.00m
+                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4")
                         },
                         new
                         {
@@ -392,8 +383,7 @@ namespace RentDrive.Data.Migrations
                             StartDate = new DateTime(2025, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 0,
                             TotalPrice = 270.00m,
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
-                            VehiclePricePerDay = 54.00m
+                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4")
                         });
                 });
 

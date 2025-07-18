@@ -11,6 +11,7 @@ using static RentDrive.Data.Configuration.VehicleTypeSeeder;
 using static RentDrive.Data.Configuration.VehicleImageSeeder;
 using static RentDrive.Data.Configuration.VehicleTypePropertySeeder;
 using static RentDrive.Data.Configuration.VehicleTypePropertyValueSeerder;
+using static RentDrive.Data.Configuration.RentalSeeder;
 
 namespace RentDrive.Data
 {
@@ -44,6 +45,7 @@ namespace RentDrive.Data
             modelBuilder.Entity<VehicleImage>().HasData(SeedVehicleImages());
             modelBuilder.Entity<VehicleTypeProperty>().HasData(SeedVehicleTypeProperties());
             modelBuilder.Entity<VehicleTypePropertyValue>().HasData(SeedVehicleTypePropertyValues());
+            modelBuilder.Entity<Rental>().HasData(SeedRentals());
         }
     }
 }
