@@ -30,7 +30,8 @@ namespace RentDrive.Services.Data
             {
                 for (DateTime date = rental.StartDate.Date; date <= rental.EndDate.Date; date = date.AddDays(1))
                 {
-                    bookedDates.Add(date);
+                    DateTime utcDate = DateTime.SpecifyKind(date, DateTimeKind.Utc);
+                    bookedDates.Add(utcDate);
                 }
             }
 
