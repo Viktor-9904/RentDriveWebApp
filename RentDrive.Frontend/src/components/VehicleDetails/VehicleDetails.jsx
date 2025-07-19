@@ -1,12 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteConfirmationModal from "../Vehicles/DeleteConfirmationModal";
 import useVehicleDetails from "../Vehicles/hooks/useVehicleDetails";
 import VehicleCalendar from "./VehicleCalendar";
+import usebookedDates from "../../hooks/useBookedDates";
 
 export default function VehicleDetails() {
     const { id } = useParams();
     const { vehicle, loadingVehicle } = useVehicleDetails(id);
+    const { bookedDates, loadingBookedDates, errorBookedDates } = usebookedDates(id);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const navigate = useNavigate();
@@ -81,7 +83,7 @@ export default function VehicleDetails() {
 
                     <div className="col-md-5 d-flex flex-column align-items-center justify-content-center">
                         <div className="calendar-wrapper w-100 mb-3">
-                            <VehicleCalendar />
+                            <VehicleCalendar bookedDates={bookedDates}/>
                         </div>
                     </div>
                 </div>

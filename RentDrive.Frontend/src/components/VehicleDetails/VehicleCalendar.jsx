@@ -1,18 +1,12 @@
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-export default function VehicleCalendar() {
+export default function VehicleCalendar({ bookedDates }) {
     const today = new Date();
     const sixMonthsLater = new Date();
     sixMonthsLater.setMonth(today.getMonth() + 6);
 
-    const bookedDates = [
-        new Date("2025-07-22"),
-        new Date("2025-07-23"),
-        new Date("2025-07-27"),
-        new Date("2025-07-28"),
-        new Date("2025-07-29"),
-    ];
+    const bookedDateObjects = bookedDates.map(dateStr => new Date(dateStr));
 
     const isSameDay = (date1, date2) =>
         date1.getFullYear() === date2.getFullYear() &&
@@ -22,7 +16,7 @@ export default function VehicleCalendar() {
     const tileClassName = ({ date, view }) => {
         if (view !== "month") return "";
 
-        if (bookedDates.some(d => isSameDay(d, date)) && date > today) {
+        if (bookedDateObjects.some(d => isSameDay(d, date)) && date > today) {
             return "booked-tile";
         }
 
@@ -32,7 +26,7 @@ export default function VehicleCalendar() {
 
         return "";
     };
-    
+
     return (
         <div className="calendar-container mt-5">
             <div className="calendar-box shadow-sm p-3 rounded">
