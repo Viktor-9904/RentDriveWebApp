@@ -2366,11 +2366,20 @@ Listing Page
 .calendar-wrapper {
     min-height: 350px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     border-radius: 12px;
     background-color: transparent;
 }
+
+.calendar-wrapper .react-calendar {
+    width: 70%;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 0 auto;
+}
+
 
 .properties-card {
     background-color: #f7f7f7;
@@ -2400,129 +2409,348 @@ Listing Page
     margin-bottom: 0;
 }
 
-.react-calendar__tile {
-    height: 40px;
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
-    font-weight: 600;
-    border-radius: 6px;
-    padding: 0;
-    line-height: normal;
-    color: inherit;
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  cursor: default;
 }
 
-.react-calendar__tile:disabled {
-    color: #a0a0a0 !important;
-    background-color: transparent !important;
+.vehicle-calendar__tile,
+.vehicle-calendar__tile:hover {
+  cursor: default !important;
 }
 
-.react-calendar__month-view__weekdays {
-    text-align: center;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 0.75rem;
+.vehicle-calendar__tile {
+  position: relative;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0;
+  line-height: normal;
+  color: inherit;
+  background-color: transparent !important;
+  cursor: default;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  height: 40px !important;
+  z-index: 0;
+  user-select: none;
 }
 
-.react-calendar__month-view__weekdays__weekday {
-    padding: 8px 0;
-    color: #000000;
+.vehicle-calendar__tile--available {
+  cursor: pointer;
+  color: #ffffff !important;
+  z-index: 1;
+}
+
+.vehicle-calendar__tile--available::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  left: 1px;
+  right: 1px;
+  border-radius: 6px;
+  background-color: #16a34a93 !important;
+  z-index: -1;
+}
+
+.vehicle-calendar__tile:disabled {
+  position: relative;
+  color: #a0a0a0 !important;
+  background-color: transparent !important;
+  z-index: 0;
+}
+
+.vehicle-calendar__tile:disabled::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  left: 1px;
+  right: 1px;
+  border-radius: 6px;
+  background-color: #dddbdbd0 !important;
+  z-index: -1;
+}
+
+.vehicle-calendar__tile--booked {
+  cursor: not-allowed;
+  color: white !important;
+  z-index: 1;
+}
+
+.vehicle-calendar__tile--booked::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  border-radius: 6px;
+  background-color: #dc26268c !important;
+  z-index: -1;
+}
+
+.vehicle-calendar__legend-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.vehicle-calendar__legend-box--available {
+  background-color: #16a34a93;
+  border: 1px solid #16a34a;
+}
+
+.vehicle-calendar__legend-box--booked {
+  background-color: #dc26268c;
+  border: 1px solid #dc2626;
 }
 
 .react-calendar__month-view__weekdays__weekday abbr {
-    text-decoration: none !important;
-    border-bottom: none !important;
-    cursor: default;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  cursor: default;
 }
 
-.booked-tile {
-    background-color: #dc26268c !important;
-    color: white !important;
+.rentnow-calendar__tile,
+.rentnow-calendar__tile:hover {
+  cursor: default !important;
 }
 
-.available-tile {
-    background-color: #16a34a93 !important;
-    color: white !important;
+.rentnow-calendar__tile {
+  position: relative;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0;
+  line-height: normal;
+  color: inherit;
+  background-color: transparent !important;
+  cursor: default;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  height: 40px !important;
+  z-index: 0;
+  user-select: none;
 }
 
-.booked-tile,
-.available-tile {
-    background-color: transparent !important;
-    position: relative;
-    color: white !important;
-    z-index: 0;
+.rentnow-calendar__tile:disabled::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  left: 1px;
+  right: 1px;
+  border-radius: 6px;
+  background-color: #dddbdbd0 !important;
+  z-index: -1;
 }
 
-.booked-tile::before,
-.available-tile::before {
-    content: "";
-    position: absolute;
-    top: 2px;
-    bottom: 2px;
-    left: 2px;
-    right: 2px;
-    border-radius: 6px;
-    z-index: -1;
+.rentnow-calendar__tile:disabled.past-date::before {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
-.booked-tile::before {
-    background-color: #dc26268c;
+.rentnow-calendar__tile--available {
+  cursor: pointer !important;
+  color: #ffffff !important;
+  z-index: 1;
+  position: relative;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.available-tile::before {
-    background-color: #16a34a93;
+.rentnow-calendar__tile--available > * {
+  cursor: pointer !important;
 }
 
-
-.booked-tile,
-.available-tile {
-    color: white !important;
-    z-index: 1;
+.rentnow-calendar__tile--available::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  left: 1px;
+  right: 1px;
+  border-radius: 6px;
+  background-color: #16a34a93 !important;
+  z-index: -1;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.rentnow-calendar__tile--available:hover::before {
+  background-color: #15803dcc !important;
+  box-shadow: 0 0 12px rgba(21, 128, 61, 0.9);
+  cursor: pointer !important;
+}
+
+.rentnow-calendar__tile--booked {
+  cursor: not-allowed;
+  color: white !important;
+  z-index: 1;
+}
+
+.rentnow-calendar__tile--booked::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  border-radius: 6px;
+  background-color: #dc26268c !important;
+  z-index: -1;
+}
+
+.rentnow-calendar__tile--selected {
+  cursor: pointer !important;
+  color: white !important;
+  font-weight: 700;
+  z-index: 2;
+  position: relative;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rentnow-calendar__tile--selected > * {
+  cursor: pointer !important;
+}
+
+.rentnow-calendar__tile--selected::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  left: 1px;
+  right: 1px;
+  border-radius: 6px;
+  background-color: #0d6efdbd !important;
+  box-shadow: 0 0 8px rgba(13, 110, 253, 0.7);
+  z-index: -1;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rentnow-calendar__tile--selected:hover::before {
+  background-color: #0d6efdcc !important;
+  box-shadow: 0 0 12px rgba(13, 110, 253, 0.9);
+cursor: pointer !important;
+}
 
 .react-calendar__tile--now {
-    position: relative;
-    z-index: 1;
-    background-color: transparent !important;
-    color: #0d6efd !important;
-    font-weight: 700;
+  position: relative;
+  background-color: transparent !important;
+  color: #0d6efd !important;
+  font-weight: 700;
+  z-index: 1;
 }
 
 .react-calendar__tile--now::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    bottom: 2px;
-    left: 2px;
-    right: 2px;
-    border: 2px solid #0d6efd;
-    border-radius: 6px;
-    z-index: -1;
+  content: '';
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  border: 2px solid #0d6efd;
+  border-radius: 6px;
+  z-index: -1;
 }
 
-.default-tile {
-    background-color: #f0f0f0 !important;
-    color: #333 !important;
+.rentnow-calendar__legend-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
-.react-calendar__tile:enabled:hover {
-    cursor: default !important;
+.rentnow-calendar__legend-box--available {
+  background-color: #16a34a93;
+  border: 1px solid #16a34a;
 }
 
-.legend-box {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
+.rentnow-calendar__legend-box--booked {
+  background-color: #dc26268c;
+  border: 1px solid #dc2626;
 }
 
-.legend-box.booked {
-    background-color: #dc26268c;
+.rentnow-calendar__legend-box--selected {
+  background-color: #0d6efdbd;
+  border: 1px solid #0d6efd;
 }
 
-.legend-box.available {
-    background-color: #16a34a93;
+.selected-date-range {
+  font-weight: 600;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #212529;
+  margin-bottom: 1.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+  user-select: none;
+  min-height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.selected-date-range.empty {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.rent-now-modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.rent-now-modal-footer button {
+  min-width: 120px;
+}
+
+.price-info {
+  max-width: 280px;
+  margin: 1.5rem auto;
+  user-select: none;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.price-box {
+  background-color: #e6f4ea;
+  border: 2px solid #198754;
+  border-radius: 10px;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 6px 12px rgba(25, 135, 84, 0.2);
+  font-weight: 700;
+  color: #145c32;
+  font-size: 1.4rem;
+  display: block;
+  min-width: 220px;
+  margin: 0.8rem auto;
+  transition: background-color 0.3s ease;
+}
+
+.price-box:hover {
+  background-color: #d4edda;
+  box-shadow: 0 8px 16px rgba(25, 135, 84, 0.3);
+}
+
+
 
 .vehicle-details-image {
     width: 100%;
@@ -2540,7 +2768,8 @@ Listing Page
 }
 
 .rent-now-btn {
-    width: 100%;
+    width: auto;
+    max-width: 200px;
     padding: 10px 20px;
     margin-top: 16px;
     font-weight: 600;
@@ -2578,6 +2807,69 @@ Listing Page
 .details div,
 .details em {
   color: #000;
+}
+
+.rent-now-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rent-now-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1060;
+}
+
+.rent-now-modal h4 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.rent-now-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.rent-now-modal .form-group {
+  margin-bottom: 1rem;
+}
+
+.rent-now-modal input[type="datetime-local"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.rent-now-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.rent-now-modal-footer .btn {
+  min-width: 100px;
 }
 
 
