@@ -14,11 +14,6 @@ export default function RentNowModal({ showRentNowModal, onClose, bookedDates, p
 
     const totalPrice = selectedDates.length > 0 ? pricePerDay * selectedDates.length : 0;
 
-    useEffect(() => {
-        const formattedDates = selectedDates.map(formatDate);
-        console.log("Selected:", formattedDates);
-    }, [selectedDates]);
-
     if (!showRentNowModal) return null;
 
     const clearSelection = () => {
@@ -47,6 +42,7 @@ export default function RentNowModal({ showRentNowModal, onClose, bookedDates, p
             } else {
                 setSelectedDates(sorted.slice(0, index));
             }
+            
             return;
         }
 

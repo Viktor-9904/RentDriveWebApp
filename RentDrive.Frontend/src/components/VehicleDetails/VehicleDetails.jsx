@@ -1,15 +1,18 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { unstable_RouterContextProvider, useNavigate, useParams } from "react-router-dom";
+import { use, useEffect, useState } from "react";
 import DeleteConfirmationModal from "../Vehicles/DeleteConfirmationModal";
 import useVehicleDetails from "../Vehicles/hooks/useVehicleDetails";
 import VehicleCalendar from "./VehicleCalendar";
 import usebookedDates from "../../hooks/useBookedDates";
 import RentNowModal from "./RentNowModal";
+import { useAuth } from "../../context/AccountContext";
 
 export default function VehicleDetails() {
     const { id } = useParams();
     const { vehicle, loadingVehicle } = useVehicleDetails(id);
     const { bookedDates, loadingBookedDates, errorBookedDates } = usebookedDates(id);
+    const [bookedDatesState, setBookedDatesState] = useState([]);
+    const { user, isAuthenticated, loadUser } = useAuth();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showRentNowModal, setRentNowShowModal] = useState(false);
@@ -17,6 +20,12 @@ export default function VehicleDetails() {
     const navigate = useNavigate();
 
     const backEndURL = import.meta.env.VITE_API_URL;
+
+    useEffect(() => {
+        if (bookedDates && bookedDates.length > 0) {
+            setBookedDatesState(bookedDates.map(d => new Date(d)));
+        }
+    }, [bookedDates]);
 
     const handleEdit = () => navigate(`/manage/vehicles/edit/${id}`);
     const handleDelete = () => setShowDeleteModal(true);
@@ -26,25 +35,31 @@ export default function VehicleDetails() {
             const res = await fetch(`${backEndURL}/api/vehicle/delete/${vehicle.id}`, {
                 method: "DELETE"
             });
-            if (!res.ok) throw new Error("Failed to delete vehicle");
+            if (!res.ok) {
+                throw new Error("Failed to delete vehicle")
+            };
+
             navigate("/listing");
+
         } catch (err) {
             alert(err.message);
         }
     };
 
     const handleRent = async (selectedDates) => {
-        if (!vehicle?.id || selectedDates.length === 0) return;
+        if (!vehicle?.id || selectedDates.length === 0) {
+            return;
+        }
 
         const payload = {
-            vehicleId: vehicle.id,
+            renterId: user.id,
             bookedDates: selectedDates.map(date =>
-                new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString()
+                `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
             )
         };
 
         try {
-            const response = await fetch(`${backEndURL}/api/rent/${id}`, {
+            const response = await fetch(`${backEndURL}/api/rental/rent/${id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -56,8 +71,14 @@ export default function VehicleDetails() {
                 throw new Error("Failed to rent the vehicle.");
             }
 
-            const result = await response.json();
-            console.log("Rent successful:", result);
+            console.log("Rent successful:");
+            const newDates = selectedDates.map(d =>
+                new Date(d.getFullYear(), d.getMonth(), d.getDate())
+            );
+
+            setBookedDatesState(prev => [...prev, ...newDates]);
+
+            setRentNowShowModal(false);
 
         } catch (error) {
             console.error("Renting failed:", error.message);
@@ -119,7 +140,7 @@ export default function VehicleDetails() {
                     <div className="col-md-5 d-flex flex-column align-items-center justify-content-center">
                         <div className="calendar-wrapper w-100 mb-3">
                             <VehicleCalendar
-                                bookedDates={bookedDates}
+                                bookedDates={bookedDatesState}
                                 setRentNowShowModal={setRentNowShowModal}
                             />
                             <button

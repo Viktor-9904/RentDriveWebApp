@@ -12,5 +12,6 @@ namespace RentDrive.Services.Data.Interfaces
         Task<bool> CreateVehicle(VehicleCreateFormViewModel viewModel);
         Task<bool> UpdateVehicle(VehicleEditFormViewModel viewModel);
         Task<bool> SoftDeleteVehicleByIdAsync(Guid id);
+        Task<decimal> GetVehiclePricePerDayByVehicleId(Guid id);
     }
 }

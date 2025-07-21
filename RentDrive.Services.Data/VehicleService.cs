@@ -298,5 +298,12 @@ namespace RentDrive.Services.Data
             return true;
         }
 
+        public async Task<decimal> GetVehiclePricePerDayByVehicleId(Guid id)
+        {
+            Vehicle vehicle = await this.vehicleRepository
+                .GetByIdAsync(id);
+
+            return vehicle.PricePerDay;
+        }
     }
 }
