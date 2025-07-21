@@ -4,6 +4,7 @@ import DeleteConfirmationModal from "../Vehicles/DeleteConfirmationModal";
 import useVehicleDetails from "../Vehicles/hooks/useVehicleDetails";
 import VehicleCalendar from "./VehicleCalendar";
 import usebookedDates from "../../hooks/useBookedDates";
+import RentNowModal from "./RentNowModal";
 
 export default function VehicleDetails() {
     const { id } = useParams();
@@ -11,6 +12,8 @@ export default function VehicleDetails() {
     const { bookedDates, loadingBookedDates, errorBookedDates } = usebookedDates(id);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showRentNowModal, setRentNowShowModal] = useState(false);
+
     const navigate = useNavigate();
 
     const backEndURL = import.meta.env.VITE_API_URL;
@@ -29,6 +32,38 @@ export default function VehicleDetails() {
             alert(err.message);
         }
     };
+
+    const handleRent = async (selectedDates) => {
+        if (!vehicle?.id || selectedDates.length === 0) return;
+
+        const payload = {
+            vehicleId: vehicle.id,
+            bookedDates: selectedDates.map(date =>
+                new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString()
+            )
+        };
+
+        try {
+            const response = await fetch(`${backEndURL}/api/rent/${id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to rent the vehicle.");
+            }
+
+            const result = await response.json();
+            console.log("Rent successful:", result);
+
+        } catch (error) {
+            console.error("Renting failed:", error.message);
+        }
+    };
+
 
     if (loadingVehicle) return <div className="text-center py-5">Loading vehicle details...</div>;
     if (!vehicle) return <div className="text-center py-5 text-danger">Vehicle not found.</div>;
@@ -83,7 +118,16 @@ export default function VehicleDetails() {
 
                     <div className="col-md-5 d-flex flex-column align-items-center justify-content-center">
                         <div className="calendar-wrapper w-100 mb-3">
-                            <VehicleCalendar bookedDates={bookedDates}/>
+                            <VehicleCalendar
+                                bookedDates={bookedDates}
+                                setRentNowShowModal={setRentNowShowModal}
+                            />
+                            <button
+                                className="btn btn-success rent-now-btn mt-3 w-100"
+                                onClick={() => setRentNowShowModal(true)}
+                            >
+                                Rent Now
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -141,6 +185,14 @@ export default function VehicleDetails() {
                 onConfirm={confirmDelete}
                 Make={vehicle?.make}
                 Model={vehicle?.model}
+            />
+
+            <RentNowModal
+                showRentNowModal={showRentNowModal}
+                onClose={() => setRentNowShowModal(false)}
+                bookedDates={bookedDates}
+                pricePerDay={vehicle.pricePerDay}
+                handleRent={handleRent}
             />
         </>
     );

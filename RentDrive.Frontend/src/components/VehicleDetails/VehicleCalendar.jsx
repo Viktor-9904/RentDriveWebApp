@@ -1,7 +1,7 @@
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-export default function VehicleCalendar({ bookedDates }) {
+export default function VehicleCalendar({bookedDates}) {
     const today = new Date();
     const sixMonthsLater = new Date();
     sixMonthsLater.setMonth(today.getMonth() + 6);
@@ -17,14 +17,14 @@ export default function VehicleCalendar({ bookedDates }) {
         if (view !== "month") return "";
 
         if (bookedDateObjects.some(d => isSameDay(d, date)) && date > today) {
-            return "booked-tile";
+            return "vehicle-calendar__tile vehicle-calendar__tile--booked";
         }
 
         if (date >= today && date <= sixMonthsLater) {
-            return "available-tile";
+            return "vehicle-calendar__tile vehicle-calendar__tile--available";
         }
 
-        return "";
+        return "vehicle-calendar__tile";
     };
 
     return (
@@ -39,13 +39,12 @@ export default function VehicleCalendar({ bookedDates }) {
                     showNeighboringMonth={false}
                 />
                 <div className="legend mt-3 d-flex gap-3">
-                    <span className="legend-box available"></span>
+                    <span className="vehicle-calendar__legend-box vehicle-calendar__legend-box--available"></span>
                     <small>Available</small>
-                    <span className="legend-box booked"></span>
+                    <span className="vehicle-calendar__legend-box vehicle-calendar__legend-box--booked"></span>
                     <small>Booked</small>
                 </div>
             </div>
-            <button className="btn btn-success rent-now-btn">Rent Now</button>
         </div>
     );
 }
