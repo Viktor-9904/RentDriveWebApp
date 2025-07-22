@@ -20,7 +20,13 @@ import EditVehicle from './pages/EditVehicle'
 import ManageVehicleTypes from './pages/ManageVehicleTypes'
 import ManageVehicleTypeCategories from './pages/ManageVehicleTypeCategories'
 
+import ProfileLayoutPage from './pages/Profile/ProfileLayoutPage'
+import ProfileOverviewPage from './pages/Profile/ProfileOverviewPage'
+import MyRentalsPage from './pages/Profile/MyRentalsPage'
+import MyListedVehiclesPage from './pages/Profile/MyListedVehiclesPage'
+
 import { AccountProvider } from './context/AccountContext'
+import ProfileSettingsPage from './pages/Profile/ProfileSettingsPage'
 
 function ManageLayout() {
   return (
@@ -55,7 +61,7 @@ function App() {
         <Route path="/api/vehicle/:id" element={<VehicleDetailsPage />} />
 
         <Route path="/manage" element={<ManageLayout />}>
-        
+
           <Route path="vehicle-type-properties" element={<VehicleTypeProperties />} />
           <Route path="vehicle-types" element={<ManageVehicleTypes />} />
           <Route path="vehicle-type-categories" element={<ManageVehicleTypeCategories />} />
@@ -64,7 +70,14 @@ function App() {
             <Route path="create" element={<CreateVehicle />} />
             <Route path="edit/:id" element={<EditVehicle />} />
           </Route>
-          
+
+        </Route>
+
+        <Route path="/profile" element={<ProfileLayoutPage />}>
+          <Route index element={<ProfileOverviewPage />} />
+          <Route path="rentals" element={<MyRentalsPage />} />
+            <Route path="vehicles" element={<MyListedVehiclesPage />} />
+            <Route path="settings" element={<ProfileSettingsPage />} />
         </Route>
 
       </Routes>

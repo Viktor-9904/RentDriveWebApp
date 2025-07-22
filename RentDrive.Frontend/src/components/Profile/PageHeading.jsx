@@ -1,0 +1,16 @@
+export default function PageHeading() {
+  return (
+    <div className="page-heading">
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-8">
+            <div className="top-text header-text">
+              <h6>Account Details</h6>
+              <h2>Manage Your Profile and Rentals</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
