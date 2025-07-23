@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RentDrive.Data.Migrations;
 using RentDrive.Data.Models;
 using RentDrive.Services.Data;
 using RentDrive.Services.Data.Interfaces;
@@ -95,6 +97,26 @@ namespace RentDrive.Backend.Controllers
                     user.UserName,
                     user.Email,
                 });
+        }
+        [HttpGet("overview-details", Name = "User overview")]
+        public async Task<IActionResult> GetOverviewDetails()
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            ApplicationUser? user = await this.accountService.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            OverviewDetailsViewModel overviewDetails = await this.accountService
+                .GetOverviewDetailsByUserIdAsync(user);
+
+            return Ok(overviewDetails);
         }
     }
 }

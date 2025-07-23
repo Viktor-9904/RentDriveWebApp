@@ -10,5 +10,6 @@ namespace RentDrive.Services.Data.Interfaces
         public Task<SignInResult> LoginUserAsync(string emailOrUsername, string password);
         public Task LogoutUserAsync();
         public Task<ApplicationUser?> GetUserByIdAsync(string id);
+        public Task<OverviewDetailsViewModel> GetOverviewDetailsByUserIdAsync(ApplicationUser user);
     }
 }

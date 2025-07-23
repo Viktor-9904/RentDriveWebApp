@@ -114,5 +114,17 @@ namespace RentDrive.Services.Data
 
             return true;
         }
+
+        public async Task<int> GetCompletedRentalsCountByUserIdAsync(Guid userId)
+        {
+            int completedRentalsCount = await this.rentalRepository
+                .GetAllAsQueryable()
+                .Where( r => 
+                    r.RenterId == userId &&
+                    r.Status == RentalStatus.Completed)
+                .CountAsync();
+
+            return completedRentalsCount;
+        }
     }
 }

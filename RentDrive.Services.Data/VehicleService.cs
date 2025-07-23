@@ -305,5 +305,15 @@ namespace RentDrive.Services.Data
 
             return vehicle.PricePerDay;
         }
+
+        public async Task<int> GetUserListedVehicleCountAsync(Guid userId)
+        {
+            int ownedVehicleCount = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .Where(v => v.OwnerId == userId)
+                .CountAsync();
+
+            return ownedVehicleCount;
+        }
     }
 }
