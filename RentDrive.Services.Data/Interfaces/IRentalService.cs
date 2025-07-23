@@ -1,4 +1,6 @@
-﻿using RentDrive.Web.ViewModels.Rental;
+﻿using Microsoft.AspNetCore.Identity;
+using RentDrive.Data.Models;
+using RentDrive.Web.ViewModels.Rental;
 
 namespace RentDrive.Services.Data.Interfaces
 {
@@ -9,5 +11,6 @@ namespace RentDrive.Services.Data.Interfaces
         public Task<bool> AreDatesValid(Guid vehicleId, IEnumerable<DateTime> bookedDates);
         public Task<int> GetCompletedRentalsCountByUserIdAsync(Guid userId);
         public Task<IEnumerable<UserRentalViewModel>> GetUserRentalsByIdAsync(Guid userId);
+        public Task<bool> ConfirmRentalByIdAsync(string userId, Guid rentalId);
     }
 }

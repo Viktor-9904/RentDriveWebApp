@@ -59,5 +59,25 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(myRentals);
         }
+        [HttpPost("confirm-rental/{rentalId}")]
+        public async Task<IActionResult> ConfirmRentalById(Guid rentalId)
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            bool confirmedRental = await this.rentalService
+                .ConfirmRentalByIdAsync(userId, rentalId);
+
+            if (!confirmedRental)
+            {
+                return BadRequest("Rental confirmation failed.");
+            }
+
+            return Ok("Rental confirmed successfully.");
+        }
     }
 }

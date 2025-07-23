@@ -62,7 +62,7 @@ namespace RentDrive.Services.Data
 
             if (vehiclePricePerDay == 0)
             {
-                return false; 
+                return false;
             }
 
             Rental rental = new Rental()
@@ -120,7 +120,7 @@ namespace RentDrive.Services.Data
         {
             int completedRentalsCount = await this.rentalRepository
                 .GetAllAsQueryable()
-                .Where( r => 
+                .Where(r =>
                     r.RenterId == userId &&
                     r.Status == RentalStatus.Completed)
                 .CountAsync();
@@ -134,7 +134,7 @@ namespace RentDrive.Services.Data
                 .GetAllAsQueryable()
                 .Include(r => r.Vehicle)
                 .ThenInclude(v => v.VehicleImages)
-                .Where(r =>r.RenterId == userId)
+                .Where(r => r.RenterId == userId)
                 .Select(r => new UserRentalViewModel()
                 {
                     Id = r.Id,
@@ -142,6 +142,7 @@ namespace RentDrive.Services.Data
                     VehicleModel = r.Vehicle.Model,
                     ImageUrl = r.Vehicle.VehicleImages.FirstOrDefault()!.ImageURL ?? "images/default-vehicle.jpg",
                     Status = r.Status.ToString(),
+                    BookedOn = r.BookedOn,
                     StartDate = r.StartDate,
                     EndDate = r.EndDate,
                     PricePerDay = r.VehiclePricePerDay,
@@ -150,6 +151,27 @@ namespace RentDrive.Services.Data
                 .ToListAsync();
 
             return userRentals;
+        }
+
+        public async Task<bool> ConfirmRentalByIdAsync(string userId, Guid rentalId)
+        {
+            Rental? rental = await this.rentalRepository
+                .GetAllAsQueryable()
+                .FirstOrDefaultAsync(r =>
+                    r.Id == rentalId &&
+                    r.RenterId.ToString() == userId);
+
+            if (rental == null)
+            {
+                return false;
+            }
+
+            rental.Status = RentalStatus.Completed;
+            rental.CompletedOn = DateTime.UtcNow;
+
+            await this.rentalRepository.SaveChangesAsync();
+
+            return true;
         }
     }
 }

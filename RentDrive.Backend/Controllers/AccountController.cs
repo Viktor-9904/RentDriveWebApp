@@ -84,7 +84,7 @@ namespace RentDrive.Backend.Controllers
                 return Unauthorized();
             }
 
-            ApplicationUser? user = await this.accountService.GetUserByIdAsync(userId);
+            ApplicationUser? user = await this.accountService.GetUserByIdAsync(userId); // remove db model from controller.
             if (user == null)
             {
                 return NotFound();
