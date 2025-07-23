@@ -1,4 +1,6 @@
-﻿namespace RentDrive.Services.Data.Interfaces
+﻿using RentDrive.Web.ViewModels.Rental;
+
+namespace RentDrive.Services.Data.Interfaces
 {
     public interface IRentalService
     {
@@ -6,5 +8,6 @@
         public Task<bool> RentVehicle(Guid vehicleId, Guid RenterId, IEnumerable<DateTime> bookedDates);
         public Task<bool> AreDatesValid(Guid vehicleId, IEnumerable<DateTime> bookedDates);
         public Task<int> GetCompletedRentalsCountByUserIdAsync(Guid userId);
+        public Task<IEnumerable<UserRentalViewModel>> GetUserRentalsByIdAsync(Guid userId);
     }
 }

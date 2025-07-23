@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Rental;
 using System.Formats.Asn1;
+using System.Security.Claims;
 
 namespace RentDrive.Backend.Controllers
 {
@@ -42,6 +43,21 @@ namespace RentDrive.Backend.Controllers
             }
 
             return Ok();
+        }
+        [HttpGet("my-rentals")]
+        public async Task<IActionResult> GetUserRentals()
+        {
+            string? userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out Guid userId))
+            {
+                return Unauthorized();
+            }
+
+            IEnumerable<UserRentalViewModel> myRentals = await this.rentalService
+                .GetUserRentalsByIdAsync(userId);
+
+            return Ok(myRentals);
         }
     }
 }

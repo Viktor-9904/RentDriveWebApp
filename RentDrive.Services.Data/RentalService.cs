@@ -3,6 +3,7 @@ using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
+using RentDrive.Web.ViewModels.Rental;
 
 namespace RentDrive.Services.Data
 {
@@ -125,6 +126,30 @@ namespace RentDrive.Services.Data
                 .CountAsync();
 
             return completedRentalsCount;
+        }
+
+        public async Task<IEnumerable<UserRentalViewModel>> GetUserRentalsByIdAsync(Guid userId)
+        {
+            List<UserRentalViewModel> userRentals = await this.rentalRepository
+                .GetAllAsQueryable()
+                .Include(r => r.Vehicle)
+                .ThenInclude(v => v.VehicleImages)
+                .Where(r =>r.RenterId == userId)
+                .Select(r => new UserRentalViewModel()
+                {
+                    Id = r.Id,
+                    VehicleMake = r.Vehicle.Make,
+                    VehicleModel = r.Vehicle.Model,
+                    ImageUrl = r.Vehicle.VehicleImages.FirstOrDefault()!.ImageURL ?? "images/default-vehicle.jpg",
+                    Status = r.Status.ToString(),
+                    StartDate = r.StartDate,
+                    EndDate = r.EndDate,
+                    PricePerDay = r.VehiclePricePerDay,
+                    TotalPrice = r.TotalPrice,
+                })
+                .ToListAsync();
+
+            return userRentals;
         }
     }
 }

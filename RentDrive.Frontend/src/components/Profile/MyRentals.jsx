@@ -1,41 +1,11 @@
+import { useUserRentals } from "./hooks/useUserRentals";
+
 export default function MyRentals() {
-    const rentals = [
-        {
-            id: 1,
-            vehicleName: "Tesla Model 3",
-            imageUrl: "https://cdn.prod.website-files.com/60ce1b7dd21cd517bb39ff20/6807a8c7597e6b65fa818511_tesla_model3.jpg",
-            status: "Active",
-            startDate: "07/20/2025",
-            endDate: "07/22/2025",
-            pricePerDay: 60,
-            totalPrice: 180,
-        },
-        {
-            id: 2,
-            vehicleName: "Yamaha MT-07",
-            imageUrl: "https://cdn.dealerspike.com/imglib/v1/800x600/imglib/Assets/Inventory/F7/58/F7584634-5D75-48ED-B549-121FCE479848.jpg",
-            status: "Completed",
-            startDate: "06/10/2025",
-            endDate: "06/13/2025",
-            pricePerDay: 40,
-            totalPrice: 120,
-        },
-    ];
+    const { rentals, loading, error } = useUserRentals();
+    const backEndURL = import.meta.env.VITE_API_URL;
 
-
-    const handleConfirm = () => {
-        console.log("Confirmed rental");
-
-    }
-
-    function formatDate(dateStr) {
-        const date = new Date(dateStr);
-        return date.toLocaleDateString('en-GB', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        });
-    }
+    if (loading) return <p>Loading rentals...</p>;
+    if (error) return <p>Error: {error}</p>;
 
     return (
         <div className="rentals-container">
@@ -58,27 +28,27 @@ export default function MyRentals() {
                         <tr key={rental.id}>
                             <td className="vehicle-cell">
                                 <img
-                                    src={rental.imageUrl}
-                                    alt={rental.vehicleName}
+                                    src={`${backEndURL}/${rental.imageUrl}`}
+                                    alt={`${rental.vehicleMake} ${rental.vehicleModel}`}
                                     className="vehicle-image"
                                 />
-                                {rental.vehicleName}
+                                {rental.vehicleMake} {rental.vehicleModel}
                             </td>
                             <td>
                                 <span className={`rental-status ${rental.status.toLowerCase()}`}>
                                     {rental.status}
                                 </span>
                             </td>
-                            <td className="date-cell">{formatDate(rental.startDate)}</td>
-                            <td className="date-cell">{formatDate(rental.endDate)}</td>
+                            <td className="date-cell">{new Date(rental.startDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
+                            <td className="date-cell">{new Date(rental.endDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</td>
 
-                            <td>${rental.pricePerDay}</td>
-                            <td>${rental.totalPrice}</td>
+                            <td className="price-cell">{rental.pricePerDay.toFixed(2)} €</td>
+                            <td className="price-cell">{rental.totalPrice.toFixed(2)} €</td>
                             <td>
                                 {rental.status === "Active" && (
                                     <button
                                         className="confirm-button"
-                                        onClick={() => handleConfirm(rental.id)}
+                                        onClick={() => console.log(`Confirm rental ${rental.id}`)}
                                     >
                                         Confirm
                                     </button>
@@ -87,8 +57,6 @@ export default function MyRentals() {
                         </tr>
                     ))}
                 </tbody>
-
-
             </table>
         </div>
     );
