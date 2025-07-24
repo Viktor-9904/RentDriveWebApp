@@ -140,7 +140,7 @@ namespace RentDrive.Services.Data
                     Id = r.Id,
                     VehicleMake = r.Vehicle.Make,
                     VehicleModel = r.Vehicle.Model,
-                    ImageUrl = r.Vehicle.VehicleImages.FirstOrDefault()!.ImageURL ?? "images/default-vehicle.jpg",
+                    ImageUrl = r.Vehicle.VehicleImages.FirstOrDefault().ImageURL ?? "images/default-vehicle.jpg",
                     Status = r.Status.ToString(),
                     BookedOn = r.BookedOn,
                     StartDate = r.StartDate,

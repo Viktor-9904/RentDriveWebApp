@@ -315,5 +315,29 @@ namespace RentDrive.Services.Data
 
             return ownedVehicleCount;
         }
+        public async Task<IEnumerable<UserVehicleViewModel>> GetUserVehiclesByIdAsync(string userId)
+        {
+            IEnumerable<UserVehicleViewModel> userVehicles = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .Include(v => v.VehicleImages)
+                .Include(v => v.Rentals)
+                .Where(v =>
+                    v.OwnerId.ToString() == userId &&
+                    v.IsDeleted == false)
+                .Select(v => new UserVehicleViewModel()
+                {
+                    Id = v.Id,
+                    ImageUrl = v.VehicleImages.FirstOrDefault().ImageURL ?? "images/default-vehicle.jpg",
+                    Make = v.Make,
+                    Model = v.Model,
+                    FuelType = v.FuelType.ToString(),
+                    PricePerDay = v.PricePerDay,
+                    TimesBooked = v.Rentals.Count(),
+                    Rating = 0, // TODO
+                })
+                .ToListAsync();
+
+            return userVehicles;
+        }
     }
 }

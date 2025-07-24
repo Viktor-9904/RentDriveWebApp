@@ -3,6 +3,7 @@
 using RentDrive.Services.Data;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Vehicle;
+using System.Security.Claims;
 
 namespace RentDrive.Backend.Controllers
 {
@@ -33,6 +34,20 @@ namespace RentDrive.Backend.Controllers
                 .GetAllVehiclesAsync();
 
             return allVehiclesViewModels;
+        }
+        [HttpGet("user-vehicles")]
+        public async Task<IActionResult> GetUserVehicles()
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            IEnumerable<UserVehicleViewModel> userVehicles = await this.vehicleService
+                .GetUserVehiclesByIdAsync(userId);
+
+            return Ok(userVehicles);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicleDetailsById(string id)

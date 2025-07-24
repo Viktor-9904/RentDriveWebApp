@@ -14,5 +14,6 @@ namespace RentDrive.Services.Data.Interfaces
         Task<bool> SoftDeleteVehicleByIdAsync(Guid id);
         Task<decimal> GetVehiclePricePerDayByVehicleId(Guid id);
         Task<int> GetUserListedVehicleCountAsync(Guid userId);
+        Task<IEnumerable<UserVehicleViewModel>> GetUserVehiclesByIdAsync(string userId);
     }
 }
