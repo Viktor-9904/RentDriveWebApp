@@ -4,6 +4,7 @@ using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Rental;
+using System.Globalization;
 
 namespace RentDrive.Services.Data
 {
@@ -172,6 +173,32 @@ namespace RentDrive.Services.Data
             await this.rentalRepository.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<IEnumerable<UserVehicleRentalViewModel>> GetUserVehiclesRentals(string userId, Guid vehicleId)
+        {
+            IEnumerable<UserVehicleRentalViewModel> userVehicleRentals = await this.rentalRepository
+                .GetAllAsQueryable()
+                .Include(r => r.Vehicle)
+                .Include(r => r.Renter)
+                .Where(r =>
+                    r.Vehicle.OwnerId.ToString() == userId && 
+                    r.VehicleId == vehicleId)
+                .Select(r=>  new UserVehicleRentalViewModel()
+                {
+                    Id = r.Id,
+                    Username = r.Renter.UserName,
+                    BookedOn = $"{r.BookedOn.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}",
+                    StartDate = r.StartDate,
+                    EndDate = r.EndDate,
+                    Period = $"{r.StartDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)} - {r.EndDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}",
+                    Status = r.Status.ToString(),
+                    PricePerDay = r.VehiclePricePerDay,
+                    TotalPrice = r.TotalPrice,
+                })
+                .ToListAsync();
+
+            return userVehicleRentals;
         }
     }
 }

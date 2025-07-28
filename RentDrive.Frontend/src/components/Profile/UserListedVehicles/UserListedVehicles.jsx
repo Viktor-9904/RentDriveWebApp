@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import DeleteConfirmationModal from "../Vehicles/DeleteConfirmationModal";
-import useDeleteVehicle from "../Vehicles/hooks/useDeleteVehicle";
-import useUserVehicles from "./hooks/useUserVehicles";
+import DeleteConfirmationModal from "../../Vehicles/DeleteConfirmationModal";
+import useDeleteVehicle from "../../Vehicles/hooks/useDeleteVehicle";
+import useUserVehicles from "../hooks/useUserVehicles";
+import UserVehicleBookingsModal from "./UserVehicleBookingsModal";
+import { ConciergeBellIcon } from "lucide-react";
 
-export default function MyVehicles() {
+export default function UserListedVehicles() {
   const { userVehicles, uservehiclesLoading, uservehiclesError } = useUserVehicles()
   const [myVehicles, setMyVehicles] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [vehicleToDelete, setVehicleToDelete] = useState({});
   const backEndURL = import.meta.env.VITE_API_URL;
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+const [selectedBookings, setSelectedBookings] = useState([]);
+const [showBookingModal, setShowBookingModal] = useState(false);
 
   useEffect(() => {
     if (userVehicles) {
@@ -17,9 +22,19 @@ export default function MyVehicles() {
     }
   }, [userVehicles])
 
-  useEffect(() => {
-    console.log(vehicleToDelete)
-  }, [vehicleToDelete])
+const handleRowClick = async (vehicle) => {
+  try {
+    const res = await fetch(`${backEndURL}/api/rental/vehicle/${vehicle.id}`, {
+      credentials: "include",
+    });
+    const data = await res.json();
+    setSelectedBookings(data);
+    setSelectedVehicle(vehicle);
+    setShowBookingModal(true);
+  } catch (err) {
+    console.log("Failed to fetch vehicle bookings: ", err);
+  }
+};
 
   const { deleteVehicle } = useDeleteVehicle();
 
@@ -80,7 +95,7 @@ export default function MyVehicles() {
           </thead>
           <tbody>
             {myVehicles.map((vehicle) => (
-              <tr key={vehicle.id}>
+              <tr key={vehicle.id} onClick={() => handleRowClick(vehicle)}>
                 <td>
                   <img
                     src={`${backEndURL}/${vehicle.imageUrl}`}
@@ -110,6 +125,13 @@ export default function MyVehicles() {
               </tr>
             ))}
           </tbody>
+          
+          <UserVehicleBookingsModal
+            show={showBookingModal}
+            onClose={() => setShowBookingModal(false)}
+            vehicle={selectedVehicle}
+            bookings={selectedBookings}
+          />
         </table>
       ) : (
         <p className="no-vehicles-message">No vehicles posted.</p>

@@ -79,5 +79,20 @@ namespace RentDrive.Backend.Controllers
 
             return Ok("Rental confirmed successfully.");
         }
+        [HttpGet("vehicle/{vehicleId}")]
+        public async Task<IActionResult> GetUserVehiclesRentalsByVehicleId(Guid vehicleId)
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            IEnumerable<UserVehicleRentalViewModel> userVehicles = await this.rentalService
+                .GetUserVehiclesRentals(userId, vehicleId);
+
+            return Ok(userVehicles);
+        }
     }
 }

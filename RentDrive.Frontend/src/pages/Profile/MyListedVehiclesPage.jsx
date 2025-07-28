@@ -1,9 +1,9 @@
-import MyListedVehicles from "../../components/Profile/MyListedVehicles";
+import UserListedVehicles from "../../components/Profile/UserListedVehicles/UserListedVehicles";
 
 export default function MyListedVehiclesPage() {
     return(
         <>
-            <MyListedVehicles/>
+            <UserListedVehicles/>
         </>
     )
 }
