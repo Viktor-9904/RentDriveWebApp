@@ -68,8 +68,15 @@ namespace RentDrive.Services.Data
             return user;
         }
 
-        public async Task<OverviewDetailsViewModel> GetOverviewDetailsByUserIdAsync(ApplicationUser user)
+        public async Task<OverviewDetailsViewModel?> GetOverviewDetailsByUserIdAsync(string userId)
         {
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return null;
+            }
+
             OverviewDetailsViewModel overviewDetails = new OverviewDetailsViewModel()
             {
                 //TODO: add first and last names to overview after also adding them to register.
@@ -151,6 +158,28 @@ namespace RentDrive.Services.Data
             IdentityResult result = await userManager.ChangePasswordAsync(user, viewModel.CurrentPassword, viewModel.NewPassword);
 
             return result.Succeeded;
+        }
+
+        public async Task<UserCredentialsViewModel?> GetUserCredentialsByIdAsync(string userId)
+        {
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            UserCredentialsViewModel userCredentials = new UserCredentialsViewModel()
+            {
+                Id = user.Id,
+                UserName = user.UserName!,
+                Email = user.Email!,
+                PhoneNumber = user.PhoneNumber,
+                MemberSince = user.CreatedOn,
+                IsCompanyEmployee = user.IsCompanyEmployee,
+            };
+
+            return userCredentials;
         }
     }
 }

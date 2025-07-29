@@ -1,30 +1,40 @@
 import { Link } from 'react-router';
 import useLogout from '../../hooks/useLogout';
 import { useAuth } from '../../context/AccountContext';
+import { useEffect } from 'react';
 
 export default function Header() {
-    const { isAuthenticated } = useAuth();
+    const { user, isAuthenticated } = useAuth();
+
+    useEffect(() => {
+        console.log(user)
+    }, [user])
 
     const navigation = [
         { name: 'Home', href: '/' },
         { name: 'Categories', href: '/categories' },
         { name: 'Listing', href: '/listing' },
         { name: 'Contact Us', href: '/contact-us' },
-        {
-            name: 'Manage',
-            dropdown: true,
-            children: [
-                { name: 'Vehicle Types', href: '/manage/vehicle-types' },
-                { name: 'Vehicle Type Properties', href: '/manage/vehicle-type-properties' },
-                { name: 'Vehicle Categories', href: '/manage/vehicle-type-categories' },
+        ...(user?.isCompanyEmployee
+            ? [
+                {
+                    name: 'Manage',
+                    dropdown: true,
+                    children: [
+                        { name: 'Vehicle Types', href: '/manage/vehicle-types' },
+                        { name: 'Vehicle Type Properties', href: '/manage/vehicle-type-properties' },
+                        { name: 'Vehicle Categories', href: '/manage/vehicle-type-categories' },
+                    ],
+                },
             ]
-        },
+            : []),
         ...(!isAuthenticated
             ? [
                 { name: 'Register', href: '/register' },
                 { name: 'Login', href: '/login' }
             ]
-            : [])
+            : []),
+        { name: 'My Profile', href: '/profile' },
     ];
 
     return (

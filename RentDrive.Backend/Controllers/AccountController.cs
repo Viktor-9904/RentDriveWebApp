@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using RentDrive.Data.Migrations;
-using RentDrive.Data.Models;
-using RentDrive.Services.Data;
+
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.ApplicationUser;
-using System.Security.Claims;
 
 namespace RentDrive.Backend.Controllers
 {
@@ -84,19 +82,15 @@ namespace RentDrive.Backend.Controllers
                 return Unauthorized();
             }
 
-            ApplicationUser? user = await this.accountService.GetUserByIdAsync(userId); // remove db model from controller.
-            if (user == null)
+            UserCredentialsViewModel? userCredentials = await this.accountService
+                .GetUserCredentialsByIdAsync(userId);
+
+            if (userCredentials == null)
             {
                 return NotFound();
             }
 
-            return Ok(
-                new
-                {
-                    user.Id,
-                    user.UserName,
-                    user.Email,
-                });
+            return Ok(userCredentials);
         }
         [HttpGet("overview-details", Name = "User overview")]
         public async Task<IActionResult> GetOverviewDetails()
@@ -107,14 +101,13 @@ namespace RentDrive.Backend.Controllers
                 return Unauthorized();
             }
 
-            ApplicationUser? user = await this.accountService.GetUserByIdAsync(userId);
-            if (user == null)
+            OverviewDetailsViewModel? overviewDetails = await this.accountService
+                .GetOverviewDetailsByUserIdAsync(userId);
+
+            if (overviewDetails == null)
             {
                 return NotFound();
             }
-
-            OverviewDetailsViewModel overviewDetails = await this.accountService
-                .GetOverviewDetailsByUserIdAsync(user);
 
             return Ok(overviewDetails);
         }

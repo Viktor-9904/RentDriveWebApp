@@ -10,9 +10,10 @@ namespace RentDrive.Services.Data.Interfaces
         public Task<SignInResult> LoginUserAsync(string emailOrUsername, string password);
         public Task LogoutUserAsync();
         public Task<ApplicationUser?> GetUserByIdAsync(string id);
-        public Task<OverviewDetailsViewModel> GetOverviewDetailsByUserIdAsync(ApplicationUser user);
+        public Task<OverviewDetailsViewModel?> GetOverviewDetailsByUserIdAsync(string userId);
         public Task<UserProfileDetailsViewModel?> GetUserProfileDetailsByIdAsync(string userId);
         public Task<UserProfileDetailsViewModel?> UpdateUserProfileDetails(string userId, UserProfileDetailsViewModel viewModel);
         public Task<bool> UpdatedUserPasswordAsync(string userId, UserChangePasswordInpuViewModel viewModel);
+        public Task<UserCredentialsViewModel?> GetUserCredentialsByIdAsync(string userId);
     }
 }
