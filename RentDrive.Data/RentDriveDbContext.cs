@@ -33,6 +33,7 @@ namespace RentDrive.Data
         public DbSet<VehicleTypeProperty> VehicleTypeProperties { get; set; } = null!;
         public DbSet<VehicleTypePropertyValue> VehicleTypePropertyValues { get; set; } = null!;
         public DbSet<Rental> Rentals { get; set; } = null!;
+        public DbSet<VehicleReview> VehicleReviews { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

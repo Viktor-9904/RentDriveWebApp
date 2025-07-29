@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 
-using static RentDrive.Common.Vehicle.VehicleValidationConstants.VehicleImages;
+using static RentDrive.Common.EntityValidationConstants.VehicleValidationConstants.VehicleImages;
 
 namespace RentDrive.Services.Data
 {

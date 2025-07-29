@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentDrive.Data;
 
@@ -11,9 +12,11 @@ using RentDrive.Data;
 namespace RentDrive.Data.Migrations
 {
     [DbContext(typeof(RentDriveDbContext))]
-    partial class RentDriveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250729225036_AddedVehicleReview")]
+    partial class AddedVehicleReview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,7 +284,7 @@ namespace RentDrive.Data.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("Rentals", (string)null);
+                    b.ToTable("Rentals");
 
                     b.HasData(
                         new
@@ -472,7 +475,7 @@ namespace RentDrive.Data.Migrations
 
                     b.HasIndex("VehicleTypeId");
 
-                    b.ToTable("Vehicles", (string)null);
+                    b.ToTable("Vehicles");
 
                     b.HasData(
                         new
@@ -546,7 +549,7 @@ namespace RentDrive.Data.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("VehicleImages", (string)null);
+                    b.ToTable("VehicleImages");
 
                     b.HasData(
                         new
@@ -606,7 +609,7 @@ namespace RentDrive.Data.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("VehicleReviews", (string)null);
+                    b.ToTable("VehicleReviews");
                 });
 
             modelBuilder.Entity("RentDrive.Data.Models.VehicleType", b =>
@@ -631,7 +634,7 @@ namespace RentDrive.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("VehicleTypes", (string)null);
+                    b.ToTable("VehicleTypes");
 
                     b.HasData(
                         new
@@ -724,7 +727,7 @@ namespace RentDrive.Data.Migrations
                     b.HasIndex("VehicleTypeId", "Name")
                         .IsUnique();
 
-                    b.ToTable("VehicleTypeCategories", (string)null);
+                    b.ToTable("VehicleTypeCategories");
 
                     b.HasData(
                         new
@@ -808,7 +811,7 @@ namespace RentDrive.Data.Migrations
 
                     b.HasIndex("VehicleTypeId");
 
-                    b.ToTable("VehicleTypeProperties", (string)null);
+                    b.ToTable("VehicleTypeProperties");
 
                     b.HasData(
                         new
@@ -886,7 +889,7 @@ namespace RentDrive.Data.Migrations
                     b.HasIndex("VehicleId", "VehicleTypePropertyId")
                         .IsUnique();
 
-                    b.ToTable("VehicleTypePropertyValues", (string)null);
+                    b.ToTable("VehicleTypePropertyValues");
 
                     b.HasData(
                         new

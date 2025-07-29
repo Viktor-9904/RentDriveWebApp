@@ -19,5 +19,6 @@ namespace RentDrive.Data.Models
         public decimal VehiclePricePerDay { get; set; }
         public decimal TotalPrice { get; set; }
         public RentalStatus Status { get; set; } = RentalStatus.Active;
+        public VehicleReview? Review { get; set; }
     }
 }

@@ -28,5 +28,7 @@ namespace RentDrive.Data.Models
             = new List<VehicleTypePropertyValue>();
         public ICollection<Rental> Rentals { get; set; }
             = new List<Rental>();
+        public ICollection<VehicleReview> Reviews { get; set; }
+            = new List<VehicleReview>();
     }
 }

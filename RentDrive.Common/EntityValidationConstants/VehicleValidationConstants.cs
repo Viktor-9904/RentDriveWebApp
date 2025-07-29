@@ -1,4 +1,4 @@
-﻿namespace RentDrive.Common.Vehicle
+﻿namespace RentDrive.Common.EntityValidationConstants
 {
     public static class VehicleValidationConstants
     {
@@ -30,6 +30,13 @@
         public static class VehicleTypePropertyValue
         {
             public const int PropertyValueMaxLength = 100;
+        }
+        public static class VehicleReview
+        {
+            public const int MinRating = 1;
+            public const int MaxRating = 10;
+
+            public const int CommentMaxLength = 500;
         }
     }
 }

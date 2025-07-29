@@ -6,7 +6,7 @@ using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Vehicle;
 using RentDrive.Web.ViewModels.VehicleTypePropertyValue;
-using static RentDrive.Common.Vehicle.VehicleValidationConstants.VehicleImages;
+using static RentDrive.Common.EntityValidationConstants.VehicleValidationConstants.VehicleImages;
 
 namespace RentDrive.Services.Data
 {

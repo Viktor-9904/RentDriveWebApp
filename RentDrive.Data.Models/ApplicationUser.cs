@@ -15,5 +15,7 @@ namespace RentDrive.Data.Models
             = new HashSet<Vehicle>();
         public ICollection<Rental> Rentals { get; set; } 
             = new List<Rental>();
+        public ICollection<VehicleReview> ReviewsGiven { get; set; }
+             = new List<VehicleReview>();
     }
 }

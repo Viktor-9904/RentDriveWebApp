@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
-using static RentDrive.Common.Vehicle.VehicleValidationConstants.Vehicle;
+using static RentDrive.Common.EntityValidationConstants.VehicleValidationConstants.Vehicle;
 
 namespace RentDrive.Data.Configuration
 {
