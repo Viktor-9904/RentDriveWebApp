@@ -118,5 +118,67 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(overviewDetails);
         }
+        [HttpGet("user-profile-details")]
+        public async Task<IActionResult> GetUserProfileDetails()
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            UserProfileDetailsViewModel? userDetails  = await this.accountService
+                .GetUserProfileDetailsByIdAsync(userId);
+
+            if (userDetails == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(userDetails);
+        }
+        [HttpPut("update-profile-details")]
+        public async Task<IActionResult> UpdateUserDetails([FromBody] UserProfileDetailsViewModel viewModel)
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            UserProfileDetailsViewModel? userDetails = await this.accountService
+                .UpdateUserProfileDetails(userId, viewModel);
+
+            if (userDetails == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(userDetails);
+        }
+        [HttpPost("update-password")]
+        public async Task<IActionResult> UpdateUserPassword([FromBody] UserChangePasswordInpuViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            bool updatedPassword = await this.accountService
+                .UpdatedUserPasswordAsync(userId, viewModel);
+
+            if (!updatedPassword)
+            {
+                return BadRequest("Failed to update password.");
+            }
+
+            return Ok("Successfully updated password.");
+        }
     }
 }

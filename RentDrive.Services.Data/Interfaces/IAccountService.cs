@@ -11,5 +11,8 @@ namespace RentDrive.Services.Data.Interfaces
         public Task LogoutUserAsync();
         public Task<ApplicationUser?> GetUserByIdAsync(string id);
         public Task<OverviewDetailsViewModel> GetOverviewDetailsByUserIdAsync(ApplicationUser user);
+        public Task<UserProfileDetailsViewModel?> GetUserProfileDetailsByIdAsync(string userId);
+        public Task<UserProfileDetailsViewModel?> UpdateUserProfileDetails(string userId, UserProfileDetailsViewModel viewModel);
+        public Task<bool> UpdatedUserPasswordAsync(string userId, UserChangePasswordInpuViewModel viewModel);
     }
 }

@@ -64,7 +64,7 @@ namespace RentDrive.Services.Data
 
         public async Task<ApplicationUser?> GetUserByIdAsync(string id)
         {
-            ApplicationUser? user =  await userManager.FindByIdAsync(id);
+            ApplicationUser? user = await userManager.FindByIdAsync(id);
             return user;
         }
 
@@ -88,6 +88,69 @@ namespace RentDrive.Services.Data
             //overviewDetails.UserRating = TODO
 
             return overviewDetails;
+        }
+
+        public async Task<UserProfileDetailsViewModel?> GetUserProfileDetailsByIdAsync(string userId)
+        {
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            UserProfileDetailsViewModel userDetails = new UserProfileDetailsViewModel()
+            {
+                Username = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+            };
+
+            return userDetails;
+        }
+
+        public async Task<UserProfileDetailsViewModel?> UpdateUserProfileDetails(string userId, UserProfileDetailsViewModel viewModel)
+        {
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            user.UserName = viewModel.Username;
+            user.Email = viewModel.Email;
+            user.PhoneNumber = viewModel.PhoneNumber;
+
+            IdentityResult result = await userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                return null;
+            }
+
+            UserProfileDetailsViewModel userDetails = new UserProfileDetailsViewModel()
+            {
+                Username = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+            };
+
+            return userDetails;
+        }
+
+        public async Task<bool> UpdatedUserPasswordAsync(string userId, UserChangePasswordInpuViewModel viewModel)
+        {
+            ApplicationUser? user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            IdentityResult result = await userManager.ChangePasswordAsync(user, viewModel.CurrentPassword, viewModel.NewPassword);
+
+            return result.Succeeded;
         }
     }
 }
