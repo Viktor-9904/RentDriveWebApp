@@ -1,6 +1,10 @@
 import { Outlet, NavLink } from "react-router-dom";
+import useLogout from "../../hooks/useLogout";
 
 export default function ProfileLayout() {
+
+  const handleLogout = useLogout();
+
   return (
     <div className="profile-layout">
       <aside className="profile-sidebar">
@@ -19,7 +23,18 @@ export default function ProfileLayout() {
             Settings
           </NavLink>
         </nav>
+
+        <div style={{ marginTop: "auto" }}>
+          <button
+            className="profile-layout-logout-button"
+            onClick={handleLogout}
+            onMouseDown={(e) => e.currentTarget.blur()}
+          >
+            Logout
+          </button>
+        </div>
       </aside>
+
 
       <main className="profile-content">
         <Outlet />

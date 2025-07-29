@@ -3424,6 +3424,26 @@ cursor: pointer !important;
   gap: 1rem;
 }
 
+.profile-layout-logout-button {
+  all: unset;
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  color: #d90429;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.profile-layout-logout-button:hover {
+  background-color: #ffe5e5;
+  color: #d90429;
+}
+
 .form-section {
   display: flex;
   flex-direction: column;

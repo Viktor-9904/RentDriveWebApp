@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AccountContext';
 
 export default function Header() {
     const { isAuthenticated } = useAuth();
-    const handleLogout = useLogout();
 
     const navigation = [
         { name: 'Home', href: '/' },
@@ -57,18 +56,6 @@ export default function Header() {
                                             </li>
                                         )
                                     ))}
-
-                                    {isAuthenticated && (
-                                        <li>
-                                            <button
-                                                className="logout-button"
-                                                onClick={handleLogout}
-                                                onMouseDown={(e) => e.currentTarget.blur()}
-                                            >
-                                                Logout
-                                            </button>
-                                        </li>
-                                    )}
                                 </ul>
                             </nav>
                         </div>
