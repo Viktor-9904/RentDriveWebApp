@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentDrive.Data;
 
@@ -11,9 +12,11 @@ using RentDrive.Data;
 namespace RentDrive.Data.Migrations
 {
     [DbContext(typeof(RentDriveDbContext))]
-    partial class RentDriveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250730104019_RenamedRatingToStars")]
+    partial class RenamedRatingToStars
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -607,68 +610,6 @@ namespace RentDrive.Data.Migrations
                     b.HasIndex("VehicleId");
 
                     b.ToTable("VehicleReviews");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("11111111-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                            Comment = "Smooth ride, very clean, great experience!",
-                            CreatedOn = new DateTime(2025, 1, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RentalId = new Guid("a1a25e78-2b30-4f77-a899-08db1682a00a"),
-                            ReviewerId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
-                            Stars = 5,
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de")
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
-                            Comment = "Engine was louder than expected, not well maintained.",
-                            CreatedOn = new DateTime(2025, 7, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RentalId = new Guid("9cfe3db6-50e1-41e4-8a98-3cdba63c20b1"),
-                            ReviewerId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a"),
-                            Stars = 2,
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de")
-                        },
-                        new
-                        {
-                            Id = new Guid("33333333-cccc-cccc-cccc-cccccccccccc"),
-                            Comment = "Powerful SUV, great for the mountains.",
-                            CreatedOn = new DateTime(2025, 7, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RentalId = new Guid("b2c98c1a-45f4-4b89-9a74-51cfa684b9e2"),
-                            ReviewerId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
-                            Stars = 4,
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743")
-                        },
-                        new
-                        {
-                            Id = new Guid("44444444-dddd-dddd-dddd-dddddddddddd"),
-                            Comment = "Uncomfortable seats and poor air conditioning.",
-                            CreatedOn = new DateTime(2025, 8, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RentalId = new Guid("a5f61b5a-883e-47f4-8189-44b197967d5f"),
-                            ReviewerId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a"),
-                            Stars = 1,
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743")
-                        },
-                        new
-                        {
-                            Id = new Guid("55555555-eeee-eeee-eeee-eeeeeeeeeeee"),
-                            Comment = "Decent for city driving, but not spacious.",
-                            CreatedOn = new DateTime(2025, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RentalId = new Guid("dca1c233-b01b-4f6c-a0fc-f6b709bd92ef"),
-                            ReviewerId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a"),
-                            Stars = 3,
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4")
-                        },
-                        new
-                        {
-                            Id = new Guid("66666666-ffff-ffff-ffff-ffffffffffff"),
-                            Comment = "Very fuel efficient and easy to park!",
-                            CreatedOn = new DateTime(2025, 7, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RentalId = new Guid("c63cc240-39c6-4d55-b5cf-bd17912825fc"),
-                            ReviewerId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
-                            Stars = 5,
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4")
-                        });
                 });
 
             modelBuilder.Entity("RentDrive.Data.Models.VehicleType", b =>

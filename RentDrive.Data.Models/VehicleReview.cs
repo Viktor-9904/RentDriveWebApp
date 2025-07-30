@@ -13,8 +13,7 @@ namespace RentDrive.Data.Models
         public Rental Rental { get; set; } = null!;
         public Guid ReviewerId { get; set; }
         public ApplicationUser Reviewer { get; set; } = null!;
-        [Range(MinRating, MaxRating)]
-        public int Rating { get; set; }
+        public int Stars { get; set; }
         public string? Comment { get; set; }
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
     }
