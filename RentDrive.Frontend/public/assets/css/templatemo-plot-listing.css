@@ -2764,6 +2764,37 @@ cursor: pointer !important;
   background-color: #d4edda;
   box-shadow: 0 8px 16px rgba(25, 135, 84, 0.3);
 }
+.orange-box {
+    background-color: #fff3e09d;
+    border: 1px solid #ffc107;
+    border-radius: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.no-reviews-text {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.individual-review {
+    background-color: #ffffff;
+    border: 1px solid #ff99009f;
+    border-radius: 5rem;
+}
+
+.review-username {
+    font-weight: 600;
+    color: #333;
+}
+
+.review-stars i {
+    color: #ffa500;
+    margin-right: 0.2rem;
+}
+
+.review-comment {
+    color: #555;
+}
 
 
 

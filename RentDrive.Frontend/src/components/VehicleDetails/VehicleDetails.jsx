@@ -7,6 +7,7 @@ import usebookedDates from "../../hooks/useBookedDates";
 import RentNowModal from "./RentNowModal";
 import { useAuth } from "../../context/AccountContext";
 import StarRating from "../shared/VehicleStarRating";
+import ReviewList from "./ReviewList";
 
 export default function VehicleDetails() {
     const { id } = useParams();
@@ -203,6 +204,8 @@ export default function VehicleDetails() {
                     <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
                 </div>
             </div>
+
+            <ReviewList reviews={vehicle.vehicleReviews} />
 
             <DeleteConfirmationModal
                 show={showDeleteModal}

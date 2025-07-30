@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using RentDrive.Data.Migrations;
+
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
+using RentDrive.Web.ViewModels;
 using RentDrive.Web.ViewModels.Vehicle;
-using RentDrive.Web.ViewModels.VehicleTypePropertyValue;
+
 using static RentDrive.Common.EntityValidationConstants.VehicleValidationConstants.VehicleImages;
 
 namespace RentDrive.Services.Data
@@ -113,6 +113,7 @@ namespace RentDrive.Services.Data
                 .GetAllAsQueryable()
                 .Include(v => v.VehicleImages)
                 .Include(v => v.Reviews)
+                .ThenInclude(vr => vr.Reviewer)
                 .Where(v => v.Id == id && !v.IsDeleted)
                 .Select(v => new VehicleDetailsViewModel()
                 {
@@ -133,7 +134,14 @@ namespace RentDrive.Services.Data
                     Description = v.Description,
                     ImageURLS = v.VehicleImages.Select(vi => vi.ImageURL).ToList(),
                     StarsRating = v.Reviews.Select(vr => (double?)vr.Stars).Average() ?? 0,
-                    ReviewCount = v.Reviews.Count()
+                    ReviewCount = v.Reviews.Count(),
+                    VehicleReviews = v.Reviews.Select(vr => new VehicleReviewListItemViewModel()
+                    {
+                        Username = vr.Reviewer.UserName!,
+                        Comment = vr.Comment,
+                        StarRating = vr.Stars,
+                    })
+                    .ToList()
                 })
                 .FirstOrDefaultAsync();
 

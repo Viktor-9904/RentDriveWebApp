@@ -23,5 +23,7 @@
             = new List<string>();
         public List<VehicleTypePropertyValuesViewModel> VehicleProperties { get; set; }
             = new List<VehicleTypePropertyValuesViewModel>();
+        public List<VehicleReviewListItemViewModel> VehicleReviews { get; set; }
+            = new List<VehicleReviewListItemViewModel>();
     }
 }
