@@ -23,6 +23,8 @@ export default function ListingPage() {
                                 fuelType={vehicle.fuelType}
                                 imageURL={vehicle.imageURL}
                                 ownerName={vehicle.ownerName}
+                                starsRating={vehicle.starsRating}
+                                reviewCount={vehicle.reviewCount}
                             />)}
                         </div>
                     </div>

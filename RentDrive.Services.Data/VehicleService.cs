@@ -43,6 +43,7 @@ namespace RentDrive.Services.Data
             IEnumerable<ListingVehicleViewModel> allVehicles = await this.vehicleRepository
                 .GetAllAsQueryable()
                 .Where(v => !v.IsDeleted)
+                .Include(v => v.Reviews)
                 .OrderBy(v => v.Make)
                 .ThenBy(v => v.Model)
                 .Select(v => new ListingVehicleViewModel()
@@ -55,7 +56,9 @@ namespace RentDrive.Services.Data
                     YearOfProduction = v.DateOfProduction.Year,
                     PricePerDay = v.PricePerDay,
                     FuelType = v.FuelType.ToString(),
-                    OwnerName = v.Owner.UserName
+                    OwnerName = v.Owner.UserName,
+                    StarsRating = v.Reviews.Select(vr => (double?)vr.Stars).Average() ?? 0,
+                    ReviewCount = v.Reviews.Count()
                 })
                 .ToListAsync();
 
@@ -91,6 +94,8 @@ namespace RentDrive.Services.Data
                     Description = v.Description,
                     VehicleType = v.VehicleType.Name,
                     VehicleTypeCategory = v.VehicleTypeCategory.Name,
+                    StarsRating = v.Reviews.Select(vr => (double?)vr.Stars).Average() ?? 0,
+                    ReviewCount = v.Reviews.Count()
                 })
                 .ToArrayAsync();
 

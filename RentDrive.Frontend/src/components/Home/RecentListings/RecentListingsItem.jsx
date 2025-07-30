@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom'
-import useVehicleAverageStarRating from '../../Vehicles/hooks/useVehicleAverageStarRating';
-import useVehicleReviewsCount from '../../Vehicles/hooks/useVehicleReviewCount';
 
 export default function RecentListingsItem({
     id,
@@ -15,11 +13,11 @@ export default function RecentListingsItem({
     fuelType,
     vehicleType,
     vehicleTypeCategory,
+    starsRating,
+    reviewCount
 }) {
 
     const backEndURL = import.meta.env.VITE_API_URL;
-    const { averageStarRating, loadingAverageStarRating, errorAverageStarRating } = useVehicleAverageStarRating(id);
-    const { vehicleReviewsCount, loadingVehicleReviewsCount, errorVehicleReviewsCount } = useVehicleReviewsCount(id);
 
     return (
         <div className="col-lg-12">
@@ -37,7 +35,7 @@ export default function RecentListingsItem({
                                         {ownerName && ownerName.length > 0 && <h6>Owner: {`${ownerName}`}</h6>}
                                         <ul className="rate">
                                             {Array.from({ length: 5 }).map((_, index) => {
-                                                const rating = averageStarRating;
+                                                const rating = starsRating;
 
                                                 if (rating >= index + 1) {
                                                     return <li key={index}><i className="fa fa-star"></i></li>;
@@ -47,7 +45,7 @@ export default function RecentListingsItem({
                                                     return <li key={index}><i className="fa fa-star-o"></i></li>;
                                                 }
                                             })}
-                                            <li>({vehicleReviewsCount}) Reviews</li>
+                                            <li>({reviewCount}) Reviews</li>
                                         </ul>
                                         <span className="price"><div className="icon"><img src="assets/images/listing-icon-01.png" alt="" /></div> {`${pricePerDay.toFixed(2)} € / per day with taxes.`}</span>
                                         <span className="details">Type: <em>{vehicleType}</em></span>

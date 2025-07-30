@@ -43,6 +43,8 @@ export default function RecentListing() {
                                 vehicleTypeCategory={vehicle.vehicleTypeCategory}
                                 fuelType={vehicle.fuelType}
                                 ownerName={vehicle.ownerName}
+                                starsRating={vehicle.starsRating}
+                                reviewCount={vehicle.reviewCount}
                             />)}
                     </div>
                 </div>

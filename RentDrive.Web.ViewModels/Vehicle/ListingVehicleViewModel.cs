@@ -12,5 +12,7 @@
         public string? FuelType { get; set; }
         public string ImageURL { get; set; } = null!;
         public string? OwnerName { get; set; }
+        public double StarsRating { get; set; }
+        public int ReviewCount { get; set; }
     }
 }

@@ -10,8 +10,11 @@ export default function ListingPageItem({
     pricePerDay,
     fuelType,
     imageURL,
-    ownerName
+    ownerName,
+    starsRating,
+    reviewCount
 }) {
+    
     const backEndURL = import.meta.env.VITE_API_URL;
 
     return (
@@ -28,8 +31,26 @@ export default function ListingPageItem({
                     <div className="right-content d-flex flex-column justify-content-between flex-grow-1">
                         <div>
                             <h4 className="mb-1 vehicle-title">{make} {model}</h4>
+
+                            {typeof starsRating === 'number' && (
+                                <ul className="rate d-flex list-unstyled mb-2">
+                                    {[...Array(5)].map((_, i) => {
+                                        if (starsRating >= i + 1) {
+                                            return <li key={i}><i className="fa fa-star"></i></li>;
+                                        } else if (starsRating > i && starsRating < i + 1) {
+                                            return <li key={i}><i className="fa fa-star-half-o"></i></li>;
+                                        } else {
+                                            return <li key={i}><i className="fa fa-star-o"></i></li>;
+                                        }
+                                    })}
+                                    <li className="ms-2">({reviewCount}) Reviews</li>
+                                </ul>
+                            )}
+
                             <hr className="my-2" />
+
                             <span className="price">{`${pricePerDay.toFixed(2)} € / per day with taxes.`}</span>
+
                             <div className="details d-block mt-2">
                                 <div>Type: <em>{vehicleType}</em></div>
                                 <div>Category: <em>{vehicleTypeCategory}</em></div>
@@ -38,6 +59,7 @@ export default function ListingPageItem({
                             </div>
                         </div>
                     </div>
+
                 </div>
             </Link>
         </div>
