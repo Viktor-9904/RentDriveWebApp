@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom'
+import StarRating from '../../shared/VehicleStarRating';
 
 export default function RecentListingsItem({
     id,
@@ -33,20 +34,7 @@ export default function RecentListingsItem({
                                     <div className="right-content align-self-center">
                                         <h4>{`${make} - ${model}`}</h4>
                                         {ownerName && ownerName.length > 0 && <h6>Owner: {`${ownerName}`}</h6>}
-                                        <ul className="rate">
-                                            {Array.from({ length: 5 }).map((_, index) => {
-                                                const rating = starsRating;
-
-                                                if (rating >= index + 1) {
-                                                    return <li key={index}><i className="fa fa-star"></i></li>;
-                                                } else if (rating >= index + 0.5) {
-                                                    return <li key={index}><i className="fa fa-star-half-o"></i></li>;
-                                                } else {
-                                                    return <li key={index}><i className="fa fa-star-o"></i></li>;
-                                                }
-                                            })}
-                                            <li>({reviewCount}) Reviews</li>
-                                        </ul>
+                                        <StarRating rating={starsRating} reviewCount={reviewCount} />
                                         <span className="price"><div className="icon"><img src="assets/images/listing-icon-01.png" alt="" /></div> {`${pricePerDay.toFixed(2)} € / per day with taxes.`}</span>
                                         <span className="details">Type: <em>{vehicleType}</em></span>
                                         <span className="details">Category: <em>{vehicleTypeCategory}</em></span>

@@ -6,6 +6,7 @@ import VehicleCalendar from "./VehicleCalendar";
 import usebookedDates from "../../hooks/useBookedDates";
 import RentNowModal from "./RentNowModal";
 import { useAuth } from "../../context/AccountContext";
+import StarRating from "../shared/VehicleStarRating";
 
 export default function VehicleDetails() {
     const { id } = useParams();
@@ -108,7 +109,10 @@ export default function VehicleDetails() {
             <div className="container py-5 vehicle-details">
 
                 <div className="vehicle-header mb-4 d-flex justify-content-between align-items-center">
-                    <h2 className="make-model">{vehicle.make} {vehicle.model}</h2>
+                    <div>
+                        <h2 className="make-model mb-1">{vehicle.make} {vehicle.model}</h2>
+                        <StarRating rating={vehicle.starsRating} reviewCount={vehicle.reviewCount} />
+                    </div>
                     <div className="price-tag">
                         {vehicle.pricePerDay.toFixed(2)} € / day
                     </div>

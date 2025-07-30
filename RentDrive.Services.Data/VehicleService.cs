@@ -111,6 +111,8 @@ namespace RentDrive.Services.Data
         {
             VehicleDetailsViewModel? vehicleDetails = await this.vehicleRepository
                 .GetAllAsQueryable()
+                .Include(v => v.VehicleImages)
+                .Include(v => v.Reviews)
                 .Where(v => v.Id == id && !v.IsDeleted)
                 .Select(v => new VehicleDetailsViewModel()
                 {
@@ -127,11 +129,11 @@ namespace RentDrive.Services.Data
                     DateOfProduction = v.DateOfProduction,
                     DateAdded = v.DateAdded,
                     CurbWeightInKg = v.CurbWeightInKg,
-                    //OdoKilometers = v.OdoKilometers,
-                    //EngineDisplacement = v.EngineDisplacement,
                     FuelType = v.FuelType.ToString(),
                     Description = v.Description,
-                    //PowerInKiloWatts = v.PowerInKiloWatts,
+                    ImageURLS = v.VehicleImages.Select(vi => vi.ImageURL).ToList(),
+                    StarsRating = v.Reviews.Select(vr => (double?)vr.Stars).Average() ?? 0,
+                    ReviewCount = v.Reviews.Count()
                 })
                 .FirstOrDefaultAsync();
 
@@ -139,9 +141,6 @@ namespace RentDrive.Services.Data
             {
                 return null;
             }
-
-            vehicleDetails.ImageURLS = await this.vehicleImageService
-                .GetAllImagesByVehicleIdAsync(id);
 
             vehicleDetails.VehicleProperties = await this.vehicleTypePropertyValueService
                 .GetVehicleTypePropertyValuesByVehicleIdAsync(id);

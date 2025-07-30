@@ -17,6 +17,8 @@
         public double CurbWeightInKg { get; set; }
         public string FuelType { get; set; } = null!;
         public string? Description { get; set; }
+        public double StarsRating { get; set; }
+        public int ReviewCount { get; set; }
         public List<string> ImageURLS { get; set; }
             = new List<string>();
         public List<VehicleTypePropertyValuesViewModel> VehicleProperties { get; set; }

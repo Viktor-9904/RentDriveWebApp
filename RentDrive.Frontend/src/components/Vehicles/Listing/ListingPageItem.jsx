@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import StarRating from "../../shared/VehicleStarRating";
 
 export default function ListingPageItem({
     id,
@@ -32,20 +33,7 @@ export default function ListingPageItem({
                         <div>
                             <h4 className="mb-1 vehicle-title">{make} {model}</h4>
 
-                            {typeof starsRating === 'number' && (
-                                <ul className="rate d-flex list-unstyled mb-2">
-                                    {[...Array(5)].map((_, i) => {
-                                        if (starsRating >= i + 1) {
-                                            return <li key={i}><i className="fa fa-star"></i></li>;
-                                        } else if (starsRating > i && starsRating < i + 1) {
-                                            return <li key={i}><i className="fa fa-star-half-o"></i></li>;
-                                        } else {
-                                            return <li key={i}><i className="fa fa-star-o"></i></li>;
-                                        }
-                                    })}
-                                    <li className="ms-2">({reviewCount}) Reviews</li>
-                                </ul>
-                            )}
+                            <StarRating rating={starsRating} reviewCount={reviewCount} />
 
                             <hr className="my-2" />
 

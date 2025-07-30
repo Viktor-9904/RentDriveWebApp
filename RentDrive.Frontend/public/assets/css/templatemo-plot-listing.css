@@ -2304,7 +2304,7 @@ Listing Page
     justify-content: space-between;
     flex-grow: 1;
 }
-.vehicle-listing-item .rate {
+.rate {
   list-style: none;
   padding: 0;
   margin: 8px 0 0 0;
@@ -2313,7 +2313,7 @@ Listing Page
   color: #f5a623;
   font-size: 1rem;
 }
-.vehicle-listing-item .rate li:last-child {
+.rate li:last-child {
   margin-left: 8px;
   color: #555;
   font-size: 0.9rem;
