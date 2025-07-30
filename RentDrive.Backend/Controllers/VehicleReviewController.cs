@@ -15,10 +15,15 @@ namespace RentDrive.Backend.Controllers
             this.vehicleReviewService = vehicleReviewService;
         }
 
-        [HttpGet("vehicle-stars/{vehicleId}")]
+        [HttpGet("average-star-rating/{vehicleId}")]
         public async Task<IActionResult> GetAverageVehicleStarRatingById(Guid vehicleId)
         {
             return Ok(await this.vehicleReviewService.GetVehicleStarRatingByIdAsync(vehicleId));
+        }
+        [HttpGet("reviews-count/{vehicleId}")]
+        public async Task<IActionResult> GetTotalReviewCountByVehicleId(Guid vehicleId)
+        {
+            return Ok(await this.vehicleReviewService.GetVehicleReviewCountByIdAsync(vehicleId));
         }
     }
 }

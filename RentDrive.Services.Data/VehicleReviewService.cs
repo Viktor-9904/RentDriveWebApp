@@ -15,6 +15,16 @@ namespace RentDrive.Services.Data
             this.vehicleReviewRepository = vehicleReviewRepository;
         }
 
+        public async Task<int> GetVehicleReviewCountByIdAsync(Guid vehicleId)
+        {
+            int reviewCount = await this.vehicleReviewRepository
+                .GetAllAsQueryable()
+                .Where(vr => vr.VehicleId == vehicleId)
+                .CountAsync();
+
+            return reviewCount;
+        }
+
         public async Task<double> GetVehicleStarRatingByIdAsync(Guid vehicleId)
         {
             double averageRating = await this.vehicleReviewRepository

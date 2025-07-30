@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import RecentListingsItem from './RecentListingsItem';
+import useVehicleAverageStarRating from '../../Vehicles/hooks/useVehicleAverageStarRating';
 
 export default function RecentListing() {
 
