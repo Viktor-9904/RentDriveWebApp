@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
-using System.Runtime.InteropServices;
 
 namespace RentDrive.Services.Data
 {

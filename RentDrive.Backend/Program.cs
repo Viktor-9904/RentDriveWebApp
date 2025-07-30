@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 using RentDrive.Data;
 using RentDrive.Data.Configuration;
+using RentDrive.Data.Migrations;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository;
 using RentDrive.Data.Repository.Interfaces;
@@ -85,6 +86,7 @@ builder.Services.AddScoped<IRepository<VehicleTypePropertyValue, Guid>, BaseRepo
 builder.Services.AddScoped<IRepository<VehicleType, int>, BaseRepository<VehicleType, int>>();
 builder.Services.AddScoped<IRepository<VehicleTypeCategory, int>, BaseRepository<VehicleTypeCategory, int>>();
 builder.Services.AddScoped<IRepository<Rental, Guid>, BaseRepository<Rental, Guid>>();
+builder.Services.AddScoped<IRepository<VehicleReview, Guid>, BaseRepository<VehicleReview, Guid>>();
 
 builder.Services.AddScoped<IVehicleImageService, VehicleImageService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
@@ -96,6 +98,7 @@ builder.Services.AddScoped<IVehicleTypeService, VehicleTypeService>();
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IVehicleTypeCategoryService, VehicleTypeCategoryService>();
 builder.Services.AddScoped<IRentalService, RentalService>();
+builder.Services.AddScoped<IVehicleReviewService, VehicleReviewService>();
 
 WebApplication app = builder.Build();
 
