@@ -1,4 +1,4 @@
-﻿namespace RentDrive.Web.ViewModels
+﻿namespace RentDrive.Web.ViewModels.VehicleReview
 {
     public class VehicleReviewListItemViewModel
     {

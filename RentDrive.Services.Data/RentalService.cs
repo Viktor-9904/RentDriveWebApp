@@ -133,6 +133,7 @@ namespace RentDrive.Services.Data
         {
             List<UserRentalViewModel> userRentals = await this.rentalRepository
                 .GetAllAsQueryable()
+                .Include(r => r.Review)
                 .Include(r => r.Vehicle)
                 .ThenInclude(v => v.VehicleImages)
                 .Where(r => r.RenterId == userId)
@@ -148,6 +149,9 @@ namespace RentDrive.Services.Data
                     EndDate = r.EndDate,
                     PricePerDay = r.VehiclePricePerDay,
                     TotalPrice = r.TotalPrice,
+                    IsCompleted = r.Status == RentalStatus.Completed,
+                    IsCancelled = r.Status == RentalStatus.Cancelled,
+                    HasReviewedVehicle = r.Review != null,
                 })
                 .ToListAsync();
 

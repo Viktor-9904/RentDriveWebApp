@@ -12,5 +12,8 @@
         public DateTime EndDate { get; set; }
         public decimal PricePerDay { get; set; }
         public decimal TotalPrice { get; set; }
+        public bool IsCompleted { get; set; }
+        public bool IsCancelled { get; set; }
+        public bool HasReviewedVehicle { get; set; }
     }
 }

@@ -1,21 +1,62 @@
 import { useUserRentals } from "./hooks/useUserRentals";
 import { useEffect, useState } from "react";
+import ReviewModal from "./ReviewModal";
+import { SiPayloadcms } from "react-icons/si";
 
 export default function MyRentals() {
     const { rentals, rentalsLoading, rentalError } = useUserRentals();
     const backEndURL = import.meta.env.VITE_API_URL;
 
     const [localRentals, setLocalRentals] = useState([]);
-    const [confirmingId, setConfirmingId] = useState("");
+    const [selectedId, setSelectedId] = useState("");
+    const [showReviewModal, setShowReviewModal] = useState(false);
 
     useEffect(() => {
         if (rentals) {
-            setLocalRentals(rentals);
+            setLocalRentals(rentals)
         }
     }, [rentals]);
 
+    const handleReviewSubmit = async (data) => {
+        const payload = {
+            rentalId: selectedId,
+            starRating: data.rating,
+            comment: data.comment
+        }
+        try {
+            console.log(payload)
+
+            const response = await fetch(`${backEndURL}/api/vehiclereview/add`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+
+            if (!response.ok) {
+                throw new Error("Failed to add review to vehicle.");
+            }
+
+            setLocalRentals((prevRentals) =>
+                prevRentals.map((rental) =>
+                    rental.id === selectedId ? { ...rental, hasReviewedVehicle: true } : rental
+                )
+            );
+
+        } catch (error) {
+            console.error("Leaving a review failed:", error.message);
+        }
+        finally {
+            setSelectedId(null);
+        }
+    };
+
+
     const handleConfirm = async (rentalId) => {
-        setConfirmingId(rentalId);
+        setSelectedId(rentalId);
 
         try {
             const response = await fetch(`${backEndURL}/api/rental/confirm-rental/${rentalId}`, {
@@ -32,13 +73,13 @@ export default function MyRentals() {
 
             setLocalRentals((prevRentals) =>
                 prevRentals.map((rental) =>
-                    rental.id === rentalId ? { ...rental, status: "Completed" } : rental
+                    rental.id === rentalId ? { ...rental, status: "Completed", isCompleted: true } : rental
                 )
             );
         } catch (err) {
             setConfirmError(err.message || "Something went wrong.");
         } finally {
-            setConfirmingId(null);
+            setSelectedId(null);
         }
     };
 
@@ -49,55 +90,77 @@ export default function MyRentals() {
         <div className="rentals-container">
             <h3 className="rentals-heading">My Rentals</h3>
 
-            <table className="rentals-table">
-                <thead>
-                    <tr>
-                        <th>Vehicle</th>
-                        <th>Status</th>
-                        <th>Booked On</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Price Per Day</th>
-                        <th>Total Price</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {localRentals.map((rental) => (
-                        <tr key={rental.id}>
-                            <td className="vehicle-cell">
-                                <img
-                                    src={`${backEndURL}/${rental.imageUrl}`}
-                                    alt={`${rental.vehicleMake} ${rental.vehicleModel}`}
-                                    className="vehicle-image"
-                                />
-                                {rental.vehicleMake} {rental.vehicleModel}
-                            </td>
-                            <td>
-                                <span className={`rental-status ${rental.status.toLowerCase()}`}>
-                                    {rental.status}
-                                </span>
-                            </td>
-                            <td className="date-cell">{new Date(rental.bookedOn).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", })}</td>
-                            <td className="date-cell">{new Date(rental.startDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", })}</td>
-                            <td className="date-cell">{new Date(rental.endDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", })}</td>
-                            <td className="price-cell">{rental.pricePerDay.toFixed(2)} €</td>
-                            <td className="price-cell">{rental.totalPrice.toFixed(2)} €</td>
-                            <td>
-                                {rental.status === "Active" && (
-                                    <button
-                                        className="confirm-button"
-                                        onClick={() => handleConfirm(rental.id)}
-                                        disabled={confirmingId === rental.id}
-                                    >
-                                        Confirm
-                                    </button>
-                                )}
-                            </td>
+            <div className="rental-table-wrapper">
+
+                <table className="rentals-table">
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Status</th>
+                            <th>Booked On</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Price Per Day</th>
+                            <th>Total Price</th>
+                            <th>Action</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {localRentals.map((rental) => (
+                            <tr key={rental.id}>
+                                <td className="vehicle-cell">
+                                    <img
+                                        src={`${backEndURL}/${rental.imageUrl}`}
+                                        alt={`${rental.vehicleMake} ${rental.vehicleModel}`}
+                                        className="vehicle-image"
+                                    />
+                                    {rental.vehicleMake} {rental.vehicleModel}
+                                </td>
+                                <td>
+                                    <span className={`rental-status ${rental.status.toLowerCase()}`}>
+                                        {rental.status}
+                                    </span>
+                                </td>
+                                <td className="date-cell">{new Date(rental.bookedOn).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", })}</td>
+                                <td className="date-cell">{new Date(rental.startDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", })}</td>
+                                <td className="date-cell">{new Date(rental.endDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", })}</td>
+                                <td className="price-cell">{rental.pricePerDay.toFixed(2)} €</td>
+                                <td className="price-cell">{rental.totalPrice.toFixed(2)} €</td>
+                                <td>
+                                    {rental.status === "Active" && (
+                                        <button
+                                            className="confirm-rental-button"
+                                            onClick={() => handleConfirm(rental.id)}
+                                            disabled={selectedId === rental.id}
+                                        >
+                                            Confirm Rental
+                                        </button>
+                                    )}
+                                    {rental.isCompleted && rental.hasReviewedVehicle === false && (
+                                        <button
+                                            className="leave-review-rental-button"
+                                            onClick={() => {
+                                                setShowReviewModal(true);
+                                                setSelectedId(rental.id)
+                                            }}
+                                        >
+                                            Leave a Review
+                                        </button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <ReviewModal
+                show={showReviewModal}
+                onClose={() => {
+                    setShowReviewModal(false)
+                    setSelectedId("")
+                }}
+                onSubmit={handleReviewSubmit}
+            />
         </div>
     );
 }

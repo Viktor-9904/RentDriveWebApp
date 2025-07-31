@@ -1,4 +1,6 @@
-﻿namespace RentDrive.Web.ViewModels.Vehicle
+﻿using RentDrive.Web.ViewModels.VehicleReview;
+
+namespace RentDrive.Web.ViewModels.Vehicle
 {
     public class VehicleDetailsViewModel
     {
