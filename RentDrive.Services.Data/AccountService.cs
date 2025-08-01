@@ -1,6 +1,6 @@
 ﻿using Azure.Identity;
 using Microsoft.AspNetCore.Identity;
-
+using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.ApplicationUser;
@@ -176,7 +176,7 @@ namespace RentDrive.Services.Data
                 Email = user.Email!,
                 PhoneNumber = user.PhoneNumber,
                 MemberSince = user.CreatedOn,
-                IsCompanyEmployee = user.IsCompanyEmployee,
+                IsCompanyEmployee = user.UserType == UserType.CompanyEmployee
             };
 
             return userCredentials;

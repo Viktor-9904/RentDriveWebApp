@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using RentDrive.Common.Enums;
 
 namespace RentDrive.Data.Models
 {
@@ -10,7 +11,7 @@ namespace RentDrive.Data.Models
             this.CreatedOn = DateTime.UtcNow;
         }
         public DateTime CreatedOn { get; set; }
-        public bool IsCompanyEmployee { get; set; }
+        public UserType UserType { get; set; }
         public ICollection<Vehicle> Vehicles { get; set; }
             = new HashSet<Vehicle>();
         public ICollection<Rental> Rentals { get; set; } 
