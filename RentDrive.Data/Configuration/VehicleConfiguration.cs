@@ -62,6 +62,7 @@ namespace RentDrive.Data.Configuration
 
             builder
                 .Property(v => v.PricePerDay)
+                .IsRequired()
                 .HasColumnType("decimal(18,2)")
                 .HasComment("Price per day for renting the vehicle.");
 

@@ -17,5 +17,6 @@ namespace RentDrive.Data.Models
             = new List<Rental>();
         public ICollection<VehicleReview> ReviewsGiven { get; set; }
              = new List<VehicleReview>();
+        public Wallet Wallet { get; set; } = null!;
     }
 }
