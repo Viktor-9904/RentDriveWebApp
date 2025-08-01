@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentDrive.Data;
 
@@ -11,9 +12,11 @@ using RentDrive.Data;
 namespace RentDrive.Data.Migrations
 {
     [DbContext(typeof(RentDriveDbContext))]
-    partial class RentDriveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250801124154_AddedWalletAndWalletTransactionTables")]
+    partial class AddedWalletAndWalletTransactionTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1056,26 +1059,6 @@ namespace RentDrive.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Wallets");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("d6b9cab2-c4f8-416c-8dbc-63bab5c5e860"),
-                            Balance = 420.32m,
-                            UserId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a")
-                        },
-                        new
-                        {
-                            Id = new Guid("3286205e-24a5-47f7-a418-141ce2f61a7f"),
-                            Balance = 620.97m,
-                            UserId = new Guid("a8b2e9f4-927d-4f87-a457-bf95cd4526dc")
-                        },
-                        new
-                        {
-                            Id = new Guid("fa010230-0d91-466b-a984-d47cd7651002"),
-                            Balance = 4120.19m,
-                            UserId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01")
-                        });
                 });
 
             modelBuilder.Entity("RentDrive.Data.Models.WalletTransaction", b =>

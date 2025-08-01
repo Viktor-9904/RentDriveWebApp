@@ -13,6 +13,7 @@ using static RentDrive.Data.Configuration.VehicleTypePropertySeeder;
 using static RentDrive.Data.Configuration.VehicleTypePropertyValueSeerder;
 using static RentDrive.Data.Configuration.RentalSeeder;
 using static RentDrive.Data.Configuration.VehicleReviewSeeder;
+using static RentDrive.Data.Configuration.WalletSeeder;
 
 namespace RentDrive.Data
 {
@@ -35,6 +36,8 @@ namespace RentDrive.Data
         public DbSet<VehicleTypePropertyValue> VehicleTypePropertyValues { get; set; } = null!;
         public DbSet<Rental> Rentals { get; set; } = null!;
         public DbSet<VehicleReview> VehicleReviews { get; set; } = null!;
+        public DbSet<Wallet> Wallets { get; set; } = null!;
+        public DbSet<WalletTransaction> WalletTransactions { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +52,7 @@ namespace RentDrive.Data
             modelBuilder.Entity<VehicleTypePropertyValue>().HasData(SeedVehicleTypePropertyValues());
             modelBuilder.Entity<Rental>().HasData(SeedRentals());
             modelBuilder.Entity<VehicleReview>().HasData(SeedVehicleReviews());
+            modelBuilder.Entity<Wallet>().HasData(SeedUserWallets());
         }
     }
 }
