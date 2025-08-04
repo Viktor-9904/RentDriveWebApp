@@ -346,6 +346,30 @@ header
   padding-right: 30px;
 }
 
+.nav .balance-display {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1.5px solid #4a90e2;
+  border-radius: 6px;
+  background-color: #a3ccff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2e2d2d;
+  user-select: none;
+  cursor: default;
+  margin-left: 1rem;
+  white-space: nowrap;
+}
+
+
+.nav .balance-display .amount {
+  font-weight: 700;
+  margin-left: 6px;
+  color: #2e2d2d;
+}
+
+
 /* .header-area .main-nav .nav li:last-child {
   padding-right: 0px;
   padding-left: 40px;
@@ -3329,7 +3353,7 @@ cursor: pointer !important;
 }
 
 .add-my-vehicle-button {
-  background-color: #28a745; /* green color */
+  background-color: #28a745;
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -3340,7 +3364,7 @@ cursor: pointer !important;
 }
 
 .add-my-vehicle-button:hover {
-  background-color: #218838; /* darker green on hover */
+  background-color: #218838;
 }
 
 .edit-button {
@@ -3360,8 +3384,8 @@ cursor: pointer !important;
 }
 
 .my-vehicles-table tbody tr:hover {
-  background-color: #acceeb8f; /* light blue background on hover */
-  box-shadow: inset 4px 0 0 0 #2196f3; /* blue left border on hover */
+  background-color: #acceeb8f;
+  box-shadow: inset 4px 0 0 0 #2196f3;
 }
 
 .my-vehicles-table tbody tr td {

@@ -1,14 +1,17 @@
 import { Link } from 'react-router';
 import useLogout from '../../hooks/useLogout';
 import { useAuth } from '../../context/AccountContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Header() {
     const { user, isAuthenticated } = useAuth();
+    const [showBalance, setShowBalance] = useState(false);
 
     useEffect(() => {
-        console.log(user)
-    }, [user])
+        if(isAuthenticated){
+            setShowBalance(true)
+        }
+    }, [isAuthenticated])
 
     const navigation = [
         { name: 'Home', href: '/' },
@@ -34,7 +37,12 @@ export default function Header() {
                 { name: 'Login', href: '/login' }
             ]
             : []),
-        { name: 'My Profile', href: '/profile' },
+        ...(isAuthenticated
+            ? [
+                { name: 'My Profile', href: '/profile' },
+            ]
+            : []),
+        ,
     ];
 
     return (
@@ -66,6 +74,10 @@ export default function Header() {
                                             </li>
                                         )
                                     ))}
+                                     {showBalance && <li className="balance-display">
+                                        <span>Balance:</span>
+                                        <span className="amount">{user?.balance?.toFixed(2) ?? '0.00'}€</span>
+                                    </li>}
                                 </ul>
                             </nav>
                         </div>

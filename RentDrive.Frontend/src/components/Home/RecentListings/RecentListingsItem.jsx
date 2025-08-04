@@ -33,7 +33,7 @@ export default function RecentListingsItem({
                                     </div>
                                     <div className="right-content align-self-center">
                                         <h4>{`${make} - ${model}`}</h4>
-                                        {ownerName && ownerName.length > 0 && <h6>Owner: {`${ownerName}`}</h6>}
+                                        {ownerName && ownerName.length > 0 && <h6><strong>Property of:</strong> {`${ownerName}`}</h6>}
                                         <StarRating rating={starsRating} reviewCount={reviewCount} />
                                         <span className="price"><div className="icon"><img src="assets/images/listing-icon-01.png" alt="" /></div> {`${pricePerDay.toFixed(2)} € / per day with taxes.`}</span>
                                         <span className="details">Type: <em>{vehicleType}</em></span>
