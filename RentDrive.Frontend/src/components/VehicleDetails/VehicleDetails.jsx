@@ -49,12 +49,12 @@ export default function VehicleDetails() {
     };
 
     const handleRent = async (selectedDates) => {
+        console.log("renting")
         if (!vehicle?.id || selectedDates.length === 0) {
             return;
         }
 
         const payload = {
-            renterId: user.id,
             bookedDates: selectedDates.map(date =>
                 `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
             )
@@ -63,6 +63,7 @@ export default function VehicleDetails() {
         try {
             const response = await fetch(`${backEndURL}/api/rental/rent/${id}`, {
                 method: "POST",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -81,6 +82,7 @@ export default function VehicleDetails() {
             setBookedDatesState(prev => [...prev, ...newDates]);
 
             setRentNowShowModal(false);
+            loadUser()
 
         } catch (error) {
             console.error("Renting failed:", error.message);
@@ -92,12 +94,12 @@ export default function VehicleDetails() {
     if (!vehicle) return <div className="text-center py-5 text-danger">Vehicle not found.</div>;
 
     const baseProperties = [
+        ...(vehicle.ownerName ? [{ label: "Property of", value: vehicle.ownerName }] : []),
         { label: "Type", value: vehicle.vehicleType + " - " + vehicle.vehicleTypeCategory },
         { label: "Year", value: new Date(vehicle.dateOfProduction).getFullYear() },
         { label: "Color", value: vehicle.color },
         { label: "Fuel", value: vehicle.fuelType || "N/A" },
         { label: "Weight", value: `${vehicle.curbWeightInKg} kg` },
-        ...(vehicle.ownerName ? [{ label: "Owner", value: vehicle.ownerName }] : [])
     ];
 
     const typeProperties = vehicle.vehicleProperties.map(p => ({
@@ -221,6 +223,7 @@ export default function VehicleDetails() {
                 bookedDates={bookedDates}
                 pricePerDay={vehicle.pricePerDay}
                 handleRent={handleRent}
+                userBalance={user.balance}
             />
         </>
     );

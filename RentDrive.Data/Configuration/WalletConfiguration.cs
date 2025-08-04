@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using RentDrive.Data.Models;
+using static RentDrive.Common.EntityValidationConstants.ApplicationUserValidationConstants.Company;
 
 namespace RentDrive.Data.Configuration
 {
@@ -35,6 +36,12 @@ namespace RentDrive.Data.Configuration
         {
             IEnumerable<Wallet> userWallets = new List<Wallet>
             {
+                new()
+                {
+                    Id = Guid.Parse("d43e10f1-599f-4ab5-a246-2e2af3e0cab5"),
+                    UserId = Guid.Parse(CompanyId),
+                    Balance = 15220.32m,
+                },
                 new()
                 {
                     Id = Guid.Parse("d6b9cab2-c4f8-416c-8dbc-63bab5c5e860"),

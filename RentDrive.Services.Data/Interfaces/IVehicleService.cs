@@ -9,7 +9,7 @@ namespace RentDrive.Services.Data.Interfaces
         Task<IEnumerable<ListingVehicleViewModel>> GetAllVehiclesAsync();
         Task<VehicleDetailsViewModel?> GetVehicleDetailsByIdAsync(Guid id);
         Task<VehicleEditFormViewModel?> GetEditVehicleDetailsByIdAsync(Guid id);
-        Task<bool> CreateVehicle(VehicleCreateFormViewModel viewModel);
+        Task<bool> CreateVehicle(string userId, VehicleCreateFormViewModel viewModel);
         Task<bool> UpdateVehicle(VehicleEditFormViewModel viewModel);
         Task<bool> SoftDeleteVehicleByIdAsync(Guid id);
         Task<decimal> GetVehiclePricePerDayByVehicleId(Guid id);

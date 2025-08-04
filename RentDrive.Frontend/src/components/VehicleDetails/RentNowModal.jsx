@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import RentNowCalendar from "./RentNowCalendar";
 
-export default function RentNowModal({ showRentNowModal, onClose, bookedDates, pricePerDay, handleRent }) {
+export default function RentNowModal({ showRentNowModal, onClose, bookedDates, pricePerDay, handleRent, userBalance = 0 }) {
     const [selectedDates, setSelectedDates] = useState([]);
 
     const formatDate = (date) => {
@@ -13,6 +13,7 @@ export default function RentNowModal({ showRentNowModal, onClose, bookedDates, p
     };
 
     const totalPrice = selectedDates.length > 0 ? pricePerDay * selectedDates.length : 0;
+    const canAfford = userBalance >= totalPrice;
 
     if (!showRentNowModal) return null;
 
@@ -42,7 +43,7 @@ export default function RentNowModal({ showRentNowModal, onClose, bookedDates, p
             } else {
                 setSelectedDates(sorted.slice(0, index));
             }
-            
+
             return;
         }
 
@@ -93,13 +94,26 @@ export default function RentNowModal({ showRentNowModal, onClose, bookedDates, p
                     <div className="price-box">
                         Total price: <strong>{totalPrice.toFixed(2)}€</strong>
                     </div>
+
+                    <div className="price-box small-box">
+                        Your balance: <strong>{userBalance.toFixed(2)}€</strong>
+                    </div>
+
+                        <div className="text-danger text-center mt-2 fw-bold">
+                            {!canAfford && "Insufficient funds to rent this vehicle."}
+                        </div>
+
                 </div>
 
                 <div className="rent-now-modal-footer">
-                    <button className="btn btn-success" onClick={() => handleRent && handleRent(selectedDates)}
+                    <button
+                        className="btn btn-success"
+                        onClick={() => handleRent && handleRent(selectedDates)}
+                        disabled={!canAfford || selectedDates.length === 0}
                     >
                         Confirm Rent
                     </button>
+
                     <button className="btn btn-secondary" onClick={handleClose}>
                         Cancel
                     </button>

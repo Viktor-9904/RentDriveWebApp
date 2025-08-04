@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RentDrive.Common.EntityValidationConstants
+﻿namespace RentDrive.Common.EntityValidationConstants
 {
     public static class ApplicationUserValidationConstants
     {
@@ -19,6 +13,10 @@ namespace RentDrive.Common.EntityValidationConstants
             public const int passwordMaxLength = 50;
 
             public const int emailMaxLength = 254;
+        }
+        public static class Company
+        {
+            public const string CompanyId = "807fafdb-d496-43c1-ae22-a0a0ead66653";
         }
     }
 }

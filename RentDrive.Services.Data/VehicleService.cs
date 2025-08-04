@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Vehicle;
 using RentDrive.Web.ViewModels.VehicleReview;
+using System;
+using static RentDrive.Common.EntityValidationConstants.ApplicationUserValidationConstants.Company;
 using static RentDrive.Common.EntityValidationConstants.VehicleValidationConstants.VehicleImages;
 
 namespace RentDrive.Services.Data
@@ -14,6 +15,7 @@ namespace RentDrive.Services.Data
         private readonly IRepository<Vehicle, Guid> vehicleRepository;
         private readonly IRepository<VehicleTypeProperty, Guid> vehicleTypePropertyRepository;
         private readonly IRepository<VehicleTypePropertyValue, Guid> vehicleTypePropertyValueRepository;
+        private readonly IRepository<ApplicationUser, Guid> applicationUserRepository;
 
         private readonly IBaseService baseService;
         private readonly IVehicleImageService vehicleImageService;
@@ -23,6 +25,7 @@ namespace RentDrive.Services.Data
             IRepository<Vehicle, Guid> vehicleRepository,
             IRepository<VehicleTypeProperty, Guid> vehicleTypePropertyRepository,
             IRepository<VehicleTypePropertyValue, Guid> vehicleTypePropertyValueRepository,
+            IRepository<ApplicationUser, Guid> applicationUserRepository,
             IBaseService baseService,
             IVehicleImageService vehicleImageService,
             IVehicleTypePropertyService vehicleTypePropertyService,
@@ -31,6 +34,7 @@ namespace RentDrive.Services.Data
             this.vehicleRepository = vehicleRepository;
             this.vehicleTypePropertyRepository = vehicleTypePropertyRepository;
             this.vehicleTypePropertyValueRepository = vehicleTypePropertyValueRepository;
+            this.applicationUserRepository = applicationUserRepository;
             this.baseService = baseService;
             this.vehicleImageService = vehicleImageService;
             this.vehicleTypePropertyService = vehicleTypePropertyService;
@@ -206,8 +210,17 @@ namespace RentDrive.Services.Data
 
             return editVehicle;
         }
-        public async Task<bool> CreateVehicle(VehicleCreateFormViewModel viewModel)
+        public async Task<bool> CreateVehicle(string userdId, VehicleCreateFormViewModel viewModel)
         {
+            ApplicationUser? user = await this.applicationUserRepository
+                .GetAllAsQueryable()
+                .FirstOrDefaultAsync(au => au.Id.ToString() == userdId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
             bool hasValidPropertyValueTypes = await this.vehicleTypePropertyService
                 .ValidateVehicleTypeProperties(viewModel.VehicleTypeId, viewModel.PropertyValues);
 
@@ -218,7 +231,7 @@ namespace RentDrive.Services.Data
 
             Vehicle newVehicle = new Vehicle()
             {
-                OwnerId = null, // todo: implement owner if a user is putting personal vehicle for rent
+                OwnerId = viewModel.IsCompanyProperty && Guid.TryParse(CompanyId, out Guid parsedCompanyId) ? parsedCompanyId : user.Id,
                 VehicleTypeId = viewModel.VehicleTypeId,
                 VehicleTypeCategoryId = viewModel.VehicleTypeCategoryId,
                 Make = viewModel.Make,

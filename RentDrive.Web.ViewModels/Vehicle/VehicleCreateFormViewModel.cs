@@ -18,6 +18,8 @@ namespace RentDrive.Web.ViewModels.Vehicle
         [Required]
         public decimal PricePerDay { get; set; }
         [Required]
+        public bool IsCompanyProperty { get; set; }
+        [Required]
         public FuelType FuelType { get; set; }
         [Required]
         public DateTime DateOfProduction { get; set; }

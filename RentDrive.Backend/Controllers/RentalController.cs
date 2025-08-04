@@ -34,8 +34,15 @@ namespace RentDrive.Backend.Controllers
                 return BadRequest(ModelState);
             }
 
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
             bool wasVehicleBooked = await this.rentalService
-                .RentVehicle(vehicleId, viewModel.RenterId, viewModel.BookedDates);
+                .RentVehicle(vehicleId, userId, viewModel.BookedDates);
 
             if (!wasVehicleBooked)
             {

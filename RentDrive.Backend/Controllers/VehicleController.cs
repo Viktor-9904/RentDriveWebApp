@@ -113,9 +113,15 @@ namespace RentDrive.Backend.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
+
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
             bool wasVehicleCreated = await this.vehicleService
-                .CreateVehicle(viewModel);
+                .CreateVehicle(userId, viewModel);
 
             if (!wasVehicleCreated)
             {

@@ -2749,7 +2749,7 @@ cursor: pointer !important;
   background-color: #e6f4ea;
   border: 2px solid #198754;
   border-radius: 10px;
-  padding: 1.2rem 1.5rem;
+  padding: 0.5rem 1rem;
   box-shadow: 0 6px 12px rgba(25, 135, 84, 0.2);
   font-weight: 700;
   color: #145c32;
@@ -2764,6 +2764,13 @@ cursor: pointer !important;
   background-color: #d4edda;
   box-shadow: 0 8px 16px rgba(25, 135, 84, 0.3);
 }
+
+.price-box.small-box {
+  background-color: #fff3cd;
+  border-color: #ffc107;
+  color: #856404;
+}
+
 .orange-box {
     background-color: #fff3e09d;
     border: 1px solid #ffc107;

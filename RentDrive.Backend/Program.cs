@@ -87,6 +87,8 @@ builder.Services.AddScoped<IRepository<VehicleType, int>, BaseRepository<Vehicle
 builder.Services.AddScoped<IRepository<VehicleTypeCategory, int>, BaseRepository<VehicleTypeCategory, int>>();
 builder.Services.AddScoped<IRepository<Rental, Guid>, BaseRepository<Rental, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleReview, Guid>, BaseRepository<VehicleReview, Guid>>();
+builder.Services.AddScoped<IRepository<Wallet, Guid>, BaseRepository<Wallet, Guid>>();
+builder.Services.AddScoped<IRepository<WalletTransaction, Guid>, BaseRepository<WalletTransaction, Guid>>();
 
 builder.Services.AddScoped<IVehicleImageService, VehicleImageService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();

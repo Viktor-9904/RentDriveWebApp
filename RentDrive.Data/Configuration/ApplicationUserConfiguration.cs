@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
+using static RentDrive.Common.EntityValidationConstants.ApplicationUserValidationConstants.Company;
 
 namespace RentDrive.Data.Configuration
 {
@@ -33,7 +35,7 @@ namespace RentDrive.Data.Configuration
             {
                 new()
                 {
-                    Id = Guid.Parse("807fafdb-d496-43c1-ae22-a0a0ead66653"),
+                    Id = Guid.Parse(CompanyId),
                     UserName = "RENT-DRIVE",
                     Email = "RentDrive@RentDrive.com",
                     EmailConfirmed = true,

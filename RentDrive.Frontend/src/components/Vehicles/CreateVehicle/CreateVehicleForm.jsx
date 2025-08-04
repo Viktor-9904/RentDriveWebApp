@@ -7,6 +7,7 @@ import useFuelTypes from "../../../hooks/useFuelTypesEnum";
 import useValueTypesEnum from "../../../hooks/useValueTypesEnum";
 import useUnitsEnum from "../../../hooks/useUnitsEnum";
 import useAllVehicleCategories from "../hooks/useAllVehicleCategories";
+import { useAuth } from "../../../context/AccountContext";
 
 
 export default function CreateVehicleForm() {
@@ -21,18 +22,24 @@ export default function CreateVehicleForm() {
   const { unitsEnum, loadingUnitsEnum, errorUnitsEnum } = useUnitsEnum();
   const { fuelTypeEnum, loadingfuelTypeEnum, errorfuelTypeEnum } = useFuelTypes();
 
+  const { user, isAuthenticated, loadUser } = useAuth();
+
   const [selectedTypeId, setSelectedTypeId] = useState("")
   const [selectedCategoryTypeId, setSelectedCategoryTypeId] = useState("");
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [vehicleTypePropertyValues, setVehicleTypePropertyValues] = useState({});
   const [images, setImages] = useState([]);
 
+  useEffect(() =>{
+    console.log(user)
+  },[user])
 
   const [baseData, setBaseData] = useState({
     make: "",
     model: "",
     color: "",
     pricePerDay: "",
+    isCompanyProperty: "",
     dateOfProduction: "",
     curbWeight: "",
     description: "",
@@ -117,6 +124,7 @@ export default function CreateVehicleForm() {
     formData.append("Model", baseData.model);
     formData.append("Color", baseData.color);
     formData.append("PricePerDay", baseData.pricePerDay);
+    formData.append("isCompanyProperty", baseData.isCompanyProperty);
     formData.append("FuelType", baseData.fuelType);
     formData.append("DateOfProduction", new Date(baseData.dateOfProduction).toISOString());
     formData.append("CurbWeightInKg", baseData.curbWeight);
@@ -134,6 +142,8 @@ export default function CreateVehicleForm() {
     images.forEach((img) => {
       formData.append("Images", img.file);
     });
+
+    console.log(formData)
 
     try {
       const response = await fetch(`${backEndURL}/api/vehicle/create`, {
@@ -214,6 +224,22 @@ export default function CreateVehicleForm() {
           min={1}
         />
       </label>
+
+      {user?.isCompanyEmployee && (<label>
+        Property Of:
+        <select
+          name="isCompanyProperty"
+          value={baseData.isCompanyProperty}
+          onChange={handleBaseChange}
+          required
+        >
+          <option value="" disabled>
+            -- Select Ownership --
+          </option>
+          <option value="true">Company Property</option>
+          <option value="false">Personal Property</option>
+        </select>
+      </label>)}
 
       <label>
         Fuel Type:

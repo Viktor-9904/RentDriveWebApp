@@ -1,24 +1,40 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using RentDrive.Common.Enums;
+using RentDrive.Data;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Rental;
-using System.Globalization;
+
+using static RentDrive.Common.EntityValidationConstants.ApplicationUserValidationConstants.Company;
+using static RentDrive.Common.EntityValidationConstants.RentalValidationConstans.Fees;
 
 namespace RentDrive.Services.Data
 {
     public class RentalService : IRentalService
     {
+        private readonly RentDriveDbContext dbContext;
         private readonly IRepository<Rental, Guid> rentalRepository;
-        private readonly IVehicleService vehicleService;
+        private readonly IRepository<ApplicationUser, Guid> applicationUserRepository;
+        private readonly IRepository<WalletTransaction, Guid> walletTransactionRepository;
+        private readonly IRepository<Vehicle, Guid> vehicleRepository;
 
         public RentalService(
+            RentDriveDbContext dbContext,
             IRepository<Rental, Guid> rentalRepository,
-            IVehicleService vehicleService)
+            IRepository<ApplicationUser, Guid> applicationUserRepository,
+            IRepository<WalletTransaction, Guid> walletTransactionRepository,
+            IRepository<Vehicle, Guid> vehicleRepository)
         {
+            this.dbContext = dbContext;
             this.rentalRepository = rentalRepository;
-            this.vehicleService = vehicleService;
+            this.applicationUserRepository = applicationUserRepository;
+            this.walletTransactionRepository = walletTransactionRepository;
+            this.vehicleRepository = vehicleRepository;
         }
         public async Task<IEnumerable<DateTime>> GetBookedDatesByVehicleIdAsync(Guid vehicleId)
         {
@@ -44,7 +60,7 @@ namespace RentDrive.Services.Data
             return bookedDates.ToList();
         }
 
-        public async Task<bool> RentVehicle(Guid vehicleId, Guid RenterId, IEnumerable<DateTime> bookedDates)
+        public async Task<bool> RentVehicle(Guid vehicleId, string renterId, IEnumerable<DateTime> bookedDates)
         {
             bool areDatesValid = await AreDatesValid(vehicleId, bookedDates);
 
@@ -58,30 +74,121 @@ namespace RentDrive.Services.Data
                 .OrderBy(d => d)
                 .ToList();
 
-            decimal vehiclePricePerDay = await this.vehicleService
-                .GetVehiclePricePerDayByVehicleId(vehicleId);
+            ApplicationUser? renter = await this.applicationUserRepository
+                .GetAllAsQueryable()
+                .Include(au => au.Wallet)
+                .FirstOrDefaultAsync(au => au.Id.ToString() == renterId);
 
-            if (vehiclePricePerDay == 0)
+            if (renter == null || renter?.Wallet == null)
             {
                 return false;
             }
 
-            Rental rental = new Rental()
+            Vehicle vehicle = await this.vehicleRepository
+                .GetByIdAsync(vehicleId);
+
+            if (vehicle == null)
             {
-                VehicleId = vehicleId,
-                RenterId = RenterId,
-                BookedOn = DateTime.UtcNow,
-                StartDate = orderedDates.First(),
-                EndDate = orderedDates.Last(),
-                VehiclePricePerDay = vehiclePricePerDay,
-                TotalPrice = orderedDates.Count * vehiclePricePerDay,
-                Status = RentalStatus.Active,
-            };
+                return false;
+            }
 
-            await this.rentalRepository.AddAsync(rental);
-            await this.rentalRepository.SaveChangesAsync();
+            ApplicationUser? owner = await this.applicationUserRepository
+                .GetAllAsQueryable()
+                .Include(au => au.Wallet)
+                .FirstOrDefaultAsync(au => au.Id == vehicle.OwnerId);
 
-            return true;
+            if (owner == null || owner?.Wallet == null)
+            {
+                return false;
+            }
+
+            decimal totalRentalPrice = vehicle.PricePerDay * orderedDates.Count;
+
+            if (renter.Wallet.Balance < totalRentalPrice)
+            {
+                return false;
+            }
+
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                Rental rental = new Rental()
+                {
+                    VehicleId = vehicleId,
+                    RenterId = renter.Id,
+                    BookedOn = DateTime.UtcNow,
+                    StartDate = orderedDates.First(),
+                    EndDate = orderedDates.Last(),
+                    VehiclePricePerDay = vehicle.PricePerDay,
+                    TotalPrice = totalRentalPrice,
+                    Status = RentalStatus.Active,
+                };
+
+                WalletTransaction renterTransaction = new WalletTransaction()
+                {
+                    WalletId = renter.Wallet.Id,
+                    Amount = -totalRentalPrice,
+                    Type = WalletTransactionType.Withdraw,
+                };
+
+                if (vehicle.OwnerId.ToString() == CompanyId) // Vehicle is company ownder
+                {
+                    WalletTransaction companyTransaction = new WalletTransaction()
+                    {
+                        WalletId = owner.Wallet.Id,
+                        Amount = totalRentalPrice,
+                        Type = WalletTransactionType.Deposit,
+                    };
+
+                    await this.walletTransactionRepository.AddRangeAsync([renterTransaction, companyTransaction]);
+
+                    owner.Wallet.Balance += totalRentalPrice;
+                }
+                else // Vehicle is owned by individual user
+                {
+                    ApplicationUser? company = await this.applicationUserRepository
+                        .GetAllAsQueryable()
+                        .Include(au => au.Wallet)
+                        .FirstOrDefaultAsync(au => au.Id.ToString() == CompanyId);
+
+                    if (company == null || company?.Wallet == null)
+                    {
+                        return false;
+                    }
+
+                    WalletTransaction ownerTransation = new WalletTransaction()
+                    {
+                        WalletId = owner.Wallet.Id,
+                        Amount = totalRentalPrice * (1 - CompanyPercentageFee),
+                        Type = WalletTransactionType.Deposit
+                    };
+
+                    WalletTransaction companyTransaction = new WalletTransaction()
+                    {
+                        WalletId = company.Wallet.Id,
+                        Amount = totalRentalPrice * CompanyPercentageFee,
+                        Type = WalletTransactionType.Deposit
+                    };
+
+                    await this.walletTransactionRepository.AddRangeAsync([renterTransaction, ownerTransation, companyTransaction]);
+
+                    owner.Wallet.Balance += totalRentalPrice * (1 - CompanyPercentageFee);
+                    company.Wallet.Balance += totalRentalPrice * CompanyPercentageFee;
+                }
+
+                renter.Wallet.Balance -= totalRentalPrice;
+
+                await this.rentalRepository.AddAsync(rental);
+                await this.rentalRepository.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
         public async Task<bool> AreDatesValid(Guid vehicleId, IEnumerable<DateTime> dates)
         {
@@ -137,6 +244,8 @@ namespace RentDrive.Services.Data
                 .Include(r => r.Vehicle)
                 .ThenInclude(v => v.VehicleImages)
                 .Where(r => r.RenterId == userId)
+                .OrderByDescending(r => r.Status == RentalStatus.Active)
+                .ThenBy(r => r.BookedOn)
                 .Select(r => new UserRentalViewModel()
                 {
                     Id = r.Id,
@@ -186,9 +295,9 @@ namespace RentDrive.Services.Data
                 .Include(r => r.Vehicle)
                 .Include(r => r.Renter)
                 .Where(r =>
-                    r.Vehicle.OwnerId.ToString() == userId && 
+                    r.Vehicle.OwnerId.ToString() == userId &&
                     r.VehicleId == vehicleId)
-                .Select(r=>  new UserVehicleRentalViewModel()
+                .Select(r => new UserVehicleRentalViewModel()
                 {
                     Id = r.Id,
                     Username = r.Renter.UserName,

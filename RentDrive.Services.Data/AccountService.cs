@@ -1,7 +1,9 @@
 ﻿using Azure.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
+using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.ApplicationUser;
 
@@ -9,17 +11,22 @@ namespace RentDrive.Services.Data
 {
     public class AccountService : IAccountService
     {
+        private readonly IRepository<ApplicationUser, Guid> applicationUserRepository;
+
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+
         private readonly IVehicleService vehicleService;
         private readonly IRentalService rentalService;
 
         public AccountService(
+            IRepository<ApplicationUser, Guid> applicationUserRepositor,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IVehicleService vehicleService,
             IRentalService rentalService)
         {
+            this.applicationUserRepository = applicationUserRepositor;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.vehicleService = vehicleService;
@@ -162,7 +169,11 @@ namespace RentDrive.Services.Data
 
         public async Task<UserCredentialsViewModel?> GetUserCredentialsByIdAsync(string userId)
         {
-            ApplicationUser? user = await userManager.FindByIdAsync(userId);
+
+            ApplicationUser? user = await this.applicationUserRepository
+                .GetAllAsQueryable()
+                .Include(au => au.Wallet)
+                .FirstOrDefaultAsync(au => au.Id.ToString() == userId);
 
             if (user == null)
             {
@@ -176,7 +187,8 @@ namespace RentDrive.Services.Data
                 Email = user.Email!,
                 PhoneNumber = user.PhoneNumber,
                 MemberSince = user.CreatedOn,
-                IsCompanyEmployee = user.UserType == UserType.CompanyEmployee
+                IsCompanyEmployee = user.UserType == UserType.CompanyEmployee,
+                Balance = user.Wallet.Balance,
             };
 
             return userCredentials;
