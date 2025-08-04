@@ -137,7 +137,7 @@ namespace RentDrive.Services.Data
                     {
                         WalletId = owner.Wallet.Id,
                         Amount = totalRentalPrice,
-                        Type = WalletTransactionType.Deposit,
+                        Type = WalletTransactionType.RentalProfit,
                     };
 
                     await this.walletTransactionRepository.AddRangeAsync([renterTransaction, companyTransaction]);
@@ -160,14 +160,14 @@ namespace RentDrive.Services.Data
                     {
                         WalletId = owner.Wallet.Id,
                         Amount = totalRentalPrice * (1 - CompanyPercentageFee),
-                        Type = WalletTransactionType.Deposit
+                        Type = WalletTransactionType.RentalProfit
                     };
 
                     WalletTransaction companyTransaction = new WalletTransaction()
                     {
                         WalletId = company.Wallet.Id,
                         Amount = totalRentalPrice * CompanyPercentageFee,
-                        Type = WalletTransactionType.Deposit
+                        Type = WalletTransactionType.CompanyRentalFeeProfit
                     };
 
                     await this.walletTransactionRepository.AddRangeAsync([renterTransaction, ownerTransation, companyTransaction]);

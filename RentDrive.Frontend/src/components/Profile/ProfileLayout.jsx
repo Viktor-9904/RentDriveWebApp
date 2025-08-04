@@ -22,6 +22,9 @@ export default function ProfileLayout() {
           <NavLink to="/profile/settings" className={({ isActive }) => isActive ? "active" : ""}>
             Settings
           </NavLink>
+          <NavLink to="/profile/wallet" className={({ isActive }) => isActive ? "active" : ""}>
+            My Wallet
+          </NavLink>
         </nav>
 
         <div style={{ marginTop: "auto" }}>
