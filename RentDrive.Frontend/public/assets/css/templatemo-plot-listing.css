@@ -3660,36 +3660,132 @@ cursor: pointer !important;
   color: red;
 }
 
-.wallet-modal-backdrop {
+.wallet-transaction-history__title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #222;
+}
+
+.wallet-transaction-history__empty {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  max-width: 500px;
+  margin: 2rem auto 0 auto;
+}
+
+.funds-modal__backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 100;
+  align-items: center;
+  z-index: 9999;
 }
 
-.wallet-modal {
-  background-color: white;
+.funds-modal__container {
+  background-color: #fff;
   padding: 2rem;
   border-radius: 10px;
-  max-width: 400px;
-  width: 100%;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
 }
 
-.wallet-modal input {
-  width: 100%;
+.funds-modal__title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.funds-modal__form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.funds-modal__form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.funds-modal__label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #444;
+}
+
+.funds-modal__input {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline-offset: 2px;
+  transition: border-color 0.2s ease;
+}
+
+.funds-modal__input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.funds-modal__buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.funds-modal__confirm-button,
+.funds-modal__cancel-button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.funds-modal__confirm-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.funds-modal__confirm-button:hover {
+  background-color: #218838;
+}
+
+.funds-modal__cancel-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.funds-modal__cancel-button:hover {
+  background-color: #c82333;
+}
+
+.funds-modal__expiry-dropdowns {
+  display: flex;
+  gap: 1rem;
+}
+
+.funds-modal__select {
+  flex: 1;
   padding: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.wallet-modal button {
-  padding: 0.5rem 1rem;
-  margin-right: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
 }
 
 .transaction-table {

@@ -60,37 +60,42 @@ export default function UserWallet() {
 
             <div className="wallet-transaction-history">
                 <h4>Transaction History</h4>
-                <table className="transaction-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {transactions?.map((tx) => (
-                            <tr key={tx.id}>
-                                <td>{tx.createdOn}</td>
-                                <td>
-                                    <span className={`transaction-type ${getTransactionTypeClass(tx.type)}`}>
-                                        {tx.type}
-                                    </span>
-                                </td>
-                                <td
-                                    className={
-                                        tx.amount < 0
-                                            ? 'wallet-transaction-negative'
-                                            : 'wallet-transaction-positive'
-                                    }
-                                >
-                                    {tx.amount.toFixed(2)} €
-                                </td>
+                {transactions?.length > 0 ? (
+                    <table className="transaction-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Amount</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-
+                        </thead>
+                        <tbody>
+                            {transactions?.map((tx) => (
+                                <tr key={tx.id}>
+                                    <td>{tx.createdOn}</td>
+                                    <td>
+                                        <span className={`transaction-type ${getTransactionTypeClass(tx.type)}`}>
+                                            {tx.type}
+                                        </span>
+                                    </td>
+                                    <td
+                                        className={
+                                            tx.amount < 0
+                                                ? 'wallet-transaction-negative'
+                                                : 'wallet-transaction-positive'
+                                        }
+                                    >
+                                        {tx.amount.toFixed(2)} €
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : (
+                    <div className="wallet-transaction-history__empty">
+                        <h6>No transaction history available.</h6>
+                    </div>
+                )}
             </div>
         </div>
     );
