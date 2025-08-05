@@ -4,11 +4,14 @@ import { useAuth } from '../../../context/AccountContext';
 import { useWalletTransactionHistory } from '../hooks/useWalletTransactionHistory';
 
 import AddFundsToBalance from './AddFundsModal';
+import { formatDate } from 'react-calendar/dist/shared/dateFormatter.js';
 
 
 export default function UserWallet() {
 
-    const { user, isAuthenticated } = useAuth();
+    const backEndURL = import.meta.env.VITE_API_URL;
+
+    const { user, isAuthenticated, loadUser } = useAuth();
     const { walletTransactionHistory, walletTransactionHistoryLoading, walletTransactionHistoryError } = useWalletTransactionHistory()
 
     const [showModal, setShowModal] = useState(false);
@@ -18,9 +21,33 @@ export default function UserWallet() {
         setTransactions(walletTransactionHistory)
     }, [walletTransactionHistory]);
 
-    const handleAddFunds = () => {
+    const handleAddFunds = async (formData, event) => {
+        event.preventDefault();
 
-        setShowModal(false);
+        console.log(formData)
+        
+        try {
+            const response = await fetch(`${backEndURL}/api/wallet/add-funds`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json" 
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to add funds to wallet.");
+            }
+
+            const newTransaction = await response.json();
+            setTransactions(prev => [newTransaction, ...prev]);
+            loadUser()
+            setShowModal(false);
+        } catch (error) {
+            alert(error.message);
+            console.error("Error adding funds:", error);
+        }
     };
 
     function getTransactionTypeClass(type) {

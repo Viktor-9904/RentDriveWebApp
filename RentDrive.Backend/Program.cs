@@ -101,6 +101,7 @@ builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IVehicleTypeCategoryService, VehicleTypeCategoryService>();
 builder.Services.AddScoped<IRentalService, RentalService>();
 builder.Services.AddScoped<IVehicleReviewService, VehicleReviewService>();
+builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<IWalletTransaction, WalletTransactionService>();
 
 WebApplication app = builder.Build();

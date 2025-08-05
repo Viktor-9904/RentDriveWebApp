@@ -7,7 +7,7 @@ export default function AddFundsToBalance({ handleAddFunds, setShowModal }) {
     cardHolderName: '',
     cvv: '',
     expiryMonth: '',
-    expiryYear: '',
+    expiryYear: 0,
   });
 
   const handleChange = (e) => {
@@ -21,9 +21,8 @@ export default function AddFundsToBalance({ handleAddFunds, setShowModal }) {
     }
   };
 
-  const onConfirm = () => {
-    handleAddFunds(formData);
-    console.log(formData)
+  const onConfirm = (formData, event) => {
+    handleAddFunds(formData, event);
   };
 
   return (
@@ -37,7 +36,7 @@ export default function AddFundsToBalance({ handleAddFunds, setShowModal }) {
       >
         <h4 className="funds-modal__title">Add Funds</h4>
 
-        <form onSubmit={onConfirm}>
+        <form onSubmit={(e) => onConfirm(formData, e)}>
           <div className="funds-modal__form-grid">
             <div className="funds-modal__form-group">
               <label htmlFor="amount" className="funds-modal__label">Amount</label>
@@ -119,7 +118,7 @@ export default function AddFundsToBalance({ handleAddFunds, setShowModal }) {
                   <option value="" disabled>Year</option>
                   {Array.from({ length: 12 }, (_, i) => {
                     const year = new Date().getFullYear() + i;
-                    return <option key={year} value={year.toString().slice(2)}>{year}</option>;
+                    return <option key={year} value={year}>{year}</option>;
                   })}
                 </select>
               </div>
