@@ -1,15 +1,22 @@
-import { useUserRentals } from "./hooks/useUserRentals";
+import { useUserRentals } from "../hooks/useUserRentals";
 import { useEffect, useState } from "react";
-import ReviewModal from "./ReviewModal";
+import ReviewModal from "../ReviewModal";
 import { SiPayloadcms } from "react-icons/si";
+import CancelConfirmationModal from "./CancelConfrimationModal";
+import { Flag } from "lucide-react";
+import { useAuth } from "../../../context/AccountContext";
 
 export default function MyRentals() {
+    const { user, isAuthenticated, loadUser } = useAuth();
     const { rentals, rentalsLoading, rentalError } = useUserRentals();
     const backEndURL = import.meta.env.VITE_API_URL;
 
     const [localRentals, setLocalRentals] = useState([]);
     const [selectedId, setSelectedId] = useState("");
+    const [selectedRental, setSelectedRental] = useState({});
+
     const [showReviewModal, setShowReviewModal] = useState(false);
+    const [showCancelModal, setShowCancelModal] = useState(false);
 
     useEffect(() => {
         if (rentals) {
@@ -83,6 +90,33 @@ export default function MyRentals() {
         }
     };
 
+    const handleCancel = async (rentalId) => {
+
+        try {
+            const response = await fetch(`${backEndURL}/api/rental/cancel-rental/${rentalId}`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to cancel rental.");
+            }
+
+            setLocalRentals((prevRentals) =>
+                prevRentals.map((rental) =>
+                    rental.id === rentalId ? { ...rental, status: "Cancelled", IsCancelled: true, isCancellable: false } : rental
+                )
+            );
+            setShowCancelModal(false);
+            await loadUser();
+        } catch (err) {
+            setConfirmError(err.message || "Something went wrong.");
+        }
+    };
+
     if (rentalsLoading) return <p>Loading rentals...</p>;
     if (rentalError) return <p>Error: {rentalError}</p>;
 
@@ -127,7 +161,7 @@ export default function MyRentals() {
                                 <td className="price-cell">{rental.pricePerDay.toFixed(2)} €</td>
                                 <td className="price-cell">{rental.totalPrice.toFixed(2)} €</td>
                                 <td>
-                                    {rental.status === "Active" && (
+                                    {rental.status === "Active" && rental.isConfirmable && (
                                         <button
                                             className="confirm-rental-button"
                                             onClick={() => handleConfirm(rental.id)}
@@ -147,6 +181,18 @@ export default function MyRentals() {
                                             Leave a Review
                                         </button>
                                     )}
+                                    {rental.isCancellable && rental.isCancelled == false && (
+                                        <button
+                                            className="cancel-rental-button"
+                                            onClick={() => {
+                                                setShowCancelModal(true);
+                                                setSelectedId(rental.id)
+                                                setSelectedRental(rental)
+                                            }}
+                                        >
+                                            Cancel Rental
+                                        </button>
+                                    )}
                                 </td>
                             </tr>
                         ))}
@@ -160,6 +206,16 @@ export default function MyRentals() {
                     setSelectedId("")
                 }}
                 onSubmit={handleReviewSubmit}
+            />
+            <CancelConfirmationModal
+                show={showCancelModal}
+                onClose={() =>{
+                    setShowCancelModal(false)
+                    setSelectedId("")
+                    setSelectedRental({})
+                }}
+                onConfirm={handleCancel}
+                rental={selectedRental}
             />
         </div>
     );

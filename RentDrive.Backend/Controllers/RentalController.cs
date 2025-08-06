@@ -86,6 +86,26 @@ namespace RentDrive.Backend.Controllers
 
             return Ok("Rental confirmed successfully.");
         }
+        [HttpPost("cancel-rental/{rentalId}")]
+        public async Task<IActionResult> CancelRentalById(Guid rentalId)
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            bool cancelledRental = await this.rentalService
+                .CancelRentalByIdAsync(userId, rentalId);
+
+            if (!cancelledRental)
+            {
+                return BadRequest("Rental cancelation failed.");
+            }
+
+            return Ok("Rental cancelled successfully.");
+        }
         [HttpGet("vehicle/{vehicleId}")]
         public async Task<IActionResult> GetUserVehiclesRentalsByVehicleId(Guid vehicleId)
         {
@@ -97,7 +117,7 @@ namespace RentDrive.Backend.Controllers
             }
 
             IEnumerable<UserVehicleRentalViewModel> userVehicles = await this.rentalService
-                .GetUserVehiclesRentals(userId, vehicleId);
+                .GetUserOwnedVehiclesRentals(userId, vehicleId);
 
             return Ok(userVehicles);
         }

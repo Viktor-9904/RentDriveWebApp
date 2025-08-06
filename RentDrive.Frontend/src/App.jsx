@@ -22,7 +22,7 @@ import ManageVehicleTypeCategories from './pages/ManageVehicleTypeCategories'
 
 import ProfileLayoutPage from './pages/Profile/ProfileLayoutPage'
 import ProfileOverviewPage from './pages/Profile/ProfileOverviewPage'
-import MyRentalsPage from './pages/Profile/MyRentalsPage'
+import MyRentals from './components/Profile/UserRentals/MyRentals'
 import MyListedVehiclesPage from './pages/Profile/MyListedVehiclesPage'
 
 import { AccountProvider } from './context/AccountContext'
@@ -76,7 +76,7 @@ function App() {
 
         <Route path="/profile" element={<ProfileLayoutPage />}>
           <Route index element={<ProfileOverviewPage />} />
-          <Route path="rentals" element={<MyRentalsPage />} />
+          <Route path="rentals" element={<MyRentals />} />
           <Route path="vehicles" element={<MyListedVehiclesPage />} />
           <Route path="settings" element={<ProfileSettingsPage />} />
           <Route path="wallet" element={<UserWallet />} />

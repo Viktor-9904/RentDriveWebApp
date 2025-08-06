@@ -1,15 +1,16 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using RentDrive.Common.Enums;
 using RentDrive.Data;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Rental;
-
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Metrics;
+using System.Globalization;
+using System.Numerics;
 using static RentDrive.Common.EntityValidationConstants.ApplicationUserValidationConstants.Company;
 using static RentDrive.Common.EntityValidationConstants.RentalValidationConstans.Fees;
 
@@ -131,52 +132,9 @@ namespace RentDrive.Services.Data
                     Type = WalletTransactionType.Withdraw,
                 };
 
-                if (vehicle.OwnerId.ToString() == CompanyId) // Vehicle is company ownder
-                {
-                    WalletTransaction companyTransaction = new WalletTransaction()
-                    {
-                        WalletId = owner.Wallet.Id,
-                        Amount = totalRentalPrice,
-                        Type = WalletTransactionType.RentalProfit,
-                    };
-
-                    await this.walletTransactionRepository.AddRangeAsync([renterTransaction, companyTransaction]);
-
-                    owner.Wallet.Balance += totalRentalPrice;
-                }
-                else // Vehicle is owned by individual user
-                {
-                    ApplicationUser? company = await this.applicationUserRepository
-                        .GetAllAsQueryable()
-                        .Include(au => au.Wallet)
-                        .FirstOrDefaultAsync(au => au.Id.ToString() == CompanyId);
-
-                    if (company == null || company?.Wallet == null)
-                    {
-                        return false;
-                    }
-
-                    WalletTransaction ownerTransation = new WalletTransaction()
-                    {
-                        WalletId = owner.Wallet.Id,
-                        Amount = totalRentalPrice * (1 - CompanyPercentageFee),
-                        Type = WalletTransactionType.RentalProfit
-                    };
-
-                    WalletTransaction companyTransaction = new WalletTransaction()
-                    {
-                        WalletId = company.Wallet.Id,
-                        Amount = totalRentalPrice * CompanyPercentageFee,
-                        Type = WalletTransactionType.CompanyRentalFeeProfit
-                    };
-
-                    await this.walletTransactionRepository.AddRangeAsync([renterTransaction, ownerTransation, companyTransaction]);
-
-                    owner.Wallet.Balance += totalRentalPrice * (1 - CompanyPercentageFee);
-                    company.Wallet.Balance += totalRentalPrice * CompanyPercentageFee;
-                }
-
                 renter.Wallet.Balance -= totalRentalPrice;
+
+                await this.walletTransactionRepository.AddAsync(renterTransaction);
 
                 await this.rentalRepository.AddAsync(rental);
                 await this.rentalRepository.SaveChangesAsync();
@@ -259,7 +217,9 @@ namespace RentDrive.Services.Data
                     PricePerDay = r.VehiclePricePerDay,
                     TotalPrice = r.TotalPrice,
                     IsCompleted = r.Status == RentalStatus.Completed,
+                    IsConfirmable = r.EndDate.Date < DateTime.UtcNow.Date,
                     IsCancelled = r.Status == RentalStatus.Cancelled,
+                    IsCancellable = r.StartDate.Date > DateTime.UtcNow.Date,
                     HasReviewedVehicle = r.Review != null,
                 })
                 .ToListAsync();
@@ -273,22 +233,149 @@ namespace RentDrive.Services.Data
                 .GetAllAsQueryable()
                 .FirstOrDefaultAsync(r =>
                     r.Id == rentalId &&
-                    r.RenterId.ToString() == userId);
+                    r.RenterId.ToString() == userId &&
+                    r.Status != RentalStatus.Completed);
 
             if (rental == null)
             {
                 return false;
             }
 
-            rental.Status = RentalStatus.Completed;
-            rental.CompletedOn = DateTime.UtcNow;
+            Vehicle vehicle = await this.vehicleRepository
+                .GetByIdAsync(rental.VehicleId);
 
-            await this.rentalRepository.SaveChangesAsync();
+            if (vehicle == null)
+            {
+                return false;
+            }
 
-            return true;
+            ApplicationUser? owner = await this.applicationUserRepository
+                .GetAllAsQueryable()
+                .Include(au => au.Wallet)
+                .FirstOrDefaultAsync(au => au.Id == vehicle.OwnerId);
+
+            if (owner == null || owner?.Wallet == null)
+            {
+                return false;
+            }
+
+            int daysRented = (rental.EndDate - rental.StartDate).Days + 1;
+            decimal totalRentalPrice = rental.VehiclePricePerDay * daysRented;
+
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                if (vehicle.OwnerId.ToString() == CompanyId) // Vehicle is company ownder
+                {
+                    WalletTransaction companyTransaction = new WalletTransaction()
+                    {
+                        WalletId = owner.Wallet.Id,
+                        Amount = totalRentalPrice,
+                        Type = WalletTransactionType.RentalProfit,
+                    };
+
+                    await this.walletTransactionRepository.AddAsync(companyTransaction);
+
+                    owner.Wallet.Balance += totalRentalPrice;
+                }
+                else // Vehicle is owned by individual user
+                {
+                    ApplicationUser? company = await this.applicationUserRepository
+                        .GetAllAsQueryable()
+                        .Include(au => au.Wallet)
+                        .FirstOrDefaultAsync(au => au.Id.ToString() == CompanyId);
+
+                    if (company == null || company?.Wallet == null)
+                    {
+                        return false;
+                    }
+
+                    WalletTransaction ownerTransaction = new WalletTransaction()
+                    {
+                        WalletId = owner.Wallet.Id,
+                        Amount = totalRentalPrice * (1 - CompanyPercentageFee),
+                        Type = WalletTransactionType.RentalProfit
+                    };
+
+                    WalletTransaction companyTransaction = new WalletTransaction()
+                    {
+                        WalletId = company.Wallet.Id,
+                        Amount = totalRentalPrice * CompanyPercentageFee,
+                        Type = WalletTransactionType.CompanyRentalFeeProfit
+                    };
+
+                    await this.walletTransactionRepository.AddRangeAsync([ownerTransaction, companyTransaction]);
+
+                    owner.Wallet.Balance += totalRentalPrice * (1 - CompanyPercentageFee);
+                    company.Wallet.Balance += totalRentalPrice * CompanyPercentageFee;
+                }
+
+                rental.Status = RentalStatus.Completed;
+                rental.CompletedOn = DateTime.UtcNow;
+
+                await this.rentalRepository.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
-        public async Task<IEnumerable<UserVehicleRentalViewModel>> GetUserVehiclesRentals(string userId, Guid vehicleId)
+        public async Task<bool> CancelRentalByIdAsync(string userId, Guid rentalId)
+        {
+            Rental? rental = await this.rentalRepository
+                .GetAllAsQueryable()
+                .Include(r => r.Renter)
+                .ThenInclude(au => au.Wallet)
+                .FirstOrDefaultAsync(r =>
+                    r.Id == rentalId &&
+                    r.RenterId.ToString() == userId &&
+                    r.StartDate > DateTime.UtcNow &&
+                    r.Status == RentalStatus.Active);
+
+            if (rental == null)
+            {
+                return false;
+            }
+
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                WalletTransaction walletTransaction = new WalletTransaction()
+                {
+                    WalletId = rental.Renter.Wallet.Id,
+                    Amount = rental.TotalPrice,
+                    Type = WalletTransactionType.Refund,
+                    CreatedAt = DateTime.UtcNow,
+                };
+
+                await this.walletTransactionRepository.AddAsync(walletTransaction);
+
+                rental.Renter.Wallet.Balance += rental.TotalPrice;
+
+                rental.Status = RentalStatus.Cancelled;
+                rental.CancelledOn = DateTime.UtcNow;
+
+                await this.rentalRepository.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+
+                return true;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<UserVehicleRentalViewModel>> GetUserOwnedVehiclesRentals(string userId, Guid vehicleId)
         {
             IEnumerable<UserVehicleRentalViewModel> userVehicleRentals = await this.rentalRepository
                 .GetAllAsQueryable()

@@ -10,5 +10,7 @@
         public decimal PricePerDay { get; set; }
         public int TimesBooked { get; set; }
         public double Rating { get; set; }
+        public double StarRating { get; set; }
+        public int ReviewCount { get; set; }
     }
 }

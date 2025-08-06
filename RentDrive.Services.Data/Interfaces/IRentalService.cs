@@ -12,6 +12,7 @@ namespace RentDrive.Services.Data.Interfaces
         public Task<int> GetCompletedRentalsCountByUserIdAsync(Guid userId);
         public Task<IEnumerable<UserRentalViewModel>> GetUserRentalsByIdAsync(Guid userId);
         public Task<bool> ConfirmRentalByIdAsync(string userId, Guid rentalId);
-        public Task<IEnumerable<UserVehicleRentalViewModel>> GetUserVehiclesRentals(string userId, Guid vehicleId);
+        public Task<bool> CancelRentalByIdAsync(string userId, Guid rentalId);
+        public Task<IEnumerable<UserVehicleRentalViewModel>> GetUserOwnedVehiclesRentals(string userId, Guid vehicleId);
     }
 }

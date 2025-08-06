@@ -13,7 +13,9 @@
         public decimal PricePerDay { get; set; }
         public decimal TotalPrice { get; set; }
         public bool IsCompleted { get; set; }
+        public bool IsConfirmable { get; set; }
         public bool IsCancelled { get; set; }
+        public bool IsCancellable { get; set; }
         public bool HasReviewedVehicle { get; set; }
     }
 }

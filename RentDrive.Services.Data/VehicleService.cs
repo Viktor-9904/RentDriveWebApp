@@ -357,7 +357,8 @@ namespace RentDrive.Services.Data
                     FuelType = v.FuelType.ToString(),
                     PricePerDay = v.PricePerDay,
                     TimesBooked = v.Rentals.Count(),
-                    Rating = 0, // TODO
+                    StarRating = v.Reviews.Select(vr => (double?)vr.Stars).Average() ?? 0,
+                    ReviewCount = v.Reviews.Count()
                 })
                 .ToListAsync();
 

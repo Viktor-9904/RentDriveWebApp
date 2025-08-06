@@ -5,6 +5,8 @@ import useDeleteVehicle from "../../Vehicles/hooks/useDeleteVehicle";
 import useUserVehicles from "../hooks/useUserVehicles";
 import UserVehicleBookingsModal from "./UserVehicleBookingsModal";
 import { ConciergeBellIcon } from "lucide-react";
+import { PiStarAndCrescentDuotone } from "react-icons/pi";
+import StarRating from "../../shared/VehicleStarRating";
 
 export default function UserListedVehicles() {
   const { userVehicles, uservehiclesLoading, uservehiclesError } = useUserVehicles()
@@ -107,7 +109,11 @@ const handleRowClick = async (vehicle) => {
                 <td>{vehicle.fuelType}</td>
                 <td>{vehicle.pricePerDay.toFixed(2)} €</td>
                 <td>{vehicle.timesBooked}</td>
-                <td>{vehicle.rating} / 10</td>
+                <td>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <StarRating rating={vehicle.starRating} reviewCount={vehicle.reviewCount} />
+                  </div>
+                </td>
                 <td>
                   <button
                     onClick={() => handleEdit(vehicle.id)}
@@ -126,17 +132,17 @@ const handleRowClick = async (vehicle) => {
             ))}
           </tbody>
           
-          <UserVehicleBookingsModal
-            show={showBookingModal}
-            onClose={() => setShowBookingModal(false)}
-            vehicle={selectedVehicle}
-            bookings={selectedBookings}
-          />
         </table>
       ) : (
         <p className="no-vehicles-message">No vehicles posted.</p>
       )}
 
+      <UserVehicleBookingsModal
+        show={showBookingModal}
+        onClose={() => setShowBookingModal(false)}
+        vehicle={selectedVehicle}
+        bookings={selectedBookings}
+      />
 
       <DeleteConfirmationModal
         show={showDeleteModal}
