@@ -3601,7 +3601,7 @@ cursor: pointer !important;
   color: #1565c0;
 }
 
-.vehicle-status.canceled {
+.vehicle-status.cancelled {
   background-color: #fdecea;
   color: #c62828;
 }
