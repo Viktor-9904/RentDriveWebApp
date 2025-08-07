@@ -369,6 +369,13 @@ header
   color: #2e2d2d;
 }
 
+.nav .balance-display .pending-balance {
+  font-weight: 700;
+  margin-left: 6px;
+  color: #2e2d2d9a;
+  padding-left: 15px;
+}
+
 
 /* .header-area .main-nav .nav li:last-child {
   padding-right: 0px;

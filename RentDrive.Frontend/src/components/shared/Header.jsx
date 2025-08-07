@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import useLogout from '../../hooks/useLogout';
 import { useAuth } from '../../context/AccountContext';
 import { useEffect, useState } from 'react';
+import { GiConsoleController } from 'react-icons/gi';
 
 export default function Header() {
     const { user, isAuthenticated } = useAuth();
@@ -10,14 +11,14 @@ export default function Header() {
     useEffect(() => {
         if(isAuthenticated){
             setShowBalance(true)
+            console.log(user)
         }
-    }, [isAuthenticated])
+    }, [user, isAuthenticated])
 
     const navigation = [
         { name: 'Home', href: '/' },
         { name: 'Categories', href: '/categories' },
         { name: 'Listing', href: '/listing' },
-        { name: 'Contact Us', href: '/contact-us' },
         ...(user?.isCompanyEmployee
             ? [
                 {
@@ -77,6 +78,7 @@ export default function Header() {
                                      {showBalance && <li className="balance-display">
                                         <span>Balance:</span>
                                         <span className="amount">{user?.balance?.toFixed(2) ?? '0.00'}€</span>
+                                        {user?.pendingBalance > 0 && <span className='pending-balance'>(Pending: {user.pendingBalance.toFixed(2)}€)</span>}
                                     </li>}
                                 </ul>
                             </nav>

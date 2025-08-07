@@ -1,17 +1,19 @@
-﻿using Azure.Identity;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.ApplicationUser;
+using static RentDrive.Common.EntityValidationConstants.RentalValidationConstans.Fees;
 
 namespace RentDrive.Services.Data
 {
     public class AccountService : IAccountService
     {
         private readonly IRepository<ApplicationUser, Guid> applicationUserRepository;
+        private readonly IRepository<Rental, Guid> rentalRepository;
 
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
@@ -21,12 +23,14 @@ namespace RentDrive.Services.Data
 
         public AccountService(
             IRepository<ApplicationUser, Guid> applicationUserRepositor,
+            IRepository<Rental, Guid> rentalRepository,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IVehicleService vehicleService,
             IRentalService rentalService)
         {
             this.applicationUserRepository = applicationUserRepositor;
+            this.rentalRepository = rentalRepository;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.vehicleService = vehicleService;
@@ -173,12 +177,23 @@ namespace RentDrive.Services.Data
             ApplicationUser? user = await this.applicationUserRepository
                 .GetAllAsQueryable()
                 .Include(au => au.Wallet)
+                .Include(au => au.Rentals)
                 .FirstOrDefaultAsync(au => au.Id.ToString() == userId);
 
             if (user == null)
             {
                 return null;
             }
+
+            decimal pendingBalance = await this.rentalRepository
+                .GetAllAsQueryable()
+                .Include(r => r.Vehicle)
+                .Where(r =>
+                    r.Vehicle.OwnerId.ToString() == userId &&
+                    r.Status == RentalStatus.Active)
+                .Select(r => r.TotalPrice)
+                .SumAsync()
+                * (1 - CompanyPercentageFee);
 
             UserCredentialsViewModel userCredentials = new UserCredentialsViewModel()
             {
@@ -189,6 +204,7 @@ namespace RentDrive.Services.Data
                 MemberSince = user.CreatedOn,
                 IsCompanyEmployee = user.UserType == UserType.CompanyEmployee,
                 Balance = user.Wallet.Balance,
+                PendingBalance = pendingBalance
             };
 
             return userCredentials;

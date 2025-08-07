@@ -9,5 +9,6 @@
         public DateTime MemberSince { get; set; }
         public bool IsCompanyEmployee { get; set; }
         public decimal Balance { get; set; }
+        public decimal PendingBalance { get; set; }
     }
 }
