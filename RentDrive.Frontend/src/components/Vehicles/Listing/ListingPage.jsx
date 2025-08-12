@@ -31,6 +31,9 @@ export default function ListingPage() {
         yearOfProduction: [1999, new Date().getFullYear()],
     });
 
+    const priceRange = { min: 0, max: 10000 };
+    const yearRange = { min: 1990, max: new Date().getFullYear() };
+
     const availableMakes = ["Toyota", "Ford", "BMW", "Tesla"];
     const availableColors = ["Red", "Blue", "Black", "White"];
     const availableFuelTypes = ["Petrol", "Diesel"]
@@ -46,11 +49,10 @@ export default function ListingPage() {
         }));
     };
 
-    const renderSlider = (label, min, max, values, onChange) => (
+    const renderSlider = (label, min, max, values, onChange, unit = "") => (
         <div className="slider-container mb-4">
             <label className="slider-label fw-bold">
-                {label}: {values[0]} - {values[1]}
-            </label>
+                {label}: {values[0]} {unit} - {values[1]} {unit}</label>
             <Range
                 step={1}
                 min={min}
@@ -278,16 +280,17 @@ export default function ListingPage() {
                                     <div className="slider-container">
                                         {renderSlider(
                                             "Price per Day",
-                                            baseFilters.pricePerDay[0],
-                                            baseFilters.pricePerDay[1],
+                                            priceRange.min,
+                                            priceRange.max,
                                             baseFilters.pricePerDay,
-                                            values => setBaseFilters(prev => ({ ...prev, pricePerDay: values }))
+                                            values => setBaseFilters(prev => ({ ...prev, pricePerDay: values })),
+                                            "€"
                                         )}
 
                                         {renderSlider(
                                             "Year of Production",
-                                            baseFilters.yearOfProduction[0],
-                                            baseFilters.yearOfProduction[1],
+                                            yearRange.min,
+                                            yearRange.max,
                                             baseFilters.yearOfProduction,
                                             values => setBaseFilters(prev => ({ ...prev, yearOfProduction: values }))
                                         )}
