@@ -150,5 +150,16 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(baseProperties);
         }
+        [HttpPost("filter")]
+        public async Task<IActionResult> FilterVehicles([FromBody] FilteredVehicleViewModel filter)
+        {
+            if (filter == null)
+                return BadRequest("Filter is required.");
+
+            IEnumerable<ListingVehicleViewModel> vehicles = await vehicleService
+                .GetFilteredVehicles(filter);
+
+            return Ok(vehicles);
+        }
     }
 }

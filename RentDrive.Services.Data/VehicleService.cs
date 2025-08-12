@@ -442,5 +442,94 @@ namespace RentDrive.Services.Data
 
             return baseProperties;
         }
+
+        public async Task<IEnumerable<ListingVehicleViewModel>> GetFilteredVehicles(FilteredVehicleViewModel filter)
+        {
+            IQueryable<Vehicle> query = this.vehicleRepository
+                .GetAllAsQueryable()
+                .Include(v => v.VehicleTypePropertyValues);
+
+            if (filter.VehicleTypeId.HasValue)
+            {
+                query = query.Where(v => v.VehicleTypeId == filter.VehicleTypeId.Value);
+            }
+
+            if (filter.VehicleTypeCategoryId.HasValue)
+            {
+                query = query.Where(v => v.VehicleTypeCategoryId == filter.VehicleTypeCategoryId.Value);
+            }
+
+            if (filter.Makes != null && filter.Makes.Any())
+            {
+                query = query.Where(v => filter.Makes.Contains(v.Make));
+            }
+
+            if (filter.Colors != null && filter.Colors.Any())
+            {
+                query = query.Where(v => filter.Colors.Contains(v.Color));
+            }
+
+            if (!string.IsNullOrEmpty(filter.FuelType))
+            {
+                query = query.Where(v => v.FuelType.ToString() == filter.FuelType);
+            }
+
+            if (filter.MinPrice.HasValue)
+            {
+                query = query.Where(v => v.PricePerDay >= filter.MinPrice.Value);
+            }
+
+            if (filter.MaxPrice.HasValue)
+            {
+                query = query.Where(v => v.PricePerDay <= filter.MaxPrice.Value);
+            }
+
+            if (filter.MinYear.HasValue)
+            {
+                query = query.Where(v => v.DateOfProduction.Year >= filter.MinYear.Value);
+            }
+
+            if (filter.MaxYear.HasValue)
+            {
+                query = query.Where(v => v.DateOfProduction.Year <= filter.MaxYear.Value);
+            }
+
+            if (filter.Properties != null && filter.Properties.Any())
+            {
+                foreach (FilteredVehicleTypeProperty property in filter.Properties)
+                {
+                    if (property.Values != null && property.Values.Any())
+                    {
+                        string propertyId = property.PropertyId;
+                        List<string> values = property.Values;
+
+                        query = query.Where(v => v.VehicleTypePropertyValues
+                            .Any(vtpv => vtpv.VehicleTypePropertyId.ToString() == propertyId && values.Contains(vtpv.PropertyValue)));
+                    }
+                }
+            }
+
+            IEnumerable<ListingVehicleViewModel> filteredVehicles = await query
+                .Include(v => v.VehicleType)
+                .Include(v => v.VehicleTypeCategory)
+                 .Select(v => new ListingVehicleViewModel()
+                 {
+                     Id = v.Id,
+                     Make = v.Make,
+                     Model = v.Model,
+                     VehicleType = v.VehicleType.Name,
+                     VehicleTypeCategory = v.VehicleTypeCategory.Name,
+                     YearOfProduction = v.DateOfProduction.Year,
+                     PricePerDay = v.PricePerDay,
+                     FuelType = v.FuelType.ToString(),
+                     ImageURL = v.VehicleImages.Select(vi => vi.ImageURL).FirstOrDefault() ?? DefaultImageURL,
+                     OwnerName = v.Owner.UserName,
+                     StarsRating = v.Reviews.Select(vr => (double?)vr.Stars).Average() ?? 0,
+                     ReviewCount = v.Reviews.Count()
+                 })
+                .ToListAsync();
+
+            return filteredVehicles;
+        }
     }
 }

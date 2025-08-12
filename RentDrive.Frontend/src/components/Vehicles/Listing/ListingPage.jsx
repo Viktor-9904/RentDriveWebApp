@@ -142,6 +142,47 @@ export default function ListingPage() {
     }, [selectedFilters, selectedTypeId]);
 
     useEffect(() => {
+        const debounceTimer = setTimeout(() => {
+            const fetchFilteredVehicles = async () => {
+                try {
+                    const payload = {
+                        vehicleTypeId: selectedTypeId || null,
+                        vehicleTypeCategoryId: selectedCategoryId || null,
+                        makes: baseFilters.makes,
+                        colors: baseFilters.colors,
+                        fuelType: baseFilters.fuelType,
+                        minPrice: baseFilters.pricePerDay[0],
+                        maxPrice: baseFilters.pricePerDay[1],
+                        minYear: baseFilters.yearOfProduction[0],
+                        maxYear: baseFilters.yearOfProduction[1],
+                        properties: Object.entries(selectedFilters).map(([propertyId, values]) => ({ propertyId, values }))
+                    };
+
+                    console.log(payload);
+
+                    const res = await fetch(`${backEndURL}/api/vehicle/filter`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!res.ok) {
+                        throw new Error("Failed to fetch vehicles");
+                    }
+                    const data = await res.json();
+                    setLocalVehicles(data);
+                } catch (err) {
+                    console.error(err);
+                }
+            };
+
+            fetchFilteredVehicles();
+        }, 250);
+
+        return () => clearTimeout(debounceTimer);
+    }, [selectedTypeId, selectedCategoryId, baseFilters, selectedFilters]);
+
+    useEffect(() => {
         setLocalVehicleTypes(vehicleTypes);
     }, [vehicleTypes])
 
@@ -381,25 +422,32 @@ export default function ListingPage() {
 
                     <div className="col-lg-9">
                         <div className="row">
-                            {localVehicles?.map(vehicle => (
-                                <ListingPageItem
-                                    key={vehicle.id}
-                                    id={vehicle.id}
-                                    make={vehicle.make}
-                                    model={vehicle.model}
-                                    vehicleType={vehicle.vehicleType}
-                                    vehicleTypeCategory={vehicle.vehicleTypeCategory}
-                                    yearOfProduction={vehicle.yearOfProduction}
-                                    pricePerDay={vehicle.pricePerDay}
-                                    fuelType={vehicle.fuelType}
-                                    imageURL={vehicle.imageURL}
-                                    ownerName={vehicle.ownerName}
-                                    starsRating={vehicle.starsRating}
-                                    reviewCount={vehicle.reviewCount}
-                                />
-                            ))}
+                            {localVehicles && localVehicles.length > 0 ? (
+                                localVehicles.map(vehicle => (
+                                    <ListingPageItem
+                                        key={vehicle.id}
+                                        id={vehicle.id}
+                                        make={vehicle.make}
+                                        model={vehicle.model}
+                                        vehicleType={vehicle.vehicleType}
+                                        vehicleTypeCategory={vehicle.vehicleTypeCategory}
+                                        yearOfProduction={vehicle.yearOfProduction}
+                                        pricePerDay={vehicle.pricePerDay}
+                                        fuelType={vehicle.fuelType}
+                                        imageURL={vehicle.imageURL}
+                                        ownerName={vehicle.ownerName}
+                                        starsRating={vehicle.starsRating}
+                                        reviewCount={vehicle.reviewCount}
+                                    />
+                                ))
+                            ) : (
+                                <div className="col-12 text-center p-5">
+                                    <p>No vehicles found matching your filters.</p>
+                                </div>
+                            )}
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
