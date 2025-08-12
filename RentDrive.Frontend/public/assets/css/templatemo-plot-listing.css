@@ -2335,6 +2335,110 @@ Listing Page
     justify-content: space-between;
     flex-grow: 1;
 }
+
+.slider-track-wrapper {
+  position: relative;
+  height: 36px;
+  display: flex;
+  width: 100%;
+  user-select: none;
+}
+
+.slider-track {
+  height: 6px;
+  border-radius: 6px;
+  width: 100%;
+  align-self: center;
+
+  background: linear-gradient(
+    to right,
+    #ddd 0%,
+    #ddd var(--percent-start, 0%),
+    #0d6efd var(--percent-start, 0%),
+    #0d6efd var(--percent-end, 100%),
+    #ddd var(--percent-end, 100%),
+    #ddd 100%
+  );
+  position: relative;
+}
+
+.slider-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid #0d6efd;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  z-index: 10;
+  transition: background-color 0.2s ease;
+}
+
+.slider-thumb:active {
+  cursor: grabbing;
+  background-color: #084298;
+}
+
+.slider-thumb-indicator {
+  height: 8px;
+  width: 2px;
+  background: #0d6efd;
+  border-radius: 2px;
+}
+
+.collapsible-header {
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.collapsible-header:hover {
+  background-color: #e9ecef;
+}
+
+.collapsible-header span {
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+  user-select: none;
+}
+
+.list-unstyled.ms-3 {
+  margin-left: 1rem !important;
+  padding-left: 0;
+}
+
+.list-unstyled.ms-3.mt-2 {
+  margin-top: 0.5rem !important;
+}
+
+.list-unstyled.ms-3 li {
+  margin-bottom: 0.3rem;
+}
+
+.list-unstyled.ms-3 li label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.list-unstyled.ms-3 li input[type="checkbox"] {
+  cursor: pointer;
+}
+
 .rate {
   list-style: none;
   padding: 0;

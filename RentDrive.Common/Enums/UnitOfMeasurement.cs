@@ -13,6 +13,7 @@ namespace RentDrive.Common.Enums
         L,
         ml,
         kW,
+        hp,
 
         [Display(Name = "km/h")]
         KmPerHour,

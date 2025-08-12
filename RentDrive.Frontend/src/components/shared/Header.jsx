@@ -11,7 +11,9 @@ export default function Header() {
     useEffect(() => {
         if(isAuthenticated){
             setShowBalance(true)
-            console.log(user)
+        }
+        else {
+            setShowBalance(false);
         }
     }, [user, isAuthenticated])
 

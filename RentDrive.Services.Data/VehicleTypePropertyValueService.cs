@@ -14,10 +14,17 @@ namespace RentDrive.Services.Data
     public class VehicleTypePropertyValueService : IVehicleTypePropertyValueService
     {
         private readonly IRepository<VehicleTypePropertyValue, Guid> vehicleTypePropertyValueRepository;
+        private readonly IRepository<VehicleTypeProperty, Guid> vehicleTypePropertyRepository;
+        private readonly IRepository<VehicleType, int> vehicleTypeRepository;
 
-        public VehicleTypePropertyValueService(IRepository<VehicleTypePropertyValue, Guid> vehicleTypePropertyValueRepository)
+        public VehicleTypePropertyValueService(
+            IRepository<VehicleTypePropertyValue, Guid> vehicleTypePropertyValueRepository,
+            IRepository<VehicleTypeProperty, Guid> vehicleTypePropertyRepository,
+            IRepository<VehicleType, int> vehicleTypeRepository)
         {
             this.vehicleTypePropertyValueRepository = vehicleTypePropertyValueRepository;
+            this.vehicleTypePropertyRepository = vehicleTypePropertyRepository;
+            this.vehicleTypeRepository = vehicleTypeRepository;
         }
 
         public async Task<List<VehicleTypePropertyValuesViewModel>> GetVehicleTypePropertyValuesByVehicleIdAsync(Guid vehicleId)
@@ -80,6 +87,60 @@ namespace RentDrive.Services.Data
 
             await this.vehicleTypePropertyValueRepository.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<FilterTypeProperties?> LoadTypePropertyValuesByTypeIdAsync(int vehicleTypeId)
+        {
+            VehicleType? vehicleType = await this.vehicleTypeRepository
+                .GetAllAsQueryable()
+                .Where(vt => vt.Id == vehicleTypeId && !vt.IsDeleted)
+                .FirstOrDefaultAsync();
+
+            if (vehicleType == null)
+            {
+                return null;
+            }
+
+            List<VehicleTypeProperty> properties = await this.vehicleTypePropertyRepository
+                .GetAllAsQueryable()
+                .Where(p => p.VehicleTypeId == vehicleTypeId)
+                .ToListAsync();
+
+            if (properties == null)
+            {
+                return null;
+            }
+
+            List<FilterProperty> filterProperties = new List<FilterProperty>();
+
+            foreach (VehicleTypeProperty property in properties)
+            {
+                List<FilterPropertyValue> valuesWithCounts = await vehicleTypePropertyValueRepository
+                    .GetAllAsQueryable()
+                    .Where(vpv => vpv.VehicleTypePropertyId == property.Id)
+                    .GroupBy(vpv => vpv.PropertyValue)
+                    .Select(g => new FilterPropertyValue
+                    {
+                        PropertyValue = g.Key,
+                        UnitOfMeasurement = property.UnitOfMeasurement.ToString(),
+                        Count = g.Count()
+                    })
+                    .ToListAsync();
+
+                filterProperties.Add(new FilterProperty
+                {
+                    PropertyId = property.Id,
+                    PropertyName = property.Name,
+                    PropertyValues = valuesWithCounts
+                });
+            }
+
+            return new FilterTypeProperties
+            {
+                TypeId = vehicleType.Id,
+                Name = vehicleType.Name,
+                Properties = filterProperties
+            };
         }
     }
 }
