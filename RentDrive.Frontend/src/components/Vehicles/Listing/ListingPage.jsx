@@ -5,12 +5,15 @@ import useAllVehicles from '../hooks/useAllVehicles';
 import useAllVehicleTypes from '../hooks/useAllVehicleTypes';
 import useAllVehicleCategories from '../hooks/useAllVehicleCategories';
 import useFilterVehiclePropertiesByTypeId from '../hooks/useFilterVehiclePropertiesByTypeId';
+import useBaseFilterProperties from '../hooks/useBaseFilterProperties';
 
 export default function ListingPage() {
     const backEndURL = import.meta.env.VITE_API_URL;
 
     const [selectedTypeId, setSelectedTypeId] = useState("");
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
+
+    const { baseFilterProperties, baseFilterPropertiesLoading, baseFilterPropertiesError } = useBaseFilterProperties(selectedTypeId, selectedCategoryId);
 
     const { vehicles, loading, error } = useAllVehicles();
     const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
@@ -21,22 +24,26 @@ export default function ListingPage() {
     const [localVehicles, setLocalVehicles] = useState([]);
     const [localVehicleTypes, setLocalVehicleTypes] = useState([]);
     const [localVehicleTypeCategories, setLocalVehicleTypeCategories] = useState([]);
+    const [localBaseFilterdProperties, setLocalBaseFilteredProperties] = useState([]);
     const [localFilterdVehicleTypeProperties, setLocalFilteredVehicleTypeProperties] = useState([]);
 
     const [baseFilters, setBaseFilters] = useState({
         makes: [],
         colors: [],
         fuelType: "",
-        pricePerDay: [50, 5000],
-        yearOfProduction: [1999, new Date().getFullYear()],
+        pricePerDay: [0, 0],
+        yearOfProduction: [1970, 1970],
     });
 
-    const priceRange = { min: 0, max: 10000 };
-    const yearRange = { min: 1990, max: new Date().getFullYear() };
-
-    const availableMakes = ["Toyota", "Ford", "BMW", "Tesla"];
-    const availableColors = ["Red", "Blue", "Black", "White"];
-    const availableFuelTypes = ["Petrol", "Diesel"]
+    useEffect(() => {
+        if (localBaseFilterdProperties?.minPrice !== undefined && localBaseFilterdProperties?.maxPrice !== undefined) {
+            setBaseFilters(prev => ({
+                ...prev,
+                pricePerDay: [localBaseFilterdProperties.minPrice, localBaseFilterdProperties.maxPrice],
+                yearOfProduction: [localBaseFilterdProperties.minYearOfProduction, localBaseFilterdProperties.maxYearOfProduction],
+            }));
+        }
+    }, [localBaseFilterdProperties]);
 
     const [openProperties, setOpenProperties] = useState({});
     const [makeOpen, setMakeOpen] = useState(false);
@@ -48,6 +55,16 @@ export default function ListingPage() {
             [propertyId]: !prev[propertyId]
         }));
     };
+
+    const getSliderBounds = (min, max) => {
+        if (min === max) {
+            return { min: Math.floor(min - 1), max: Math.ceil(max + 1) };
+        }
+        return { min: Math.floor(min), max: Math.ceil(max) };
+    };
+
+    const priceBounds = getSliderBounds(baseFilterProperties?.minPrice || 0, baseFilterProperties?.maxPrice || 0);
+    const yearBounds = getSliderBounds(baseFilterProperties?.minYearOfProduction || 1970, baseFilterProperties?.maxYearOfProduction || 1970);
 
     const renderSlider = (label, min, max, values, onChange, unit = "") => (
         <div className="slider-container mb-4">
@@ -140,6 +157,10 @@ export default function ListingPage() {
         setLocalFilteredVehicleTypeProperties(filterVehicleProperties)
     }, [filterVehicleProperties]);
 
+    useEffect(() => {
+        setLocalBaseFilteredProperties(baseFilterProperties)
+    }, [baseFilterProperties])
+
     return (
         <div className="listing-page">
             <div className="container">
@@ -167,7 +188,7 @@ export default function ListingPage() {
                             {selectedTypeId && (
                                 <div className="mt-4">
                                     <h6 className="mb-2">
-                                        {localVehicleTypes.find(t => t.id === selectedTypeId)?.name} Categories
+                                        {localVehicleTypes.find(t => String(t.id) === String(selectedTypeId))?.name} Categories
                                     </h6>
                                     <select
                                         className="form-select"
@@ -176,7 +197,7 @@ export default function ListingPage() {
                                     >
                                         <option value="">Select category</option>
                                         {localVehicleTypeCategories
-                                            .filter(cat => cat.vehicleTypeId === selectedTypeId)
+                                            .filter(cat => String(cat.vehicleTypeId) === String(selectedTypeId))
                                             .map(cat => (
                                                 <option key={cat.id} value={cat.id}>
                                                     {cat.name}
@@ -198,7 +219,7 @@ export default function ListingPage() {
 
                                     {makeOpen && (
                                         <ul className="list-unstyled ms-3">
-                                            {availableMakes.map(make => (
+                                            {localBaseFilterdProperties?.makes.map(make => (
                                                 <li key={make}>
                                                     <label>
                                                         <input
@@ -230,7 +251,7 @@ export default function ListingPage() {
                                     </div>
                                     {colorOpen && (
                                         <ul className="list-unstyled ms-3">
-                                            {availableColors.map(color => (
+                                            {localBaseFilterdProperties?.colors.map(color => (
                                                 <li key={color}>
                                                     <label>
                                                         <input
@@ -268,7 +289,7 @@ export default function ListingPage() {
                                         }
                                     >
                                         <option value="">Select fuel type</option>
-                                        {availableFuelTypes.map(fuel => (
+                                        {localBaseFilterdProperties?.fuelTypes?.map(ft => ft.name).map(fuel => (
                                             <option key={fuel} value={fuel}>
                                                 {fuel}
                                             </option>
@@ -280,8 +301,8 @@ export default function ListingPage() {
                                     <div className="slider-container">
                                         {renderSlider(
                                             "Price per Day",
-                                            priceRange.min,
-                                            priceRange.max,
+                                            priceBounds.min,
+                                            priceBounds.max,
                                             baseFilters.pricePerDay,
                                             values => setBaseFilters(prev => ({ ...prev, pricePerDay: values })),
                                             "€"
@@ -289,8 +310,8 @@ export default function ListingPage() {
 
                                         {renderSlider(
                                             "Year of Production",
-                                            yearRange.min,
-                                            yearRange.max,
+                                            yearBounds.min,
+                                            yearBounds.max,
                                             baseFilters.yearOfProduction,
                                             values => setBaseFilters(prev => ({ ...prev, yearOfProduction: values }))
                                         )}

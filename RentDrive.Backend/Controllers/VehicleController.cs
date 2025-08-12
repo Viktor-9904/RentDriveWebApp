@@ -143,5 +143,12 @@ namespace RentDrive.Backend.Controllers
 
             return Ok();
         }
+        [HttpGet("base-filter-properties")]
+        public async Task<IActionResult> GetBaseFilterProperties([FromQuery] int? vehicleTypeId = null, [FromQuery] int? vehicleTypeCategoryId = null)
+        {
+            BaseFilterProperties baseProperties = await vehicleService.GetBaseFilterPropertiesAsync(vehicleTypeId, vehicleTypeCategoryId);
+
+            return Ok(baseProperties);
+        }
     }
 }

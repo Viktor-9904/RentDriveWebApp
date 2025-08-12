@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
+using RentDrive.Web.ViewModels.Enums;
 using RentDrive.Web.ViewModels.Vehicle;
 using RentDrive.Web.ViewModels.VehicleReview;
-using System;
+
 using static RentDrive.Common.EntityValidationConstants.ApplicationUserValidationConstants.Company;
+using static RentDrive.Common.EntityValidationConstants.VehicleValidationConstants.Vehicle;
 using static RentDrive.Common.EntityValidationConstants.VehicleValidationConstants.VehicleImages;
 
 namespace RentDrive.Services.Data
@@ -110,6 +113,7 @@ namespace RentDrive.Services.Data
 
             return top3RecentVehicles;
         }
+
         public async Task<VehicleDetailsViewModel?> GetVehicleDetailsByIdAsync(Guid id)
         {
             VehicleDetailsViewModel? vehicleDetails = await this.vehicleRepository
@@ -158,6 +162,7 @@ namespace RentDrive.Services.Data
 
             return vehicleDetails;
         }
+
         public async Task<bool> SoftDeleteVehicleByIdAsync(Guid id)
         {
             Vehicle vehicleToDelete = await this.vehicleRepository
@@ -174,6 +179,7 @@ namespace RentDrive.Services.Data
 
             return true;
         }
+
         public async Task<VehicleEditFormViewModel?> GetEditVehicleDetailsByIdAsync(Guid id)
         {
             VehicleEditFormViewModel? editVehicle = await this.vehicleRepository
@@ -210,6 +216,7 @@ namespace RentDrive.Services.Data
 
             return editVehicle;
         }
+
         public async Task<bool> CreateVehicle(string userdId, VehicleCreateFormViewModel viewModel)
         {
             ApplicationUser? user = await this.applicationUserRepository
@@ -339,6 +346,7 @@ namespace RentDrive.Services.Data
 
             return ownedVehicleCount;
         }
+
         public async Task<IEnumerable<UserVehicleViewModel>> GetUserVehiclesByIdAsync(string userId)
         {
             IEnumerable<UserVehicleViewModel> userVehicles = await this.vehicleRepository
@@ -363,6 +371,76 @@ namespace RentDrive.Services.Data
                 .ToListAsync();
 
             return userVehicles;
+        }
+
+        public async Task<BaseFilterProperties> GetBaseFilterPropertiesAsync(int? vehicleTypeId = null, int? vehicleTypeCategoryId = null)
+        {
+            IQueryable<Vehicle> vehiclesQuery = this.vehicleRepository.GetAllAsQueryable();
+
+            if (vehicleTypeId.HasValue)
+            {
+                vehiclesQuery = vehiclesQuery.Where(v => v.VehicleTypeId == vehicleTypeId.Value);
+            }
+
+            if (vehicleTypeCategoryId.HasValue)
+            {
+                vehiclesQuery = vehiclesQuery.Where(v => v.VehicleTypeCategoryId == vehicleTypeCategoryId.Value);
+            }
+
+            if (!await vehiclesQuery.AnyAsync())
+            {
+                return new BaseFilterProperties
+                {
+                    Makes = new List<string>(),
+                    Colors = new List<string>(),
+                    FuelTypes = new List<FuelTypeEnumViewModel>(),
+                    MinPrice = 0,
+                    MaxPrice = 0,
+                    MinYearOfProduction = 0,
+                    MaxYearOfProduction = 0
+                };
+            }
+
+            List<string> makes = await vehiclesQuery
+                .Select(v => v.Make)
+                .Distinct()
+                .OrderBy(m => m)
+                .ToListAsync();
+
+            List<string> colors = await vehiclesQuery
+                .Select(v => v.Color)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+
+            List<FuelTypeEnumViewModel> fuelTypes = await vehiclesQuery
+                .Select(v => new FuelTypeEnumViewModel
+                {
+                    Id = (int)v.FuelType,
+                    Name = v.FuelType.ToString()
+                })
+                .Distinct()
+                .OrderBy(f => f.Name)
+                .ToListAsync();
+
+            decimal minPrice = await vehiclesQuery.MinAsync(v => v.PricePerDay);
+            decimal maxPrice = await vehiclesQuery.MaxAsync(v => v.PricePerDay);
+
+            int minYear = await vehiclesQuery.MinAsync(v => v.DateOfProduction.Year);
+            int maxYear = await vehiclesQuery.MaxAsync(v => v.DateOfProduction.Year);
+
+            BaseFilterProperties baseProperties = new BaseFilterProperties()
+            {
+                Makes = makes,
+                Colors = colors,
+                FuelTypes = fuelTypes,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
+                MinYearOfProduction = minYear,
+                MaxYearOfProduction = maxYear,
+            };
+
+            return baseProperties;
         }
     }
 }

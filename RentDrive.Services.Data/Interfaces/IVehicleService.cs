@@ -15,5 +15,6 @@ namespace RentDrive.Services.Data.Interfaces
         Task<decimal> GetVehiclePricePerDayByVehicleId(Guid id);
         Task<int> GetUserListedVehicleCountAsync(Guid userId);
         Task<IEnumerable<UserVehicleViewModel>> GetUserVehiclesByIdAsync(string userId);
+        Task<BaseFilterProperties> GetBaseFilterPropertiesAsync(int? vehicleTypeId = null, int? vehicleTypeCategoryId = null);
     }
 }
