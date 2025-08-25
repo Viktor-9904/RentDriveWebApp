@@ -40,7 +40,13 @@ namespace RentDrive.Data.Configuration
                     Email = "RentDrive@RentDrive.com",
                     EmailConfirmed = true,
                     UserType = UserType.Company,
-                    CreatedOn = new DateTime(2023, 7, 8)
+                    CreatedOn = new DateTime(2023, 7, 8),
+                    Wallet = new Wallet
+                    {
+                        Id = Guid.Parse("d43e10f1-599f-4ab5-a246-2e2af3e0cab5"),
+                        UserId = Guid.Parse(CompanyId),
+                        Balance = 15220.32m,
+                    },
                 },
                 new()
                 {
@@ -49,7 +55,13 @@ namespace RentDrive.Data.Configuration
                     Email = "john.doe@example.com",
                     EmailConfirmed = true,
                     UserType = UserType.Regular,
-                    CreatedOn = new DateTime(2024, 8, 15)
+                    CreatedOn = new DateTime(2024, 8, 15),
+                    Wallet = new Wallet
+                    {
+                        Id = Guid.Parse("fa010230-0d91-466b-a984-d47cd7651002"),
+                        UserId = Guid.Parse("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
+                        Balance = 4120.19m,
+                    },
                 },
                 new()
                 {
@@ -58,7 +70,13 @@ namespace RentDrive.Data.Configuration
                     Email = "jane.smith@example.com",
                     EmailConfirmed = true,
                     UserType = UserType.CompanyEmployee,
-                    CreatedOn = new DateTime(2024, 9, 3)
+                    CreatedOn = new DateTime(2024, 9, 3),
+                    Wallet = new Wallet
+                    {
+                        Id = Guid.Parse("d6b9cab2-c4f8-416c-8dbc-63bab5c5e860"),
+                        UserId = Guid.Parse("e7df3bc2-1c20-4895-b8c9-781ad6cf892a"),
+                        Balance = 420.32m,
+                    },
                 },
                 new()
                 {
@@ -67,7 +85,13 @@ namespace RentDrive.Data.Configuration
                     Email = "alex.miles@example.com",
                     EmailConfirmed = true,
                     UserType = UserType.Regular,
-                    CreatedOn = new DateTime(2025, 1, 12)
+                    CreatedOn = new DateTime(2025, 1, 12),
+                    Wallet = new Wallet
+                    {
+                        Id = Guid.Parse("3286205e-24a5-47f7-a418-141ce2f61a7f"),
+                        UserId = Guid.Parse("a8b2e9f4-927d-4f87-a457-bf95cd4526dc"),
+                        Balance = 620.97m,
+                    },
                 }
             };
 
@@ -94,5 +118,4 @@ namespace RentDrive.Data.Configuration
             return seededUsers;
         }
     }
-
 }

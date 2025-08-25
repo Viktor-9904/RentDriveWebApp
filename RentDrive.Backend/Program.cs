@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 
 using RentDrive.Data;
 using RentDrive.Data.Configuration;
-using RentDrive.Data.Migrations;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository;
 using RentDrive.Data.Repository.Interfaces;
@@ -18,11 +17,13 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 string frontEndURL = builder.Configuration["FrontEndURL:URL"]!;
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 // Add services to the container.
 builder.Services
     .AddDbContext<RentDriveDbContext>(options =>
     {
-        options.UseSqlServer(connectionString);
+        options.UseNpgsql(connectionString);
     });
 
 builder.Services

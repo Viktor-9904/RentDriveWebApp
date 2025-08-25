@@ -31,7 +31,6 @@ namespace RentDrive.Data.Configuration
             builder
                 .Property(wt => wt.CreatedAt)
                 .IsRequired()
-                .HasDefaultValueSql("GETUTCDATE()")
                 .HasComment("Creation date of transaction.");
         }
     }
