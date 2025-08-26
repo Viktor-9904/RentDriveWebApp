@@ -1,5 +1,5 @@
 # Stage 1 - Build
-FROM node:20 AS build
+FROM --platform=linux/arm64/v8 node:20 AS build
 WORKDIR /app
 
 # Copy dependencies and install
@@ -13,7 +13,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2 - Serve with NGINX
-FROM nginx:alpine
+FROM --platform=linux/arm64/v8 nginx:alpine
 
 # Remove default nginx config
 RUN rm -rf /usr/share/nginx/html/*
