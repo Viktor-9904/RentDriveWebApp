@@ -13,6 +13,11 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["RentDrive.Backend/RentDrive.Backend.csproj", "RentDrive.Backend/"]
+COPY ["RentDrive.Data/RentDrive.Data.csproj", "RentDrive.Data/"]
+COPY ["RentDrive.Common/RentDrive.Common.csproj", "RentDrive.Common/"]
+COPY ["RentDrive.Data.Models/RentDrive.Data.Models.csproj", "RentDrive.Data.Models/"]
+COPY ["RentDrive.Services.Data/RentDrive.Services.Data.csproj", "RentDrive.Services.Data/"]
+COPY ["RentDrive.Web.ViewModels/RentDrive.Web.ViewModels.csproj", "RentDrive.Web.ViewModels/"]
 RUN dotnet restore "./RentDrive.Backend/RentDrive.Backend.csproj"
 COPY . .
 WORKDIR "/src/RentDrive.Backend"
