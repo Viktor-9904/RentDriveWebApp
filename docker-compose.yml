@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_DB: rentdrive
+      POSTGRES_USER: rentdrive
+      POSTGRES_PASSWORD: rentdrive2025
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./
+      dockerfile: ./RentDrive.Backend/Dockerfile
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: rentdrive
+      DB_USER: rentdrive
+      DB_PASS: rentdrive2025
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./RentDrive.Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
+  caddy_data:
+  caddy_config:

@@ -14,7 +14,12 @@ using RentDrive.Services.Data;
 using RentDrive.Services.Data.Interfaces;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+string connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
+                       $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
+                       $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
+                       $"Username={Environment.GetEnvironmentVariable("DB_USER")};" +
+                       $"Password={Environment.GetEnvironmentVariable("DB_PASS")}";
+
 string frontEndURL = builder.Configuration["FrontEndURL:URL"]!;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -77,7 +82,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddScoped<IRepository<ApplicationUser, Guid>, BaseRepository<ApplicationUser, Guid>>();
-builder.Services.AddScoped<IRepository<Vehicle, Guid>, BaseRepository<Vehicle, Guid>>();
+builder.Services.AddScoped<IRepository<Vehicle, Guid>, BaseRepository<Vehicle, Guid>>(); 
 builder.Services.AddScoped<IRepository<VehicleType, Guid>, BaseRepository<VehicleType, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleTypeCategory, Guid>, BaseRepository<VehicleTypeCategory, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleImage, Guid>, BaseRepository<VehicleImage, Guid>>();
@@ -106,6 +111,15 @@ builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<IWalletTransaction, WalletTransactionService>();
 
 WebApplication app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<RentDriveDbContext>();
+    db.Database.Migrate();
+
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    await UserSeeder.SeedUsersAsync(userManager);
+}
 
 using (var scope = app.Services.CreateScope())
 {
