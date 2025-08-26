@@ -13,32 +13,28 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
-  backend:
-    build:
-      context: ./
-      dockerfile: ./RentDrive.Backend/Dockerfile
-    depends_on:
-      - db
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_NAME: rentdrive
-      DB_USER: rentdrive
-      DB_PASS: rentdrive2025
-      ASPNETCORE_ENVIRONMENT: Development
-    ports:
-      - "8080:8080"
-    restart: unless-stopped
+backend:
+  image: viktor9904/rentdrive-backend:pi-latest
+  depends_on:
+    - db
+  environment:
+    DB_HOST: db
+    DB_PORT: 5432
+    DB_NAME: rentdrive
+    DB_USER: rentdrive
+    DB_PASS: rentdrive2025
+    ASPNETCORE_ENVIRONMENT: Development
+  ports:
+    - "8080:8080"
+  restart: unless-stopped
 
-  frontend:
-    build:
-      context: ./RentDrive.Frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:80"
-    depends_on:
-      - backend
-    restart: unless-stopped
+frontend:
+  image: viktor9904/rentdrive-frontend:pi-latest
+  depends_on:
+    - backend
+  ports:
+    - "3000:80"
+  restart: unless-stopped
 
   caddy:
     image: caddy:2
