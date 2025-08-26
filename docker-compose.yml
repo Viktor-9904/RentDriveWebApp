@@ -21,7 +21,7 @@ services:
       DB_NAME: rentdrive
       DB_USER: rentdrive
       DB_PASS: rentdrive2025
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: Production
     ports:
       - "8080:8080"
     restart: unless-stopped
@@ -46,6 +46,7 @@ services:
       - caddy_config:/config
     depends_on:
       - backend
+      - frontend
 
 volumes:
   db_data:
