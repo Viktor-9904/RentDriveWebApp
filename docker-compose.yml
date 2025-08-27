@@ -10,7 +10,9 @@ services:
       - db_data:/var/lib/postgresql/data
 
   backend:
-    build: ./RentDrive.Backend
+    build:
+      context: .
+      dockerfile: RentDrive.Backend/Dockerfile
     depends_on:
       - db
     environment:
