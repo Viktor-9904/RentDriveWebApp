@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   db:
     image: postgres:17
@@ -6,13 +8,11 @@ services:
       POSTGRES_DB: rentdrive
       POSTGRES_USER: rentdrive
       POSTGRES_PASSWORD: rentdrive2025
-    ports:
-      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
 
   backend:
-    image: viktor9904/rentdrive-backend:pi-latest
+    build: ./backend
     depends_on:
       - db
     environment:
@@ -22,33 +22,42 @@ services:
       DB_USER: rentdrive
       DB_PASS: rentdrive2025
       ASPNETCORE_ENVIRONMENT: Production
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     restart: unless-stopped
 
   frontend:
-    image: viktor9904/rentdrive-frontend:pi-latest
+    build: ./frontend
     depends_on:
       - backend
-    ports:
-      - "3000:80"
+    expose:
+      - "80"
     restart: unless-stopped
 
-  caddy:
-    image: caddy:2
+  nginx:
+    image: nginx:alpine
     restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
     depends_on:
-      - backend
       - frontend
+      - backend
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    entrypoint: /bin/sh -c
+    command: >
+      "trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done"
 
 volumes:
   db_data:
-  caddy_data:
-  caddy_config:
+  certbot-etc:
+  certbot-var:
