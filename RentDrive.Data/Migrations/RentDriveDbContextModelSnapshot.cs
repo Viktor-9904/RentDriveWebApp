@@ -2,8 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RentDrive.Data;
 
 #nullable disable
@@ -18,34 +18,33 @@ namespace RentDrive.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.4")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -54,18 +53,18 @@ namespace RentDrive.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -78,18 +77,18 @@ namespace RentDrive.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -101,16 +100,16 @@ namespace RentDrive.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -122,10 +121,10 @@ namespace RentDrive.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -137,16 +136,16 @@ namespace RentDrive.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -157,62 +156,62 @@ namespace RentDrive.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp without time zone")
                         .HasComment("User profile creation time (UTC).");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<int>("UserType")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasDefaultValue(0)
                         .HasComment("User's type.");
 
@@ -223,8 +222,7 @@ namespace RentDrive.Data.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -233,34 +231,34 @@ namespace RentDrive.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("BookedOn")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp without time zone")
                         .HasComment("Date of booking.");
 
                     b.Property<DateTime?>("CancelledOn")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp without time zone")
                         .HasComment("Date of cancelled rental.");
 
                     b.Property<DateTime?>("CompletedOn")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp without time zone")
                         .HasComment("Rental date of completion.");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp without time zone")
                         .HasComment("End day of rental.");
 
                     b.Property<Guid>("RenterId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp without time zone")
                         .HasComment("Start day of rental.");
 
                     b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasDefaultValue(0)
                         .HasComment("Status of rental");
 
@@ -269,7 +267,7 @@ namespace RentDrive.Data.Migrations
                         .HasComment("Total price for renting.");
 
                     b.Property<Guid>("VehicleId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("VehiclePricePerDay")
                         .HasColumnType("decimal(18,2)")
@@ -282,176 +280,63 @@ namespace RentDrive.Data.Migrations
                     b.HasIndex("VehicleId");
 
                     b.ToTable("Rentals");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("a1a25e78-2b30-4f77-a899-08db1682a00a"),
-                            BookedOn = new DateTime(2024, 12, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CompletedOn = new DateTime(2025, 1, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2025, 1, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RenterId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
-                            StartDate = new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
-                            TotalPrice = 130.00m,
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
-                            VehiclePricePerDay = 32.50m
-                        },
-                        new
-                        {
-                            Id = new Guid("9cfe3db6-50e1-41e4-8a98-3cdba63c20b1"),
-                            BookedOn = new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2025, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RenterId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a"),
-                            StartDate = new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 0,
-                            TotalPrice = 162.50m,
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
-                            VehiclePricePerDay = 32.50m
-                        },
-                        new
-                        {
-                            Id = new Guid("7bb21c7b-d0d8-4de0-8d84-2e8d4bffec85"),
-                            BookedOn = new DateTime(2025, 6, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2025, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RenterId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a"),
-                            StartDate = new DateTime(2025, 7, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 0,
-                            TotalPrice = 162.50m,
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de"),
-                            VehiclePricePerDay = 32.50m
-                        },
-                        new
-                        {
-                            Id = new Guid("b2c98c1a-45f4-4b89-9a74-51cfa684b9e2"),
-                            BookedOn = new DateTime(2025, 6, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CompletedOn = new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2025, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RenterId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
-                            StartDate = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
-                            TotalPrice = 372.00m,
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
-                            VehiclePricePerDay = 62.00m
-                        },
-                        new
-                        {
-                            Id = new Guid("a5f61b5a-883e-47f4-8189-44b197967d5f"),
-                            BookedOn = new DateTime(2025, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2025, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RenterId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a"),
-                            StartDate = new DateTime(2025, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 0,
-                            TotalPrice = 310.00m,
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
-                            VehiclePricePerDay = 62.00m
-                        },
-                        new
-                        {
-                            Id = new Guid("f62e7790-609b-4a42-a01c-fbb6d8c88f89"),
-                            BookedOn = new DateTime(2025, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2025, 8, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RenterId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
-                            StartDate = new DateTime(2025, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 0,
-                            TotalPrice = 310.00m,
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743"),
-                            VehiclePricePerDay = 62.00m
-                        },
-                        new
-                        {
-                            Id = new Guid("dca1c233-b01b-4f6c-a0fc-f6b709bd92ef"),
-                            BookedOn = new DateTime(2025, 6, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CompletedOn = new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RenterId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a"),
-                            StartDate = new DateTime(2025, 7, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
-                            TotalPrice = 270.00m,
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
-                            VehiclePricePerDay = 54.00m
-                        },
-                        new
-                        {
-                            Id = new Guid("c63cc240-39c6-4d55-b5cf-bd17912825fc"),
-                            BookedOn = new DateTime(2025, 6, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2025, 7, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RenterId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
-                            StartDate = new DateTime(2025, 7, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 0,
-                            TotalPrice = 270.00m,
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
-                            VehiclePricePerDay = 54.00m
-                        },
-                        new
-                        {
-                            Id = new Guid("f471e13c-5fae-4421-9fa4-300b08b97c28"),
-                            BookedOn = new DateTime(2025, 6, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndDate = new DateTime(2025, 7, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RenterId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
-                            StartDate = new DateTime(2025, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 0,
-                            TotalPrice = 270.00m,
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4"),
-                            VehiclePricePerDay = 54.00m
-                        });
                 });
 
             modelBuilder.Entity("RentDrive.Data.Models.Vehicle", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Color")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasComment("Vehicle's color.");
 
                     b.Property<double>("CurbWeightInKg")
-                        .HasColumnType("float")
+                        .HasColumnType("double precision")
                         .HasComment("Weight of the vehicle when empty in kilograms.");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("DateOfProduction")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp without time zone")
                         .HasComment("Vehicle's manufactured date.");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1500)
-                        .HasColumnType("nvarchar(1500)")
+                        .HasColumnType("character varying(1500)")
                         .HasComment("Optional description of the vehicle.");
 
                     b.Property<int>("FuelType")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasDefaultValue(0)
                         .HasComment("Vehicle fuel type.");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false)
                         .HasComment("Indicates whether the vehicle is soft deleted.");
 
                     b.Property<string>("Make")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasComment("Manufacturer of the vehicle.");
 
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasComment("Model of the vehicle.");
 
                     b.Property<Guid?>("OwnerId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid")
                         .HasComment("The owner's Id of the vehicle. Null if the vehicle is company-owned.");
 
                     b.Property<decimal>("PricePerDay")
@@ -459,10 +344,10 @@ namespace RentDrive.Data.Migrations
                         .HasComment("Price per day for renting the vehicle.");
 
                     b.Property<int>("VehicleTypeCategoryId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("VehicleTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -529,18 +414,18 @@ namespace RentDrive.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ImageURL")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(2083)
-                        .HasColumnType("nvarchar(2083)")
+                        .HasColumnType("character varying(2083)")
                         .HasDefaultValue("images/default-image.jpg")
                         .HasComment("Vehicle Image URL.");
 
                     b.Property<Guid>("VehicleId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -573,29 +458,29 @@ namespace RentDrive.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Comment")
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
+                        .HasColumnType("character varying(500)")
                         .HasComment("Review Comment");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp without time zone")
                         .HasComment("Review creation date.");
 
                     b.Property<Guid>("RentalId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ReviewerId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Stars")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Vehicle rating scale from 0 to 10.");
 
                     b.Property<Guid>("VehicleId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -607,88 +492,26 @@ namespace RentDrive.Data.Migrations
                     b.HasIndex("VehicleId");
 
                     b.ToTable("VehicleReviews");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("11111111-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                            Comment = "Smooth ride, very clean, great experience!",
-                            CreatedOn = new DateTime(2025, 1, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RentalId = new Guid("a1a25e78-2b30-4f77-a899-08db1682a00a"),
-                            ReviewerId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
-                            Stars = 5,
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de")
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
-                            Comment = "Engine was louder than expected, not well maintained.",
-                            CreatedOn = new DateTime(2025, 7, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RentalId = new Guid("9cfe3db6-50e1-41e4-8a98-3cdba63c20b1"),
-                            ReviewerId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a"),
-                            Stars = 2,
-                            VehicleId = new Guid("6a8e2d12-04a3-4c55-8b2b-f9a0f1fd35de")
-                        },
-                        new
-                        {
-                            Id = new Guid("33333333-cccc-cccc-cccc-cccccccccccc"),
-                            Comment = "Powerful SUV, great for the mountains.",
-                            CreatedOn = new DateTime(2025, 7, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RentalId = new Guid("b2c98c1a-45f4-4b89-9a74-51cfa684b9e2"),
-                            ReviewerId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
-                            Stars = 4,
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743")
-                        },
-                        new
-                        {
-                            Id = new Guid("44444444-dddd-dddd-dddd-dddddddddddd"),
-                            Comment = "Uncomfortable seats and poor air conditioning.",
-                            CreatedOn = new DateTime(2025, 8, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RentalId = new Guid("a5f61b5a-883e-47f4-8189-44b197967d5f"),
-                            ReviewerId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a"),
-                            Stars = 1,
-                            VehicleId = new Guid("fe15cde2-1a90-46d4-89f1-10fda7f11743")
-                        },
-                        new
-                        {
-                            Id = new Guid("55555555-eeee-eeee-eeee-eeeeeeeeeeee"),
-                            Comment = "Decent for city driving, but not spacious.",
-                            CreatedOn = new DateTime(2025, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RentalId = new Guid("dca1c233-b01b-4f6c-a0fc-f6b709bd92ef"),
-                            ReviewerId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a"),
-                            Stars = 3,
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4")
-                        },
-                        new
-                        {
-                            Id = new Guid("66666666-ffff-ffff-ffff-ffffffffffff"),
-                            Comment = "Very fuel efficient and easy to park!",
-                            CreatedOn = new DateTime(2025, 7, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RentalId = new Guid("c63cc240-39c6-4d55-b5cf-bd17912825fc"),
-                            ReviewerId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01"),
-                            Stars = 5,
-                            VehicleId = new Guid("ff71fcbc-6829-47fd-81c7-d16d7c2c34b4")
-                        });
                 });
 
             modelBuilder.Entity("RentDrive.Data.Models.VehicleType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false)
                         .HasComment("Is vehicle type soft deleted");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasComment("Name of the vehicle type.");
 
                     b.HasKey("Id");
@@ -756,30 +579,30 @@ namespace RentDrive.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1500)
-                        .HasColumnType("nvarchar(1500)")
+                        .HasColumnType("character varying(1500)")
                         .HasComment("Description of the vehicle class.");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false)
                         .HasComment("Is vehicle type category soft deleted.");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasComment("Name of the vehicle class.");
 
                     b.Property<int>("VehicleTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -843,28 +666,28 @@ namespace RentDrive.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasComment("Property Name");
 
                     b.Property<int>("UnitOfMeasurement")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasDefaultValue(0)
                         .HasComment("Property unit of measurement");
 
                     b.Property<int>("ValueType")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasDefaultValue(0)
                         .HasComment("Property value type");
 
                     b.Property<int>("VehicleTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -927,19 +750,19 @@ namespace RentDrive.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("PropertyValue")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasComment("Property Value");
 
                     b.Property<Guid>("VehicleId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("VehicleTypePropertyId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -1041,14 +864,14 @@ namespace RentDrive.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)")
                         .HasComment("Available balance in wallet.");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -1056,56 +879,28 @@ namespace RentDrive.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Wallets");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("d43e10f1-599f-4ab5-a246-2e2af3e0cab5"),
-                            Balance = 15220.32m,
-                            UserId = new Guid("807fafdb-d496-43c1-ae22-a0a0ead66653")
-                        },
-                        new
-                        {
-                            Id = new Guid("d6b9cab2-c4f8-416c-8dbc-63bab5c5e860"),
-                            Balance = 420.32m,
-                            UserId = new Guid("e7df3bc2-1c20-4895-b8c9-781ad6cf892a")
-                        },
-                        new
-                        {
-                            Id = new Guid("3286205e-24a5-47f7-a418-141ce2f61a7f"),
-                            Balance = 620.97m,
-                            UserId = new Guid("a8b2e9f4-927d-4f87-a457-bf95cd4526dc")
-                        },
-                        new
-                        {
-                            Id = new Guid("fa010230-0d91-466b-a984-d47cd7651002"),
-                            Balance = 4120.19m,
-                            UserId = new Guid("d56b4e71-7c38-4c3f-8c85-ff2b7cfd2f01")
-                        });
                 });
 
             modelBuilder.Entity("RentDrive.Data.Models.WalletTransaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)")
                         .HasComment("Amount of money");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()")
+                        .HasColumnType("timestamp without time zone")
                         .HasComment("Creation date of transaction.");
 
                     b.Property<int>("Type")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasComment("Type of transaction - Deposit or Withdraw.");
 
                     b.Property<Guid>("WalletId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 

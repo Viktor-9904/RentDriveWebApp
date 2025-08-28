@@ -50,9 +50,9 @@ namespace RentDrive.Data
             modelBuilder.Entity<VehicleImage>().HasData(SeedVehicleImages());
             modelBuilder.Entity<VehicleTypeProperty>().HasData(SeedVehicleTypeProperties());
             modelBuilder.Entity<VehicleTypePropertyValue>().HasData(SeedVehicleTypePropertyValues());
-            modelBuilder.Entity<Rental>().HasData(SeedRentals());
-            modelBuilder.Entity<VehicleReview>().HasData(SeedVehicleReviews());
-            modelBuilder.Entity<Wallet>().HasData(SeedUserWallets());
+            //modelBuilder.Entity<Rental>().HasData(SeedRentals());
+            //modelBuilder.Entity<VehicleReview>().HasData(SeedVehicleReviews());
+            //modelBuilder.Entity<Wallet>().HasData(SeedUserWallets());
         }
     }
 }
