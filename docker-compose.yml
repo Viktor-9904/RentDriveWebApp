@@ -24,6 +24,13 @@ services:
     container_name: rentdrivewebapp-backend-1
     networks:
       - app-network
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: rentdrive
+      DB_USER: rentdrive
+      DB_PASS: rentdrive2025
+      ASPNETCORE_ENVIRONMENT: Production
 
   certbot:
     image: certbot/certbot
