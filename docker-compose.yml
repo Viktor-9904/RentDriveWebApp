@@ -14,13 +14,15 @@ services:
     networks:
       - app-network
   frontend:
-    image: rentdrivewebapp-frontend
+    build: ./RentDrive.Frontend
     container_name: rentdrivewebapp-frontend-1
     networks:
       - app-network
 
   backend:
-    image: rentdrivewebapp-backend
+    build:
+      context: .
+      dockerfile: RentDrive.Backend/Dockerfile
     container_name: rentdrivewebapp-backend-1
     networks:
       - app-network
