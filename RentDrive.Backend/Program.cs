@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 
 using RentDrive.Data;
 using RentDrive.Data.Configuration;
-using RentDrive.Data.Migrations;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository;
 using RentDrive.Data.Repository.Interfaces;
@@ -24,11 +23,8 @@ string connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")}
 string frontEndURL = builder.Configuration["FrontEndURL:URL"]!;
 
 // Add services to the container.
-builder.Services
-    .AddDbContext<RentDriveDbContext>(options =>
-    {
-        options.UseSqlServer(connectionString);
-    });
+builder.Services.AddDbContext<RentDriveDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole<Guid>>(cfg =>
