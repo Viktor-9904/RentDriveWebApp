@@ -13,11 +13,15 @@ services:
       - backend
     networks:
       - app-network
+
   frontend:
     build: ./RentDrive.Frontend
     container_name: rentdrivewebapp-frontend-1
     networks:
       - app-network
+    depends_on:
+      db:
+        condition: service_healthy
 
   backend:
     build:
@@ -33,6 +37,9 @@ services:
       DB_USER: rentdrive
       DB_PASS: rentdrive2025
       ASPNETCORE_ENVIRONMENT: Production
+    depends_on:
+      db:
+        condition: service_healthy
 
   certbot:
     image: certbot/certbot
@@ -46,9 +53,16 @@ services:
     image: postgres:17
     container_name: rentdrivewebapp-db-1
     environment:
-      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: rentdrive
+      POSTGRES_USER: rentdrive
+      POSTGRES_PASSWORD: rentdrive2025
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 networks:
   app-network:
