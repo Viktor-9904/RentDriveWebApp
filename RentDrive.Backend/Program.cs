@@ -14,12 +14,13 @@ using RentDrive.Services.Data;
 using RentDrive.Services.Data.Interfaces;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
-//string connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
-//                       $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
-//                       $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
-//                       $"Username={Environment.GetEnvironmentVariable("DB_USER")};" +
-//                       $"Password={Environment.GetEnvironmentVariable("DB_PASS")}";
+//string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+string connectionString = 
+    $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
+    $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
+    $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
+    $"Username={Environment.GetEnvironmentVariable("DB_USER")};" +
+    $"Password={Environment.GetEnvironmentVariable("DB_PASS")}";
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
