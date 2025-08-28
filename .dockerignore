@@ -28,7 +28,5 @@ README.md
 !.git/config
 !.git/packed-refs
 !.git/refs/heads/**
-letsencrypt/**
-letsencrypt-challenge/**
 letsencrypt/
 letsencrypt-challenge/
