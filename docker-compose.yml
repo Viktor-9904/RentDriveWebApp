@@ -21,8 +21,8 @@ services:
 
   backend:
     build:
-      context: ./RentDrive.Backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: RentDrive.Backend/Dockerfile
     container_name: rentdrivewebapp-backend-1
     networks:
       - app-network
