@@ -35,7 +35,7 @@ services:
       DB_PORT: 5432
       DB_NAME: rentdrive
       DB_USER: rentdrive
-      DB_PASS: rentdrive2025
+      DB_PASS: rentdrive
       ASPNETCORE_ENVIRONMENT: Production
     depends_on:
       db:
@@ -55,7 +55,7 @@ services:
     environment:
       POSTGRES_DB: rentdrive
       POSTGRES_USER: rentdrive
-      POSTGRES_PASSWORD: rentdrive2025
+      POSTGRES_PASSWORD: rentdrive
     networks:
       - app-network
     healthcheck:
