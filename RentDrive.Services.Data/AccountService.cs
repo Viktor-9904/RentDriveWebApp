@@ -203,7 +203,7 @@ namespace RentDrive.Services.Data
                 PhoneNumber = user.PhoneNumber,
                 MemberSince = user.CreatedOn,
                 IsCompanyEmployee = user.UserType == UserType.CompanyEmployee,
-                Balance = user.Wallet.Balance,
+                Balance = user.Wallet?.Balance ?? 0m,
                 PendingBalance = pendingBalance
             };
 

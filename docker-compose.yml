@@ -8,6 +8,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./letsencrypt:/etc/letsencrypt:ro
+      - images-data:/usr/share/nginx/html/images:ro
     depends_on:
       - frontend
       - backend
@@ -27,6 +28,8 @@ services:
     build:
       context: .
       dockerfile: RentDrive.Backend/Dockerfile
+    volumes:
+      - images-data:/app/wwwroot/images
     container_name: rentdrivewebapp-backend-1
     networks:
       - app-network

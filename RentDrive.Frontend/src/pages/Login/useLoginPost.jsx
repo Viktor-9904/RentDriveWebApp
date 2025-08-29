@@ -6,8 +6,6 @@ export function useLoginPost() {
     const backEndURL = import.meta.env.VITE_API_URL;
 
     const loginUser = async (payload) => {
-        console.log("in post")
-
         setLoading(true)
         setError(null)
 
