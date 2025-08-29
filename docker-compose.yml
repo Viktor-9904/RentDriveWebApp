@@ -16,7 +16,7 @@ services:
       - app-network
 
   frontend:
-    build: ./RentDrive.Frontend
+    image: viktor9904/rentdrivewebapp-frontend:latest
     container_name: rentdrivewebapp-frontend-1
     networks:
       - app-network
@@ -25,9 +25,7 @@ services:
         condition: service_healthy
 
   backend:
-    build:
-      context: .
-      dockerfile: RentDrive.Backend/Dockerfile
+    image: viktor9904/rentdrivewebapp-backend:latest
     volumes:
       - images-data:/app/wwwroot/images
     container_name: rentdrivewebapp-backend-1
