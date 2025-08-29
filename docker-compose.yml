@@ -57,6 +57,8 @@ services:
       POSTGRES_DB: rentdrive
       POSTGRES_USER: rentdrive
       POSTGRES_PASSWORD: rentdrive
+    volumes:
+      - db-data:/var/lib/postgresql/data
     networks:
       - app-network
     healthcheck:
@@ -71,3 +73,4 @@ networks:
 
 volumes:
   images-data:
+  db-data:
