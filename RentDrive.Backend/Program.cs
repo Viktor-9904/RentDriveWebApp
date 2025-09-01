@@ -14,13 +14,27 @@ using RentDrive.Services.Data;
 using RentDrive.Services.Data.Interfaces;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-//string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
-string connectionString = 
-    $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
-    $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
-    $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
-    $"Username={Environment.GetEnvironmentVariable("DB_USER")};" +
-    $"Password={Environment.GetEnvironmentVariable("DB_PASS")}";
+
+string? dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+string? dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+string? dbName = Environment.GetEnvironmentVariable("DB_NAME");
+string? dbUser = Environment.GetEnvironmentVariable("DB_USER");
+string? dbPass = Environment.GetEnvironmentVariable("DB_PASS");
+
+string connectionString;
+
+if (!string.IsNullOrEmpty(dbHost) &&
+    !string.IsNullOrEmpty(dbPort) &&
+    !string.IsNullOrEmpty(dbName) &&
+    !string.IsNullOrEmpty(dbUser) &&
+    !string.IsNullOrEmpty(dbPass))
+{
+    connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPass}";
+}
+else
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+}
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -83,7 +97,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddScoped<IRepository<ApplicationUser, Guid>, BaseRepository<ApplicationUser, Guid>>();
-builder.Services.AddScoped<IRepository<Vehicle, Guid>, BaseRepository<Vehicle, Guid>>(); 
+builder.Services.AddScoped<IRepository<Vehicle, Guid>, BaseRepository<Vehicle, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleType, Guid>, BaseRepository<VehicleType, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleTypeCategory, Guid>, BaseRepository<VehicleTypeCategory, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleImage, Guid>, BaseRepository<VehicleImage, Guid>>();
