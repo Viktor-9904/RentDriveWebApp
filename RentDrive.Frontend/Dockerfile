@@ -1,5 +1,5 @@
 # Stage 1 - Build
-FROM --platform=linux/arm64 node:20-bullseye-slim AS build
+FROM node:20-bullseye-slim AS build
 WORKDIR /app
 
 # Copy dependencies and install
@@ -13,7 +13,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2 - Serve with NGINX
-FROM --platform=linux/arm64 nginx:alpine
+FROM nginx:alpine
 
 # Remove default nginx html folder
 RUN rm -rf /usr/share/nginx/html/*
