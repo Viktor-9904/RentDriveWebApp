@@ -14,22 +14,23 @@ using RentDrive.Services.Data;
 using RentDrive.Services.Data.Interfaces;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-string connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
-                       $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
-                       $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
-                       $"Username={Environment.GetEnvironmentVariable("DB_USER")};" +
-                       $"Password={Environment.GetEnvironmentVariable("DB_PASS")}";
+//string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+string connectionString = 
+    $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
+    $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
+    $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
+    $"Username={Environment.GetEnvironmentVariable("DB_USER")};" +
+    $"Password={Environment.GetEnvironmentVariable("DB_PASS")}";
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 string frontEndURL = builder.Configuration["FrontEndURL:URL"]!;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // Add services to the container.
-builder.Services
-    .AddDbContext<RentDriveDbContext>(options =>
-    {
-        options.UseNpgsql(connectionString);
-    });
+builder.Services.AddDbContext<RentDriveDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole<Guid>>(cfg =>
