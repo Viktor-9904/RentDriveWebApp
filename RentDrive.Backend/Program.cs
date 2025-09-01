@@ -1,10 +1,6 @@
-using System.Net;
-using System.Text.Json.Serialization;
-
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
 using RentDrive.Data;
 using RentDrive.Data.Configuration;
 using RentDrive.Data.Models;
@@ -12,6 +8,8 @@ using RentDrive.Data.Repository;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data;
 using RentDrive.Services.Data.Interfaces;
+using System.Net;
+using System.Text.Json.Serialization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -21,20 +19,13 @@ string? dbName = Environment.GetEnvironmentVariable("DB_NAME");
 string? dbUser = Environment.GetEnvironmentVariable("DB_USER");
 string? dbPass = Environment.GetEnvironmentVariable("DB_PASS");
 
-string connectionString;
-
-if (!string.IsNullOrEmpty(dbHost) &&
-    !string.IsNullOrEmpty(dbPort) &&
-    !string.IsNullOrEmpty(dbName) &&
-    !string.IsNullOrEmpty(dbUser) &&
-    !string.IsNullOrEmpty(dbPass))
-{
-    connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPass}";
-}
-else
-{
-    connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
-}
+string connectionString = (!string.IsNullOrEmpty(dbHost) &&
+                           !string.IsNullOrEmpty(dbPort) &&
+                           !string.IsNullOrEmpty(dbName) &&
+                           !string.IsNullOrEmpty(dbUser) &&
+                           !string.IsNullOrEmpty(dbPass))
+    ? $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPass}"
+    : builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
