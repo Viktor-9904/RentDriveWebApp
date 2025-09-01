@@ -29,7 +29,7 @@ jobs:
           file: RentDrive.Backend/Dockerfile
           push: true
           tags: viktor9904/rentdrivewebapp-backend:latest
-          platforms: linux/arm64,linux/amd64
+          platforms: linux/arm64
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
@@ -37,4 +37,4 @@ jobs:
           context: ./RentDrive.Frontend
           push: true
           tags: viktor9904/rentdrivewebapp-frontend:latest
-          platforms: linux/arm64,linux/amd64
+          platforms: linux/arm64
