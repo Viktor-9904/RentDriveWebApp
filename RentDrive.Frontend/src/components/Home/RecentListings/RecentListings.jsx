@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
 import RecentListingsItem from './RecentListingsItem';
-import useVehicleAverageStarRating from '../../Vehicles/hooks/useVehicleAverageStarRating';
+import { useBackendURL } from '../../../hooks/useBackendURL';
 
 export default function RecentListing() {
 
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
     const [recentVehicles, setRecentVehicles] = useState([])
 
     useEffect(() => {

@@ -5,11 +5,12 @@ import { SiPayloadcms } from "react-icons/si";
 import CancelConfirmationModal from "./CancelConfrimationModal";
 import { Flag } from "lucide-react";
 import { useAuth } from "../../../context/AccountContext";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 export default function MyRentals() {
     const { user, isAuthenticated, loadUser } = useAuth();
     const { rentals, rentalsLoading, rentalError } = useUserRentals();
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     const [localRentals, setLocalRentals] = useState([]);
     const [selectedId, setSelectedId] = useState("");

@@ -3,11 +3,12 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import useFuelTypes from "../../../hooks/useFuelTypesEnum";
 import useVehicleEdit from "../hooks/useVehicleEdit";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 
 export default function EditVehicleForm() {
   const { id } = useParams();
-  const backEndURL = import.meta.env.VITE_API_URL;
+  const backEndURL = useBackendURL();
   const navigate = useNavigate();
 
   const { vehicle, loadingVehicle, errorVehicle } = useVehicleEdit(id)

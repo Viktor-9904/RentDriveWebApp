@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import StarRating from "../../shared/VehicleStarRating";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 export default function ListingPageItem({
     id,
@@ -16,7 +17,7 @@ export default function ListingPageItem({
     reviewCount
 }) {
     
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     return (
         <div className="col-lg-3 col-md-6 mb-4">

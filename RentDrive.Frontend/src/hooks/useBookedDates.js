@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { useBackendURL } from "./useBackendURL";
 
 export default function usebookedDates(id) {
     const [bookedDates, setBookedDates] = useState([])
     const [loadingBookedDates, setLoadingBookedDates] = useState(true)
     const [errorBookedDates, setErrorBookedDates] = useState(null)
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     useEffect(() => {
         const fetchBookedDates = async () => {

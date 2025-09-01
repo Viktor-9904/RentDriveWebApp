@@ -8,10 +8,11 @@ import useValueTypesEnum from "../../../hooks/useValueTypesEnum";
 import useUnitsEnum from "../../../hooks/useUnitsEnum";
 import useAllVehicleCategories from "../hooks/useAllVehicleCategories";
 import { useAuth } from "../../../context/AccountContext";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 
 export default function CreateVehicleForm() {
-  const backEndURL = import.meta.env.VITE_API_URL;
+  const backEndURL = useBackendURL();
   const navigate = useNavigate();
 
   const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();

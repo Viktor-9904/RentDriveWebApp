@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 export function useOverview() {
     const [overviewData, setOverviewData] = useState(null);
     const [overviewLoading, setOverviewLoading] = useState(true);
     const [overviewError, setOverviewError] = useState(null);
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     useEffect(() => {
         const fetchOverview = async () => {

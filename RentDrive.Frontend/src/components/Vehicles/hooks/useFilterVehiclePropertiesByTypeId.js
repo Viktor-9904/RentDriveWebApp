@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 export default function useFilterVehiclePropertiesByTypeId(typeId) {
     const [filterVehicleProperties, setFilterProperties] = useState([]);
     const [filterVehiclePropertiesLoading, setFilterPropertiesLoading] = useState(false);
     const [filterVehiclePropertiesError, setFilterPropertiesError] = useState(null);
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     useEffect(() => {
         if(!typeId) return;

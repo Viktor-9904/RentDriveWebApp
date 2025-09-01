@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useUserProfileDetails } from "./hooks/useUserProfileDetails";
+import { useBackendURL } from "../../hooks/useBackendURL";
 
 export default function ProfileSettings() {
-  const backEndURL = import.meta.env.VITE_API_URL;
+  const backEndURL = useBackendURL();
   const { userProfileDetails, userProfileDetailsLoading, userProfileDetailsError } = useUserProfileDetails();
 
   const [profileData, setProfileData] = useState({

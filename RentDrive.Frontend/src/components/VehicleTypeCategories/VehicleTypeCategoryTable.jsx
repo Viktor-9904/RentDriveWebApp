@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import DeleteConfirmationModal from "./DeleteConfrimationModal";
 import VehicleTypeCategoryTableItem from "./VehicleTypeCategoryTableItem";
+import { useBackendURL } from "../../hooks/useBackendURL";
 
 export default function VehicleTypeCategoryTable({
   categories,
@@ -10,8 +11,7 @@ export default function VehicleTypeCategoryTable({
   newCategory,
   setNewCategory
 }) {
-  const backEndURL = import.meta.env.VITE_API_URL;
-
+  const backEndURL = useBackendURL();
   const [localCategories, setLocalCategories] = useState(categories);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

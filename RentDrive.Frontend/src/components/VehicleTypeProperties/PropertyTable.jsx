@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DeleteConfirmationModal from "./DeleteConfrimationModal";
+import { useBackendURL } from "../../hooks/useBackendURL";
 
 export default function PropertyTable({
   setFilteredProperties,
@@ -14,7 +15,7 @@ export default function PropertyTable({
   editValues,
   selectedTypeId,
 }) {
-  const backEndURL = import.meta.env.VITE_API_URL;
+  const backEndURL = useBackendURL();
 
   const [propertyToDelete, setPropertyToDelete] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

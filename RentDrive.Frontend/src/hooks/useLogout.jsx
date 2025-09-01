@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AccountContext';
 import { useState } from 'react';
+import { useBackendURL } from './useBackendURL';
 
 export default function useLogout() {
     const [error, setError] = useState(null)
     const { user, isAuthenticated, loadUser } = useAuth();
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
     const navigate = useNavigate();
 
     const logout = async () => {

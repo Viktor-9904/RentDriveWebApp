@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 export default function useDeleteVehicle() {
     const navigate = useNavigate();
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     const deleteVehicle = async (vehicleId, redirectPath = "/listing") => {
         try {

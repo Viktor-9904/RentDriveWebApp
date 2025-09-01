@@ -4,12 +4,12 @@ import { useAuth } from '../../../context/AccountContext';
 import { useWalletTransactionHistory } from '../hooks/useWalletTransactionHistory';
 
 import AddFundsToBalance from './AddFundsModal';
-import { formatDate } from 'react-calendar/dist/shared/dateFormatter.js';
+import { useBackendURL } from '../../../hooks/useBackendURL';
 
 
 export default function UserWallet() {
 
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     const { user, isAuthenticated, loadUser } = useAuth();
     const { walletTransactionHistory, walletTransactionHistoryLoading, walletTransactionHistoryError } = useWalletTransactionHistory()

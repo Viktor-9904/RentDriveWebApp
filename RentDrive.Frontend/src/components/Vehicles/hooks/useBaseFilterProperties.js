@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 export default function useBaseFilterProperties(vehicleTypeId, vehicleTypeCategoryId) {
     const [baseFilterProperties, setBaseFilterProperties] = useState([]);
     const [baseFilterPropertiesLoading, setBaseFilterPropertiesLoading] = useState(true);
     const [baseFilterPropertiesError, setBaseFilterPropertiesError] = useState(null);
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     useEffect(() => {
         const fetchBasefilterProperties = async () => {

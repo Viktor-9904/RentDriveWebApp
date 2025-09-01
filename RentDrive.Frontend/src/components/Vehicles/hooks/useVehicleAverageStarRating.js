@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 export default function useVehicleAverageStarRating(vehicleId) {
 
     const [averageStarRating, setAverageStarRating] = useState(0)
     const [loadingAverageStarRating, setLoadingaverageStarRating] = useState(true)
     const [errorAverageStarRating, setErrorAverageStarRating] = useState(null)
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     useEffect(() => {
         const fetchAverageStarRating = async () => {

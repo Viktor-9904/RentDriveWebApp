@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 export function useUserRentals() {
     const [rentals, setRentals] = useState([]);
     const [rentalsLoading, setRentalsLoading] = useState(true);
     const [rentalError, setRentalError] = useState(null);
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
 
     useEffect(() => {

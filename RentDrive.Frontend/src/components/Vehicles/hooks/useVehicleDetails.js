@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 const useVehicleDetails = (id) => {
     const [vehicle, setVehicle] = useState(null);
     const [loadingVehicle, setVehicleLoading] = useState(true);
     const [errorVehicle, setVehicleError] = useState(null);
     const navigate = useNavigate();
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     useEffect(() => {
         const fetchVehicleDetails = async () => {

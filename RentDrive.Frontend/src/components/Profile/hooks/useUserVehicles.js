@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 export default function useUserVehicles() {
     const [userVehicles, setUserVehicles] = useState([]);
     const [uservehiclesLoading, setUserVehiclesLoading] = useState(true);
     const [uservehiclesError, setUserVehiclesError] = useState(null);
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     useEffect(() => {
         const fetchUserVehicles = async () => {

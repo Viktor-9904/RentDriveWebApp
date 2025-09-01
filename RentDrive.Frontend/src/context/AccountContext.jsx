@@ -1,9 +1,10 @@
 import { createContext, useState, useEffect, useContext } from 'react';
+import { useBackendURL } from '../hooks/useBackendURL';
 
 const AccountContext = createContext();
 
 export function AccountProvider({ children }) {
-  const backEndURL = import.meta.env.VITE_API_URL;
+  const backEndURL = useBackendURL();
   const [user, setUser] = useState(null);
 
   const loadUser = async () => {

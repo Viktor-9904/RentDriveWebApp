@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useBackendURL } from "../../hooks/useBackendURL";
 
 export function useRegisterPost() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     
     const registerUser = async (payload) => {

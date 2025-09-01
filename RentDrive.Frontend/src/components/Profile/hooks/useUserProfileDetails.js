@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 export function useUserProfileDetails() {
     const [userProfileDetails, setUserProfileDetails] = useState(null);
     const [userProfileDetailsLoading, setUserProfileDetailsLoading] = useState(true);
     const [userProfileDetailsError, setUserProfileDetailsError] = useState(null);
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     useEffect(() => {
         const fetchUserProfileDetails = async () => {

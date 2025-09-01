@@ -6,9 +6,10 @@ import useAllVehicleTypes from '../hooks/useAllVehicleTypes';
 import useAllVehicleCategories from '../hooks/useAllVehicleCategories';
 import useFilterVehiclePropertiesByTypeId from '../hooks/useFilterVehiclePropertiesByTypeId';
 import useBaseFilterProperties from '../hooks/useBaseFilterProperties';
+import { useBackendURL } from '../../../hooks/useBackendURL';
 
 export default function ListingPage() {
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     const [selectedTypeId, setSelectedTypeId] = useState("");
     const [selectedCategoryId, setSelectedCategoryId] = useState("");

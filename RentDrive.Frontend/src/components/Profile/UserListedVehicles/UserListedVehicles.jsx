@@ -7,13 +7,14 @@ import UserVehicleBookingsModal from "./UserVehicleBookingsModal";
 import { ConciergeBellIcon } from "lucide-react";
 import { PiStarAndCrescentDuotone } from "react-icons/pi";
 import StarRating from "../../shared/VehicleStarRating";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 export default function UserListedVehicles() {
   const { userVehicles, uservehiclesLoading, uservehiclesError } = useUserVehicles()
   const [myVehicles, setMyVehicles] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [vehicleToDelete, setVehicleToDelete] = useState({});
-  const backEndURL = import.meta.env.VITE_API_URL;
+  const backEndURL = useBackendURL();
   const [selectedVehicle, setSelectedVehicle] = useState(null);
 const [selectedBookings, setSelectedBookings] = useState([]);
 const [showBookingModal, setShowBookingModal] = useState(false);

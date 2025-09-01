@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { useBackendURL } from "./useBackendURL";
 
 export default function useFuelTypesEnum() {
     const [fuelTypeEnum, setFuelTypeEnum] = useState([])
     const [loadingfuelTypeEnum, setLoading] = useState(true)
     const [errorfuelTypeEnum, setError] = useState(null)
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     useEffect(() => {
         const fetchfuelTypeEnum = async () => {

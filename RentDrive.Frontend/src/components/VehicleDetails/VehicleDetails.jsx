@@ -8,6 +8,7 @@ import RentNowModal from "./RentNowModal";
 import { useAuth } from "../../context/AccountContext";
 import StarRating from "../shared/VehicleStarRating";
 import ReviewList from "./ReviewList";
+import { useBackendURL } from "../../hooks/useBackendURL";
 
 export default function VehicleDetails() {
     const { id } = useParams();
@@ -21,8 +22,7 @@ export default function VehicleDetails() {
 
     const navigate = useNavigate();
 
-    const backEndURL = import.meta.env.VITE_API_URL;
-
+    const backEndURL = useBackendURL();
     useEffect(() => {
         if (bookedDates && bookedDates.length > 0) {
             setBookedDatesState(bookedDates.map(d => new Date(d)));
@@ -223,7 +223,7 @@ export default function VehicleDetails() {
                 bookedDates={bookedDates}
                 pricePerDay={vehicle.pricePerDay}
                 handleRent={handleRent}
-                userBalance={user.balance}
+                userBalance={user?.balance}
             />
         </>
     );

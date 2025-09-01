@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { useBackendURL } from "./useBackendURL";
 
 export default function useValueTypesEnum() {
     const [valueTypeEnum, setValueTypeEnum] = useState([])
     const [loadingValueTypeEnum, setLoading] = useState(true)
     const [errorValueTypeEnum, setError] = useState(null)
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     useEffect(() => {
         const fetchValueTypeEnum = async () => {

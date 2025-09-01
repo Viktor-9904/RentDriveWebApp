@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
 export function useWalletTransactionHistory() {
     const [walletTransactionHistory, setWalletTransactionHistory] = useState(null);
     const [walletTransactionHistoryLoading, setWalletTransactionHistoryLoading] = useState(true);
     const [walletTransactionHistoryError, setWalletTransactionHistoryError] = useState(null);
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     useEffect(() => {
         const fetchWalletTransactionHistory = async () => {

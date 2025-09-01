@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import StarRating from '../../shared/VehicleStarRating';
+import { useBackendURL } from '../../../hooks/useBackendURL';
 
 export default function RecentListingsItem({
     id,
@@ -18,7 +19,7 @@ export default function RecentListingsItem({
     reviewCount
 }) {
 
-    const backEndURL = import.meta.env.VITE_API_URL;
+    const backEndURL = useBackendURL();
 
     return (
         <div className="col-lg-12">
