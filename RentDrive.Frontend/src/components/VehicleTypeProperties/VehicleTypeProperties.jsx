@@ -77,8 +77,6 @@ export default function VehicleTypePropertyManager() {
 
     return (
         <div className="container py-5">
-            <h2 className="mb-4">Manage Vehicle Type Properties</h2>
-
             <div className="mb-4">
                 <label className="form-label">Select Vehicle Type:</label>
                 <select
