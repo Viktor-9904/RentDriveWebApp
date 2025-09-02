@@ -58,8 +58,6 @@ export default function PropertyTable({
         vehicleTypeId: selectedTypeId,
       };
 
-      console.log("payload - ", payload);
-
       const response = await fetch(
         `${backEndURL}/api/vehicletypeproperty/${editValues.isNew ? "create" : "edit"}${editValues.isNew ? "" : "/" + editingId}`,
         {

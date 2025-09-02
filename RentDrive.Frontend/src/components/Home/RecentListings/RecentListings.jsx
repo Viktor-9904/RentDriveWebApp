@@ -12,7 +12,6 @@ export default function RecentListing() {
         fetch(`${backEndURL}/api/vehicle/recent`)
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 setRecentVehicles(data)
             })
             .catch(err => console.error("API error:", err));

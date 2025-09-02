@@ -123,9 +123,6 @@ export default function EditVehicleForm() {
     }
 
     try {
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
       const response = await fetch(`${backEndURL}/api/vehicle/edit/${id}`, {
         method: "Put",
         body: formData,

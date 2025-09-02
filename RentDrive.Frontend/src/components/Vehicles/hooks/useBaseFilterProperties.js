@@ -10,7 +10,6 @@ export default function useBaseFilterProperties(vehicleTypeId, vehicleTypeCatego
     useEffect(() => {
         const fetchBasefilterProperties = async () => {
 
-            console.log("in base filter properties hook")
 
             setBaseFilterPropertiesLoading(true);
             setBaseFilterPropertiesError(null);

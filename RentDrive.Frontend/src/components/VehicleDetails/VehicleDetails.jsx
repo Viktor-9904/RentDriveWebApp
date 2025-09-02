@@ -49,7 +49,6 @@ export default function VehicleDetails() {
     };
 
     const handleRent = async (selectedDates) => {
-        console.log("renting")
         if (!vehicle?.id || selectedDates.length === 0) {
             return;
         }
@@ -74,7 +73,6 @@ export default function VehicleDetails() {
                 throw new Error("Failed to rent the vehicle.");
             }
 
-            console.log("Rent successful:");
             const newDates = selectedDates.map(d =>
                 new Date(d.getFullYear(), d.getMonth(), d.getDate())
             );

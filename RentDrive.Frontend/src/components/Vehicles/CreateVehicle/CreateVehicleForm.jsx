@@ -31,10 +31,6 @@ export default function CreateVehicleForm() {
   const [vehicleTypePropertyValues, setVehicleTypePropertyValues] = useState({});
   const [images, setImages] = useState([]);
 
-  useEffect(() =>{
-    console.log(user)
-  },[user])
-
   const [baseData, setBaseData] = useState({
     make: "",
     model: "",
@@ -144,11 +140,10 @@ export default function CreateVehicleForm() {
       formData.append("Images", img.file);
     });
 
-    console.log(formData)
-
     try {
       const response = await fetch(`${backEndURL}/api/vehicle/create`, {
         method: "POST",
+        credentials: 'include',
         body: formData,
       });
 

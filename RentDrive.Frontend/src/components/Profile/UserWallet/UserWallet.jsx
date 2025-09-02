@@ -23,8 +23,6 @@ export default function UserWallet() {
 
     const handleAddFunds = async (formData, event) => {
         event.preventDefault();
-
-        console.log(formData)
         
         try {
             const response = await fetch(`${backEndURL}/api/wallet/add-funds`, {

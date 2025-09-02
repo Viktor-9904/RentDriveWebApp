@@ -32,8 +32,6 @@ export default function MyRentals() {
             comment: data.comment
         }
         try {
-            console.log(payload)
-
             const response = await fetch(`${backEndURL}/api/vehiclereview/add`, {
                 method: "POST",
                 credentials: "include",

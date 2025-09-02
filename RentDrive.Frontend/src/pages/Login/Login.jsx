@@ -50,7 +50,7 @@ export default function Login() {
             await loadUser();
             navigate('/')            
         } else {
-            console.log("Failed to register: " + JSON.stringify(error))
+            console.log("Failed to register.")
         }
     };
 

@@ -8,8 +8,6 @@ export function useRegisterPost() {
 
     
     const registerUser = async (payload) => {
-        console.log("in post")
-
         setLoading(true)
         setError(null)
 
@@ -22,7 +20,6 @@ export function useRegisterPost() {
                 },
                 body: JSON.stringify(payload)
             })
-            console.log(response)
 
             if (!response.ok) {
                 let errorData

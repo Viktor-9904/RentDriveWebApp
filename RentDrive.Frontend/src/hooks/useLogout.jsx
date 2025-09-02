@@ -18,7 +18,6 @@ export default function useLogout() {
         } catch (err) {
             setError(err)
         } finally{
-            console.log("Loogged out successfully!")
             navigate('/');
         }
         await loadUser()

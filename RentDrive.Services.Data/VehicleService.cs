@@ -447,6 +447,7 @@ namespace RentDrive.Services.Data
         {
             IQueryable<Vehicle> query = this.vehicleRepository
                 .GetAllAsQueryable()
+                .Where(v => v.IsDeleted == false)
                 .Include(v => v.VehicleTypePropertyValues);
 
             if (filter.VehicleTypeId.HasValue)

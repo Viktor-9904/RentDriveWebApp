@@ -61,8 +61,6 @@ const handleRowClick = async (vehicle) => {
     const { success, error } = await deleteVehicle(vehicleToDelete.id, location.pathname);
 
     if (success) {
-      console.log("Vehicle deleted!");
-
       setMyVehicles((prev) => prev.filter(v => v.id !== vehicleToDelete.id));
 
       setShowDeleteModal(false);

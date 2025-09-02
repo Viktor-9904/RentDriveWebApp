@@ -17,14 +17,12 @@ export function useWalletTransactionHistory() {
                         "Content-Type": "application/json",
                     },
                 })
-                console.log(response)
 
                 if (!response.ok) {
                     throw new Error("Failed to fetch overview details");
                 }
 
                 const result = await response.json();
-                console.log(result)
                 setWalletTransactionHistory(result);
 
             } catch (err) {

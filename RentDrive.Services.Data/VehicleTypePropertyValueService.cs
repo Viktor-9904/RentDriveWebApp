@@ -117,8 +117,9 @@ namespace RentDrive.Services.Data
             {
                 List<FilterPropertyValue> valuesWithCounts = await vehicleTypePropertyValueRepository
                     .GetAllAsQueryable()
-                    .Where(vpv => vpv.VehicleTypePropertyId == property.Id)
-                    .GroupBy(vpv => vpv.PropertyValue)
+                    .Include(vtpv => vtpv.Vehicle)
+                    .Where(vtpv => vtpv.VehicleTypePropertyId == property.Id && vtpv.Vehicle.IsDeleted == false)
+                    .GroupBy(vtpv => vtpv.PropertyValue)
                     .Select(g => new FilterPropertyValue
                     {
                         PropertyValue = g.Key,

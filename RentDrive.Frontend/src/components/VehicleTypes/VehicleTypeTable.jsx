@@ -40,14 +40,10 @@ const handleSaveClick = async () => {
       isNew: isNew,
     };
 
-    console.log(payload)
-
     if (!payload.name) {
       alert("Name cannot be empty.");
       return;
     }
-
-    console.log("payload - ", payload);
 
     const url = `${backEndURL}/api/vehicletype/${payload.isNew ? "create" : "edit"}${payload.isNew ? "" : "/" + payload.id}`;
     const method = payload.isNew ? "POST" : "PUT";

@@ -125,7 +125,7 @@ export default function ListingPage() {
                 const payload = Object.entries(selectedFilters)
                     .map(([propertyId, values]) => ({ propertyId, values }));
 
-                const res = await fetch(`${backEndURL}/api/vehicles/filter`, {
+                const res = await fetch(`${backEndURL}/api/vehicle/filter`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
@@ -159,8 +159,6 @@ export default function ListingPage() {
                         properties: Object.entries(selectedFilters).map(([propertyId, values]) => ({ propertyId, values }))
                     };
 
-                    console.log(payload);
-
                     const res = await fetch(`${backEndURL}/api/vehicle/filter`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -192,10 +190,6 @@ export default function ListingPage() {
     }, [vehicleCategories])
 
     useEffect(() => {
-        setLocalVehicles(vehicles)
-    }, [vehicles])
-
-    useEffect(() => {
         setLocalFilteredVehicleTypeProperties(filterVehicleProperties)
     }, [filterVehicleProperties]);
 
@@ -219,7 +213,7 @@ export default function ListingPage() {
                                     setSelectedCategoryId("");
                                 }}
                             >
-                                <option value="">Select vehicle type</option>
+                                <option value="">All</option>
                                 {localVehicleTypes.map(type => (
                                     <option key={type.id} value={type.id}>
                                         {type.name}
@@ -330,7 +324,7 @@ export default function ListingPage() {
                                             setBaseFilters(prev => ({ ...prev, fuelType: e.target.value }))
                                         }
                                     >
-                                        <option value="">Select fuel type</option>
+                                        <option value="">All</option>
                                         {localBaseFilterdProperties?.fuelTypes?.map(ft => ft.name).map(fuel => (
                                             <option key={fuel} value={fuel}>
                                                 {fuel}
