@@ -25,8 +25,6 @@ export default function Footer() {
                                 <div className="row">
                                     <div className="col-lg-6 col-sm-6">
                                         <ul>
-                                            <li><Link to="/categories">Categories</Link></li>
-                                            <li><Link to="#">Reviews</Link></li>
                                             <li><Link to="/listing">Listing</Link></li>
                                             <li><Link to="/contact-us">Contact Us</Link></li>
                                         </ul>
@@ -34,8 +32,6 @@ export default function Footer() {
                                     <div className="col-lg-6">
                                         <ul>
                                             <li><Link to="#">About Us</Link></li>
-                                            <li><Link to="#">Awards</Link></li>
-                                            <li><Link to="#">Useful Sites</Link></li>
                                             <li><Link to="#">Privacy Policy</Link></li>
                                         </ul>
                                     </div>
@@ -48,13 +44,22 @@ export default function Footer() {
                                 <p>27th Street of New Town, Digital Villa</p>
                                 <div className="row">
                                     <div className="col-lg-6">
-                                        <Link to="#">010-020-0340</Link>
+                                        <a href="tel:0100200340">010-020-0340</a>
+                                        <br />
+                                        <a href="tel:0800800760">080-080-0760</a>
+                                        <br />
+                                        <a href="tel:09008009040">090-080-9040</a>
                                     </div>
                                     <div className="col-lg-6">
-                                        <Link to="#">090-080-0760</Link>
+                                        <a href="support@rentdrive.eu">support@rentdrive.eu</a>
+                                        <br />
+                                        <a href="https://github.com/viktor-9904" target="_blank" rel="noopener noreferrer">GitHub</a>
+                                        <br />
+                                        <a href="https://www.linkedin.com/in/viktor-stanev-67b55a366/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>

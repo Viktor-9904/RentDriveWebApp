@@ -19,7 +19,6 @@ export default function Header() {
 
     const navigation = [
         { name: 'Home', href: '/' },
-        { name: 'Categories', href: '/categories' },
         { name: 'Listing', href: '/listing' },
         ...(user?.isCompanyEmployee
             ? [
