@@ -8,8 +8,8 @@ export default function MainBanner() {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="top-text header-text">
-                                <h6>Over 36,500+ Active Listings</h6>
-                                <h2>Find Nearby Places &amp; Things</h2>
+                                <h6>Over 100+ Active Listings</h6>
+                                <h2>Find Your Next Ride</h2>
                             </div>
                         </div>
                         <div className="col-lg-12">
