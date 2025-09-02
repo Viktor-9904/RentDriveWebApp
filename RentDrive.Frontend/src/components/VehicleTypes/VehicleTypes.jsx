@@ -10,8 +10,6 @@ export default function VehicleTypes() {
 
   return (
     <div className="container py-5">
-      <h2 className="mb-4">Manage Vehicle Types</h2>
-
       <div className="d-flex justify-content-end mb-3">
         <button className="btn btn-success" onClick={() => setIsNew(true)}>
           + Add New Type
