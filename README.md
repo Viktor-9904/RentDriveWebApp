@@ -99,7 +99,7 @@ dotnet run
 
  #### 📊 Database Schema
 <p align="center">
-  <img src="README/images/db_schema.png alt="Full Project Overview" width="800"/>
+  <img src="README/images/db_schema.png" alt="Full Project Overview" width="800"/>
 </p>
 
 ---
@@ -109,7 +109,7 @@ RentDrive uses a **classic monolithic 3-layer architecture**: Web, Service, and 
 
 #### Overview of the Structure
 <p align="center">
-  <img src="README/images/backend_overview.png" alt="Full Project Overview" width="800"/>
+  <img src="README/images/backend_overview.png" alt="Full Project Overview" width="300"/>
 </p>
 
 #### Server Structure
@@ -118,14 +118,14 @@ RentDrive uses a **classic monolithic 3-layer architecture**: Web, Service, and 
 - **Models:** Entities such as `Vehicles`, `VehicleTypes`, `VehicleTypeProperties`, `VehicleTypePropertyValues`, `VehicleTypeCategories`, `VehicleImages`, `VehicleReviews`, `Wallets`, `WalletTransactions`, `Rentals`.  
 - **DbContext:** `RentDriveDbContext.cs` handles database access, relationships, and migrations.  
 <p align="center">
-  <img src="README/images/backend_data_layer.png" alt="Data Layer Structure" width="600"/>
+  <img src="README/images/backend_data_layer.png" alt="Data Layer Structure" width="300"/>
 </p>
 
 **Services Layer (`RentDrive.Services.Data`)**  
 - **Interfaces:** Service contracts for dependency injection.  
 - **Implementations:** Business logic for vehicles, rentals, wallets, and bookings.  
 <p align="center">
-  <img src="README/images/backend_service_layer.png" alt="Services Layer Structure" width="600"/>
+  <img src="README/images/backend_service_layer.png" alt="Services Layer Structure" width="300"/>
 </p>
 
 **Web Layer (`RentDrive.Backend`)**  
@@ -133,7 +133,7 @@ RentDrive uses a **classic monolithic 3-layer architecture**: Web, Service, and 
 - **ViewModels:** Input models for validation and mapping to services.  
 - **wwwroot:** Stores static files, including vehicle images uploaded by users.  
 <p align="center">
-  <img src="README/images/backend_web_layer.png" alt="Web Layer Structure" width="600"/>
+  <img src="README/images/backend_web_layer.png" alt="Web Layer Structure" width="300"/>
 </p>
 
 **Common (`RentDrive.Common`)**  
@@ -161,7 +161,7 @@ The frontend is built in **React v19** with static CSS. Components and logic are
 
 #### Overview of the Front-End
 <p align="center">
-  <img src="README/images/frontend_overview.png" alt="Front-End Overview" width="800"/>
+  <img src="README/images/frontend_overview.png" alt="Front-End Overview" width="300"/>
 </p>
 
 #### Components
@@ -169,25 +169,25 @@ The frontend is built in **React v19** with static CSS. Components and logic are
 - `contexts/` – Contexts for global state (AccountContext, etc.)  
 
 <p align="center">
-  <img src="README/images/frontend_components.png" alt="Components Structure" width="600"/>
+  <img src="README/images/frontend_components.png" alt="Components Structure" width="300"/>
 </p>
 
 #### Pages
 - `pages/` – Top-level page components that assemble multiple components for specific routes  
 
 <p align="center">
-  <img src="README/images/frontend_pages.png" alt="Pages Structure" width="600"/>
+  <img src="README/images/frontend_pages.png" alt="Pages Structure" width="300"/>
 </p>
 
 #### Hooks
 - `hooks/` – Custom hooks that encapsulate feature logic and API calls  
 
 <p align="center">
-  <img src="README/images/frontend_hooks.png" alt="Hooks Structure" width="600"/>
+  <img src="README/images/frontend_hooks.png" alt="Hooks Structure" width="300"/>
 </p>
 
 <p align="center">
-  <img src="README/images/frontend_hooks_vehicle.png" alt="Hooks Structure" width="600"/>
+  <img src="README/images/frontend_hooks_vehicle.png" alt="Hooks Structure" width="300"/>
 </p>
 
 ---
