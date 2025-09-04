@@ -148,10 +148,6 @@ export default function CreateVehicleForm() {
         body: formData,
       });
 
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
-
       if (!response.ok) {
         throw new Error("Failed to save vehicle");
       }
