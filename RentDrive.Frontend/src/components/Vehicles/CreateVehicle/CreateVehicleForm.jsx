@@ -9,6 +9,7 @@ import useUnitsEnum from "../../../hooks/useUnitsEnum";
 import useAllVehicleCategories from "../hooks/useAllVehicleCategories";
 import { useAuth } from "../../../context/AccountContext";
 import { useBackendURL } from "../../../hooks/useBackendURL";
+import { formatDate } from "react-calendar/dist/shared/dateFormatter.js";
 
 
 export default function CreateVehicleForm() {
@@ -36,7 +37,7 @@ export default function CreateVehicleForm() {
     model: "",
     color: "",
     pricePerDay: "",
-    isCompanyProperty: "",
+    isCompanyProperty: false,
     dateOfProduction: "",
     curbWeight: "",
     description: "",
@@ -146,6 +147,10 @@ export default function CreateVehicleForm() {
         credentials: 'include',
         body: formData,
       });
+
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
 
       if (!response.ok) {
         throw new Error("Failed to save vehicle");
