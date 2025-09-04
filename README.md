@@ -28,13 +28,15 @@ The entire application is fully Dockerized and deployed on a Raspberry Pi 4B usi
 ## ✨ Features  
 
 ### 🟢 Implemented
-- **User Authentication:** Secure login & registration using ASP.NET Identity (cookie-based).  
-- **Vehicle Management:** Add and manage vehicles with base properties (make, model, color, price per day, date of production, curb weight, fuel type, description). *Only users with manager roles can add, edit or delete vehicles.*  
-- **Vehicle Types:** Define vehicle types (Car, Motorcycle, Truck, etc.). *Managers can add, edit, and delete vehicle types.*
-- **Vehicle Categories:** Define categories (SUV, Sedan, Naked, Tour, etc.). *Managers can add, edit, and delete categories.*  
-- **Dynamic Properties:** Each vehicle type has custom properties (e.g., both cars and motorcycles have engine CC, but motorcycles don’t have AC). *Managers can add, edit, and delete dynamic properties for each vehicle type.*
-- **Availability Calendar:** View available vs. booked dates for each vehicle, up to 6 months in advance.  
-- **Bookings:** Rent vehicles for full days. Each booking has a status (Active, Canceled, Completed).  
+- **User Authentication** – Secure login & registration using ASP.NET Identity (cookie-based).  
+- **Vehicle Management** – Add and manage vehicles with base properties (make, model, color, price per day, etc.).  
+- **Dynamic Vehicle Fields** – Managers can create, edit, and delete:
+  - Vehicle Types (Car, Motorcycle, Truck, etc.)  
+  - Vehicle Categories (SUV, Sedan, Naked, Tour, etc.)  
+  - Vehicle Properties (Engine Displacement, Door Count, Seat Count, etc.).  
+- **Wallet System** – Users can top up wallets with card payments and use balance for rentals.  
+- **Availability Calendar** – Check available vs. booked dates for each vehicle, up to 6 months ahead.  
+- **Bookings** – Full-day rentals with status tracking (Active, Canceled, Completed).  
 
 ### 🚧 In Progress / Upcoming
 - **Search & Filtering:** Filter vehicles by type, category, price, availability, etc.  
@@ -83,6 +85,23 @@ cd RentDrive.Backend
 dotnet restore
 dotnet run
 ```
+
+---
+## 👤 Test Users
+
+The application comes with preloaded demo accounts you can use to explore the features:
+
+- **Manager**  
+  - Username: `jane.smith`  
+  - Password: `Asd123`  
+
+- **Regular Users**  
+  - Username: `john.doe`  
+  - Password: `Asd123`  
+  - Username: `alex.miles`  
+  - Password: `Asd123`
+ 
+  ---
 
 ## 🛠 Technologies Used
 
