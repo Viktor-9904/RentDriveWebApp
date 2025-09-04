@@ -1,4 +1,4 @@
-# RentHub  
+# RentDrive
 
 <p align="center">
   <img src="https://img.shields.io/github/actions/workflow/status/viktor-9904/RentDriveWebApp/docker-build.yml?branch=master" />
