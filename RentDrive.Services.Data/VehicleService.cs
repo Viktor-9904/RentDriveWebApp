@@ -375,7 +375,7 @@ namespace RentDrive.Services.Data
 
         public async Task<BaseFilterProperties> GetBaseFilterPropertiesAsync(int? vehicleTypeId = null, int? vehicleTypeCategoryId = null)
         {
-            IQueryable<Vehicle> vehiclesQuery = this.vehicleRepository.GetAllAsQueryable();
+            IQueryable<Vehicle> vehiclesQuery = this.vehicleRepository.GetAllAsQueryable().Where(v => v.IsDeleted == false);
 
             if (vehicleTypeId.HasValue)
             {
