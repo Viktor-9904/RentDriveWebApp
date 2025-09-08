@@ -39,7 +39,7 @@ The entire application is fully Dockerized and deployed on a Raspberry Pi 4B usi
 - **Bookings** – Full-day rentals with status tracking (Active, Canceled, Completed).  
 
 ### 🚧 In Progress / Upcoming
-- **Search & Filtering:** Filter vehicles by type, category, price, availability, etc.  
+- **Search** – Quickly find vehicles by keyword (make, model, etc.).  
 - **Pickup & Return Logistics:** Manage rental logistics for real-world usage.  
 - **Notifications:** Inform users about booking confirmations, cancellations, etc.  
 - **Roles & Permissions:** Differentiate between managers, admins, and normal users.  
@@ -72,18 +72,17 @@ cd RentDriveWebApp
 docker-compose up --build -d
 ```
 
-Option B: Run Client Locally
+Option B: Run Client + Server Locally
 ```bash
-cd RentDrive.Frontend
-npm i
-npm run dev
-```
-
-Option C: Run Server Locally
-```bash
+# Run Backend
 cd RentDrive.Backend
 dotnet restore
 dotnet run
+
+# In a separate terminal, run Frontend
+cd RentDrive.Frontend
+npm install
+npm run dev
 ```
 
 ---
@@ -208,8 +207,6 @@ The frontend is built in **React v19** with static CSS. Components and logic are
 <p align="center">
   <img src="README/images/frontend_hooks_vehicle.png" alt="Hooks Structure" width="300"/>
 </p>
-
----
 
 ---
 
