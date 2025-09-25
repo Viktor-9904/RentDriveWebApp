@@ -161,5 +161,16 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(vehicles);
         }
+        [HttpGet("search-vehicles")]
+        public async Task<IActionResult> SearchVehicles([FromQuery] string searchQuery)
+        {
+            if (string.IsNullOrWhiteSpace(searchQuery))
+                return BadRequest("Search query is required.");
+
+            IEnumerable<ListingVehicleViewModel> vehicles = await vehicleService
+                .GetSearchQueryVehicles(searchQuery);
+
+            return Ok(vehicles);
+        }
     }
 }

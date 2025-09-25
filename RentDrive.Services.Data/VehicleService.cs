@@ -528,9 +528,49 @@ namespace RentDrive.Services.Data
                      StarsRating = v.Reviews.Select(vr => (double?)vr.Stars).Average() ?? 0,
                      ReviewCount = v.Reviews.Count()
                  })
+                 .OrderBy(lvvm => lvvm.Make)
+                 .ThenBy(lvvm => lvvm.Model)
                 .ToListAsync();
 
             return filteredVehicles;
+        }
+
+        public async Task<IEnumerable<ListingVehicleViewModel>> GetSearchQueryVehicles(string searchQuery)
+        {
+            IEnumerable<ListingVehicleViewModel> result = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .Where(v => v.IsDeleted == false)
+                .Include(v => v.VehicleType)
+                .Include(v => v.VehicleTypeCategory)
+                .Include(v => v.VehicleImages)
+                .Where(v =>
+                    EF.Functions.ILike(v.Make, $"%{searchQuery}%") ||
+                    EF.Functions.ILike(v.Model, $"%{searchQuery}%") ||
+                    EF.Functions.ILike(v.VehicleType.Name, $"%{searchQuery}%") ||
+                    EF.Functions.ILike(v.VehicleTypeCategory.Name, $"%{searchQuery}%") ||
+                    EF.Functions.ILike(v.FuelType.ToString(), $"%{searchQuery}%") ||
+                    EF.Functions.ILike(v.DateOfProduction.Year.ToString(), $"%{searchQuery}%") ||
+                    EF.Functions.ILike(v.Description, $"%{searchQuery}%"))
+                 .Select(v => new ListingVehicleViewModel()
+                 {
+                     Id = v.Id,
+                     Make = v.Make,
+                     Model = v.Model,
+                     VehicleType = v.VehicleType.Name,
+                     VehicleTypeCategory = v.VehicleTypeCategory.Name,
+                     YearOfProduction = v.DateOfProduction.Year,
+                     PricePerDay = v.PricePerDay,
+                     FuelType = v.FuelType.ToString(),
+                     ImageURL = v.VehicleImages.Select(vi => vi.ImageURL).FirstOrDefault() ?? DefaultImageURL,
+                     OwnerName = v.Owner.UserName,
+                     StarsRating = v.Reviews.Select(vr => (double?)vr.Stars).Average() ?? 0,
+                     ReviewCount = v.Reviews.Count()
+                 })
+                .OrderBy(lvvm => lvvm.Make)
+                .ThenBy(lvvm => lvvm.Model)
+                .ToListAsync();
+
+            return result;
         }
     }
 }

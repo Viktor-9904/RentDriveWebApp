@@ -17,5 +17,6 @@ namespace RentDrive.Services.Data.Interfaces
         Task<IEnumerable<UserVehicleViewModel>> GetUserVehiclesByIdAsync(string userId);
         Task<BaseFilterProperties> GetBaseFilterPropertiesAsync(int? vehicleTypeId = null, int? vehicleTypeCategoryId = null);
         Task<IEnumerable<ListingVehicleViewModel>> GetFilteredVehicles(FilteredVehicleViewModel filter);
+        Task<IEnumerable<ListingVehicleViewModel>> GetSearchQueryVehicles(string searchQuery);
     }
 }

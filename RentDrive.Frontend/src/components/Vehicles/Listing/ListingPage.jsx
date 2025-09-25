@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Range, getTrackBackground } from "react-range";
+import { useSearchParams } from "react-router-dom";
+
+import { useBackendURL } from '../../../hooks/useBackendURL';
 import ListingPageItem from './ListingPageItem';
 import useAllVehicles from '../hooks/useAllVehicles';
 import useAllVehicleTypes from '../hooks/useAllVehicleTypes';
 import useAllVehicleCategories from '../hooks/useAllVehicleCategories';
 import useFilterVehiclePropertiesByTypeId from '../hooks/useFilterVehiclePropertiesByTypeId';
 import useBaseFilterProperties from '../hooks/useBaseFilterProperties';
-import { useBackendURL } from '../../../hooks/useBackendURL';
+import useSearchQuery from '../hooks/useSearchQuery';
 
 export default function ListingPage() {
     const backEndURL = useBackendURL();
+    const [searchQuery, setSearchQuery] = useState("");
+    const [triggeredQuery, setTriggeredQuery] = useState("");
+
+    const { searchQueryVehicles } = useSearchQuery(triggeredQuery);
+
+    const handleSearch = () => {
+        setTriggeredQuery(searchQuery);
+    };
 
     const [selectedTypeId, setSelectedTypeId] = useState("");
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
@@ -180,6 +191,14 @@ export default function ListingPage() {
 
         return () => clearTimeout(debounceTimer);
     }, [selectedTypeId, selectedCategoryId, baseFilters, selectedFilters]);
+
+    useEffect(() => {
+        setLocalVehicles(searchQueryVehicles);
+        if(!searchQueryVehicles || searchQueryVehicles.length === 0)
+        {
+            setLocalVehicles(vehicles);
+        }
+    }, [searchQueryVehicles])
 
     useEffect(() => {
         setLocalVehicleTypes(vehicleTypes);
@@ -416,33 +435,52 @@ export default function ListingPage() {
                     </div>
 
                     <div className="col-lg-9">
-                        <div className="row">
-                            {localVehicles && localVehicles.length > 0 ? (
-                                localVehicles.map(vehicle => (
-                                    <ListingPageItem
-                                        key={vehicle.id}
-                                        id={vehicle.id}
-                                        make={vehicle.make}
-                                        model={vehicle.model}
-                                        vehicleType={vehicle.vehicleType}
-                                        vehicleTypeCategory={vehicle.vehicleTypeCategory}
-                                        yearOfProduction={vehicle.yearOfProduction}
-                                        pricePerDay={vehicle.pricePerDay}
-                                        fuelType={vehicle.fuelType}
-                                        imageURL={vehicle.imageURL}
-                                        ownerName={vehicle.ownerName}
-                                        starsRating={vehicle.starsRating}
-                                        reviewCount={vehicle.reviewCount}
+                        <div className="col-lg-5 ms-auto">
+                            <div className="mb-4">
+                                <div className="input-group">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Search by make, model, type..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                                     />
-                                ))
-                            ) : (
-                                <div className="col-12 text-center p-5">
-                                    <p>No vehicles found matching your filters.</p>
+                                    <button className="btn btn-primary" type="button" onClick={handleSearch}>
+                                        Search
+                                    </button>
                                 </div>
-                            )}
+                            </div>
+                        </div>
+
+                        <div className="col-lg-12">
+                            <div className="row">
+                                {localVehicles && localVehicles.length > 0 ? (
+                                    localVehicles.map(vehicle => (
+                                        <ListingPageItem
+                                            key={vehicle.id}
+                                            id={vehicle.id}
+                                            make={vehicle.make}
+                                            model={vehicle.model}
+                                            vehicleType={vehicle.vehicleType}
+                                            vehicleTypeCategory={vehicle.vehicleTypeCategory}
+                                            yearOfProduction={vehicle.yearOfProduction}
+                                            pricePerDay={vehicle.pricePerDay}
+                                            fuelType={vehicle.fuelType}
+                                            imageURL={vehicle.imageURL}
+                                            ownerName={vehicle.ownerName}
+                                            starsRating={vehicle.starsRating}
+                                            reviewCount={vehicle.reviewCount}
+                                        />
+                                    ))
+                                ) : (
+                                    <div className="col-12 text-center p-5">
+                                        <p>No vehicles found matching your filters.</p>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
