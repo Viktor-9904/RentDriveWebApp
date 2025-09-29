@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using RentDrive.Services.Data;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Vehicle;
@@ -171,6 +171,14 @@ namespace RentDrive.Backend.Controllers
                 .GetSearchQueryVehicles(searchQuery);
 
             return Ok(vehicles);
+        }
+        [HttpGet("all-makes")]
+        public async Task<IActionResult> GetAllMakes()
+        {
+            IEnumerable<string> allMakes = await this.vehicleService
+                .GetAllVehicleMakesAsync();
+
+            return Ok(allMakes);
         }
     }
 }

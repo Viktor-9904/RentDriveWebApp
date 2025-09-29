@@ -572,5 +572,16 @@ namespace RentDrive.Services.Data
 
             return result;
         }
+
+        public async Task<IEnumerable<string>> GetAllVehicleMakesAsync()
+        {
+            IEnumerable<string> makes = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .Where(v => v.IsDeleted == false)
+                .Select(v => v.Make)
+                .ToListAsync();
+
+            return makes;
+        }
     }
 }

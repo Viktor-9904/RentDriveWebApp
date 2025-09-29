@@ -1,6 +1,58 @@
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+
+import useAllVehicleTypes from '../Vehicles/hooks/useAllVehicleTypes';
+import useAllVehicleCategories from '../Vehicles/hooks/useAllVehicleCategories';
+import useFuelTypesEnum from '../../hooks/useFuelTypesEnum';
 
 export default function MainBanner() {
+
+    const navigate = useNavigate();
+
+    const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
+    const { vehicleCategories, loadingVehicleCategories, errorVehicleCategories } = useAllVehicleCategories();
+    const { fuelTypeEnum, loadingfuelTypeEnum, errorfuelTypeEnum } = useFuelTypesEnum();
+
+    const [selectedTypeId, setSelectedTypeId] = useState("");
+    const [selectedCategoryId, setSelectedCategoryId] = useState("");
+    const [selectedFuelTypeId, setSelectedFuelTypeId] = useState("");
+
+    const [localVehicleTypes, setLocalVehicleTypes] = useState([]);
+    const [localVehicleCategories, setLocalVehicleCategories] = useState([]);
+    const [localFuelTypes, setLocalFuelTypes] = useState([]);
+
+    useEffect(() => {
+        setLocalVehicleTypes(vehicleTypes);
+    }, [vehicleTypes])
+
+    useEffect(() => {
+        setLocalVehicleCategories(vehicleCategories);
+    }, [vehicleCategories])
+
+    useEffect(() => {
+        setLocalFuelTypes(fuelTypeEnum)
+    },[fuelTypeEnum])
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const selectedType = localVehicleTypes.find(type => type.id === Number(selectedTypeId))?.name;
+        const selectedCategory = localVehicleCategories.find(category => category.id === Number(selectedCategoryId))?.name;
+        const selectedFuelType = localFuelTypes.find(fuel => fuel.id === Number(selectedFuelTypeId))?.name;
+
+        console.log(selectedType);
+        console.log(selectedCategory);
+        console.log(selectedFuelType);
+
+        const params = new URLSearchParams();
+
+        if (selectedType) params.append("type", selectedType);
+        if (selectedCategory) params.append("category", selectedCategory);
+        if (selectedFuelType && selectedFuelType !== "None") params.append("fuel", selectedFuelType);
+
+        navigate(`/listing?${params.toString()}`);
+    }
+
     return (
         <>
             <div className="main-banner">
@@ -13,29 +65,77 @@ export default function MainBanner() {
                             </div>
                         </div>
                         <div className="col-lg-12">
-                            <form id="search-form" name="gs" method="submit" role="search" action="#">
+                            <form onSubmit={handleSubmit} id="search-form" name="gs" method="submit" role="search" action="#">
                                 <div className="row">
                                     <div className="col-lg-3 align-self-center">
-                                        <fieldset>
-                                            <select name="area" className="form-select" aria-label="Area" id="chooseCategory" defaultValue="All Areas">
-                                                <option value="New Village">New Village</option>
-                                                <option value="Old Town">Old Town</option>
-                                                <option value="Modern City">Modern City</option>
+                                        <fieldset className="flex-grow-1">
+                                            <select
+                                                id="vehicleType"
+                                                name="vehicleType"
+                                                className="form-select"
+                                                defaultValue=""
+                                                onChange={e => {
+                                                    setSelectedTypeId(e.target.value);
+                                                    selectedCategoryId !== "0" ? setSelectedCategoryId("") : "";
+                                                }}
+                                            >
+                                                <option value="" disabled>
+                                                    Select Vehicle Type
+                                                </option>
+                                                <option value={0}>All Vehicle Types</option>
+                                                {localVehicleTypes.map(type => (
+                                                    <option key={type.id} value={type.id}>
+                                                        {type.name}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </fieldset>
                                     </div>
                                     <div className="col-lg-3 align-self-center">
-                                        <fieldset>
-                                            <input type="address" name="address" className="searchText" placeholder="Enter a location" required />
+                                        <fieldset className="flex-grow-1">
+                                            <select
+                                                id="vehicleCategory"
+                                                name="vehicleCategory"
+                                                className="form-select searchSelect"
+                                                value={selectedCategoryId}
+                                                onChange={e => setSelectedCategoryId(e.target.value)}
+                                            >
+                                                <option value="" disabled>
+                                                    Select Vehicle Category
+                                                </option>
+                                                <option value="All">All Vehicle Categories</option>
+                                                {localVehicleCategories
+                                                    .filter(category =>
+                                                        Number(selectedTypeId) === 0 && selectedTypeId !== ""
+                                                            ? true
+                                                            : category.vehicleTypeId === Number(selectedTypeId)
+                                                    )
+                                                    .map(category => (
+                                                        <option key={category.id} value={category.id}>
+                                                            {category.name}
+                                                        </option>
+                                                    ))}
+                                            </select>
                                         </fieldset>
                                     </div>
                                     <div className="col-lg-3 align-self-center">
-                                        <fieldset>
-                                            <select name="price" className="form-select" aria-label="Default select example" id="chooseCategory" defaultValue="Price Range">
-                                                <option value="$100 - $250">$100 - $250</option>
-                                                <option value="$250 - $500">$250 - $500</option>
-                                                <option value="$500 - $1000">$500 - $1,000</option>
-                                                <option value="$1000+">$1,000 or more</option>
+                                        <fieldset className="flex-grow-1">
+                                            <select
+                                                id="fuelType"
+                                                name="fuelType"
+                                                className="form-select"
+                                                onChange={e => setSelectedFuelTypeId(e.target.value)}
+                                                value={selectedFuelTypeId} 
+                                            >
+                                                <option value="" disabled>
+                                                    Select Fuel Type
+                                                </option>
+                                                <option value="All">All Fuel Types</option>
+                                                {localFuelTypes.map(fuel => (
+                                                    <option key={fuel.id} value={fuel.id}>
+                                                        {fuel.name}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </fieldset>
                                     </div>

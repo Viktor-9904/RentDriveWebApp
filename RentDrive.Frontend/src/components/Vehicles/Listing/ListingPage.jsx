@@ -39,6 +39,51 @@ export default function ListingPage() {
     const [localBaseFilterdProperties, setLocalBaseFilteredProperties] = useState([]);
     const [localFilterdVehicleTypeProperties, setLocalFilteredVehicleTypeProperties] = useState([]);
 
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        const typeName = searchParams.get("type");
+        const categoryName = searchParams.get("category");
+        const fuel = searchParams.get("fuel");
+
+        if (fuel) {
+            const normalizedFuel = fuel.charAt(0).toUpperCase() + fuel.slice(1).toLowerCase();
+            setBaseFilters(prev => ({
+                ...prev,
+                fuelType: normalizedFuel,
+            }));
+        } else {
+            setBaseFilters(prev => ({
+                ...prev,
+                fuelType: "",
+            }));
+
+        }
+
+        if (localVehicleTypes.length > 0) {
+            if (typeName) {
+                const matchedType = localVehicleTypes.find(
+                    t => t.name.toLowerCase() === typeName.toLowerCase()
+                );
+                setSelectedTypeId(matchedType ? matchedType.id : 0);
+            } else {
+                setSelectedTypeId(0);
+            }
+        }
+
+        if (localVehicleTypeCategories.length > 0) {
+            if (categoryName) {
+                const matchedCategory = localVehicleTypeCategories.find(
+                    c => c.name.toLowerCase() === categoryName.toLowerCase()
+                );
+                setSelectedCategoryId(matchedCategory ? matchedCategory.id : "");
+            } else {
+                setSelectedCategoryId("");
+            }
+        }
+    }, [searchParams, localVehicleTypes, localVehicleTypeCategories]);
+
+
     const [baseFilters, setBaseFilters] = useState({
         makes: [],
         colors: [],
@@ -129,12 +174,26 @@ export default function ListingPage() {
     );
 
     useEffect(() => {
-        if (!selectedTypeId) return;
+        const hasFilters =
+            (selectedTypeId && selectedTypeId !== 0) ||
+            (selectedCategoryId && selectedCategoryId !== 0) ||
+            (baseFilterProperties.fuel && baseFilterProperties.fuel !== "All") ||
+            (selectedFilters && Object.keys(selectedFilters).length > 0);
+
+        if (!hasFilters) {
+            return;
+        }
 
         const fetchFilteredVehicles = async () => {
             try {
-                const payload = Object.entries(selectedFilters)
-                    .map(([propertyId, values]) => ({ propertyId, values }));
+                const payload = {
+                    VehicleTypeId: selectedTypeId && selectedTypeId !== 0 ? selectedTypeId : null,
+                    VehicleCategoryId: selectedCategoryId && selectedCategoryId !== 0 ? selectedCategoryId : null,
+                    FuelType: baseFilterProperties.fuel && baseFilterProperties.fuel !== "All"
+                        ? baseFilterProperties.fuel
+                        : null,
+                    PropertyFilters: selectedFilters
+                };
 
                 const res = await fetch(`${backEndURL}/api/vehicle/filter`, {
                     method: "POST",
@@ -151,7 +210,8 @@ export default function ListingPage() {
         };
 
         fetchFilteredVehicles();
-    }, [selectedFilters, selectedTypeId]);
+    }, [selectedFilters, selectedTypeId, selectedCategoryId, baseFilterProperties.fuel]);
+
 
     useEffect(() => {
         const debounceTimer = setTimeout(() => {
@@ -194,8 +254,7 @@ export default function ListingPage() {
 
     useEffect(() => {
         setLocalVehicles(searchQueryVehicles);
-        if(!searchQueryVehicles || searchQueryVehicles.length === 0)
-        {
+        if (!searchQueryVehicles || searchQueryVehicles.length === 0) {
             setLocalVehicles(vehicles);
         }
     }, [searchQueryVehicles])
@@ -215,6 +274,10 @@ export default function ListingPage() {
     useEffect(() => {
         setLocalBaseFilteredProperties(baseFilterProperties)
     }, [baseFilterProperties])
+
+    useEffect(() => {
+        console.log(selectedTypeId)
+    }, [selectedTypeId])
 
     return (
         <div className="listing-page">
@@ -240,7 +303,7 @@ export default function ListingPage() {
                                 ))}
                             </select>
 
-                            {selectedTypeId && (
+                            {selectedTypeId !== null && selectedTypeId !== undefined && selectedTypeId !== 0 && (
                                 <div className="mt-4">
                                     <h6 className="mb-2">
                                         {localVehicleTypes.find(t => String(t.id) === String(selectedTypeId))?.name} Categories
@@ -274,7 +337,7 @@ export default function ListingPage() {
 
                                     {makeOpen && (
                                         <ul className="list-unstyled ms-3">
-                                            {localBaseFilterdProperties?.makes.map(make => (
+                                            {localBaseFilterdProperties?.makes?.map(make => (
                                                 <li key={make}>
                                                     <label>
                                                         <input
@@ -374,7 +437,7 @@ export default function ListingPage() {
                                 </div>
                             </div>
 
-                            {selectedTypeId && (
+                            {selectedTypeId !== null && selectedTypeId !== undefined && selectedTypeId !== 0 && (
                                 <div className="type-properties">
                                     <h6 className="mb-2">
                                         {localVehicleTypes.find(v => v.id === selectedTypeId)?.name} Properties
