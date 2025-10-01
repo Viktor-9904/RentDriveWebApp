@@ -391,8 +391,8 @@ namespace RentDrive.Services.Data
             {
                 return new BaseFilterProperties
                 {
-                    Makes = new List<string>(),
-                    Colors = new List<string>(),
+                    Makes = new List<PropertyWithCount>(),
+                    Colors = new List<PropertyWithCount>(),
                     FuelTypes = new List<FuelTypeEnumViewModel>(),
                     MinPrice = 0,
                     MaxPrice = 0,
@@ -401,16 +401,24 @@ namespace RentDrive.Services.Data
                 };
             }
 
-            List<string> makes = await vehiclesQuery
-                .Select(v => v.Make)
-                .Distinct()
-                .OrderBy(m => m)
+            List<PropertyWithCount> makesWithCounts = await vehiclesQuery
+                .GroupBy(v => v.Make)
+                .Select(g => new PropertyWithCount
+                {
+                    Name = g.Key,
+                    Count = g.Count()
+                })
+                .OrderBy(m => m.Name)
                 .ToListAsync();
 
-            List<string> colors = await vehiclesQuery
-                .Select(v => v.Color)
-                .Distinct()
-                .OrderBy(c => c)
+            List<PropertyWithCount> colorsWithCounts = await vehiclesQuery
+                .GroupBy(v => v.Color)
+                .Select(g => new PropertyWithCount
+                {
+                    Name = g.Key,
+                    Count = g.Count()
+                })
+                .OrderBy(m => m.Name)
                 .ToListAsync();
 
             List<FuelTypeEnumViewModel> fuelTypes = await vehiclesQuery
@@ -431,8 +439,8 @@ namespace RentDrive.Services.Data
 
             BaseFilterProperties baseProperties = new BaseFilterProperties()
             {
-                Makes = makes,
-                Colors = colors,
+                Makes = makesWithCounts,
+                Colors = colorsWithCounts,
                 FuelTypes = fuelTypes,
                 MinPrice = minPrice,
                 MaxPrice = maxPrice,

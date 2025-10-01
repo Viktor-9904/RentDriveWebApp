@@ -4,11 +4,11 @@ namespace RentDrive.Web.ViewModels.Vehicle
 {
     public class BaseFilterProperties
     {
-        public List<string> Makes { get; set; }
-            = new List<string>();
+        public List<PropertyWithCount> Makes { get; set; }
+            = new List<PropertyWithCount>();
 
-        public List<string> Colors { get; set; }
-            = new List<string>();
+        public List<PropertyWithCount> Colors { get; set; }
+            = new List<PropertyWithCount>();
 
         public List<FuelTypeEnumViewModel> FuelTypes { get; set; }
             = new List<FuelTypeEnumViewModel>();
@@ -17,5 +17,11 @@ namespace RentDrive.Web.ViewModels.Vehicle
         public decimal MaxPrice { get; set; }
         public int MinYearOfProduction { get; set; }
         public int MaxYearOfProduction { get; set; }
+    }
+
+    public class PropertyWithCount
+    {
+        public string Name { get; set; } = null!;
+        public int Count { get; set; }
     }
 }

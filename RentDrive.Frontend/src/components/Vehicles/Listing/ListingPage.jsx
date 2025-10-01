@@ -182,8 +182,8 @@ export default function ListingPage() {
                     const payload = {
                         vehicleTypeId: selectedTypeId || null,
                         vehicleTypeCategoryId: selectedCategoryId || null,
-                        makes: baseFilters.makes,
-                        colors: baseFilters.colors,
+                        makes: baseFilters.makes.map(m => m.name),
+                        colors: baseFilters.colors.map(c => c.name),
                         fuelType: baseFilters.fuelType,
                         minPrice: baseFilters.pricePerDay[0],
                         maxPrice: baseFilters.pricePerDay[1],
@@ -302,7 +302,7 @@ export default function ListingPage() {
                                     {makeOpen && (
                                         <ul className="list-unstyled ms-3">
                                             {localBaseFilterdProperties?.makes?.map(make => (
-                                                <li key={make}>
+                                                <li key={make.name}>
                                                     <label>
                                                         <input
                                                             type="checkbox"
@@ -318,7 +318,7 @@ export default function ListingPage() {
                                                                 });
                                                             }}
                                                         />
-                                                        {make}
+                                                        {make.name} <span className="text-muted">({make.count})</span>
                                                     </label>
                                                 </li>
                                             ))}
@@ -334,7 +334,7 @@ export default function ListingPage() {
                                     {colorOpen && (
                                         <ul className="list-unstyled ms-3">
                                             {localBaseFilterdProperties?.colors.map(color => (
-                                                <li key={color}>
+                                                <li key={color.name}>
                                                     <label>
                                                         <input
                                                             type="checkbox"
@@ -350,7 +350,7 @@ export default function ListingPage() {
                                                                 });
                                                             }}
                                                         />
-                                                        {color}
+                                                        {color.name} <span className="text-muted">({color.count})</span>
                                                     </label>
                                                 </li>
                                             ))}
@@ -401,7 +401,7 @@ export default function ListingPage() {
                                 </div>
                             </div>
 
-                            {selectedTypeId !== null && (
+                            {selectedTypeId !== null && selectedTypeId !== undefined && selectedTypeId !== 0 && (
                                 <div className="type-properties">
                                     <h6 className="mb-2">
                                         {localVehicleTypes.find(v => v.id === selectedTypeId)?.name} Properties
