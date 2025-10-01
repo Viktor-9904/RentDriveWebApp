@@ -41,6 +41,7 @@ namespace RentDrive.Services.Data
                     Id = vt.Id,
                     Name = vt.Name,
                     AvailableFuels = vt.Vehicles
+                        .Where(v => v.IsDeleted == false)
                         .GroupBy(v => v.FuelType)
                         .Select(g => new FuelTypeEnumViewModel()
                         {
