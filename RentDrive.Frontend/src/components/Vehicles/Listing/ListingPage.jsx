@@ -174,40 +174,53 @@ export default function ListingPage() {
     }, [localBaseFilterdProperties]);
 
     useEffect(() => {
-        const fetchFilteredVehicles = async () => {
-            try {
-                const payload = {
-                    vehicleTypeId: selectedTypeId || null,
-                    vehicleTypeCategoryId: selectedCategoryId || null,
-                    makes: baseFilters.makes,
-                    colors: baseFilters.colors,
-                    fuelType: baseFilters.fuelType,
-                    minPrice: baseFilters.pricePerDay[0],
-                    maxPrice: baseFilters.pricePerDay[1],
-                    minYear: baseFilters.yearOfProduction[0],
-                    maxYear: baseFilters.yearOfProduction[1],
-                    searchQuery: triggeredSearchQuery,
-                    properties: Object.entries(selectedFilters).map(([propertyId, values]) => ({ propertyId, values }))
-                };
+        const controller = new AbortController();
 
-                const res = await fetch(`${backEndURL}/api/vehicle/filter`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
-                });
+        const debounceTimer = setTimeout(() => {
+            const fetchFilteredVehicles = async  () => {
+                try {
+                    const payload = {
+                        vehicleTypeId: selectedTypeId || null,
+                        vehicleTypeCategoryId: selectedCategoryId || null,
+                        makes: baseFilters.makes,
+                        colors: baseFilters.colors,
+                        fuelType: baseFilters.fuelType,
+                        minPrice: baseFilters.pricePerDay[0],
+                        maxPrice: baseFilters.pricePerDay[1],
+                        minYear: baseFilters.yearOfProduction[0],
+                        maxYear: baseFilters.yearOfProduction[1],
+                        searchQuery: triggeredSearchQuery,
+                        properties: Object.entries(selectedFilters).map(([propertyId, values]) => ({ propertyId, values }))
+                    };
 
-                if (!res.ok) {
-                    throw new Error("Failed to fetch vehicles");
+                    const res = await fetch(`${backEndURL}/api/vehicle/filter`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload),
+                        signal: controller.signal,
+                    });
+
+                    if (!res.ok) {
+                        throw new Error("Failed to fetch vehicles");
+                    }
+                    const filteredIds = await res.json();
+                    setLocalVehicles(vehicles.filter(v => filteredIds.includes(v.id)));
+
+                } catch (err) {
+                    if (err.name === "AbortError") {
+                        return;
+                    }
+                    console.error(err);
                 }
-                const filteredIds = await res.json();
-                setLocalVehicles(vehicles.filter(v => filteredIds.includes(v.id)));
-
-            } catch (err) {
-                console.error(err);
             }
+            fetchFilteredVehicles();
+        }, 250);
+
+        return () => {
+            controller.abort();
+            clearTimeout(debounceTimer)
         }
 
-        fetchFilteredVehicles();
     }, [selectedTypeId, selectedCategoryId, baseFilters, selectedFilters, triggeredSearchQuery]);
     
     useEffect(() => {
