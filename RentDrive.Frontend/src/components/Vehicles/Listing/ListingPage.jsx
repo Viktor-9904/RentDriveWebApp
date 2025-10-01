@@ -19,7 +19,7 @@ export default function ListingPage() {
         setTriggeredSearchQuery(searchQuery);
     };
 
-    const [selectedTypeId, setSelectedTypeId] = useState(null);
+    const [selectedTypeId, setSelectedTypeId] = useState("");
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
 
     const { baseFilterProperties, baseFilterPropertiesLoading, baseFilterPropertiesError } = useBaseFilterProperties(selectedTypeId, selectedCategoryId);
@@ -223,10 +223,6 @@ export default function ListingPage() {
 
     }, [selectedTypeId, selectedCategoryId, baseFilters, selectedFilters, triggeredSearchQuery]);
     
-    useEffect(() => {
-        setLocalVehicles(vehicles);
-    }, [vehicles])
-
     useEffect(() => {
         setLocalVehicleTypes(vehicleTypes);
     }, [vehicleTypes])
@@ -482,7 +478,7 @@ export default function ListingPage() {
 
                         <div className="col-lg-12">
                             <div className="row">
-                                {localVehicles && localVehicles.length > 0 ? (
+                                {localVehicles?.length > 0 ? (
                                     localVehicles.map(vehicle => (
                                         <ListingPageItem
                                             key={vehicle.id}
