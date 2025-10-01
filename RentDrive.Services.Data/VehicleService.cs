@@ -443,7 +443,7 @@ namespace RentDrive.Services.Data
             return baseProperties;
         }
 
-        public async Task<IEnumerable<ListingVehicleViewModel>> GetFilteredVehicles(FilteredVehicleViewModel filter)
+        public async Task<IEnumerable<Guid>> GetFilteredVehicles(FilteredVehiclesViewModel filter)
         {
             IQueryable<Vehicle> query = this.vehicleRepository
                 .GetAllAsQueryable()
@@ -510,26 +510,20 @@ namespace RentDrive.Services.Data
                 }
             }
 
-            IEnumerable<ListingVehicleViewModel> filteredVehicles = await query
+            IEnumerable<Guid> filteredVehicles = await query
                 .Include(v => v.VehicleType)
                 .Include(v => v.VehicleTypeCategory)
-                 .Select(v => new ListingVehicleViewModel()
-                 {
-                     Id = v.Id,
-                     Make = v.Make,
-                     Model = v.Model,
-                     VehicleType = v.VehicleType.Name,
-                     VehicleTypeCategory = v.VehicleTypeCategory.Name,
-                     YearOfProduction = v.DateOfProduction.Year,
-                     PricePerDay = v.PricePerDay,
-                     FuelType = v.FuelType.ToString(),
-                     ImageURL = v.VehicleImages.Select(vi => vi.ImageURL).FirstOrDefault() ?? DefaultImageURL,
-                     OwnerName = v.Owner.UserName,
-                     StarsRating = v.Reviews.Select(vr => (double?)vr.Stars).Average() ?? 0,
-                     ReviewCount = v.Reviews.Count()
-                 })
-                 .OrderBy(lvvm => lvvm.Make)
-                 .ThenBy(lvvm => lvvm.Model)
+                .OrderBy(lvvm => lvvm.Make)
+                .ThenBy(lvvm => lvvm.Model)
+                .Where(v =>
+                    EF.Functions.ILike(v.Make, $"%{filter.SearchQuery}%") ||
+                    EF.Functions.ILike(v.Model, $"%{filter.SearchQuery}%") ||
+                    EF.Functions.ILike(v.VehicleType.Name, $"%{filter.SearchQuery}%") ||
+                    EF.Functions.ILike(v.VehicleTypeCategory.Name, $"%{filter.SearchQuery}%") ||
+                    EF.Functions.ILike(v.FuelType.ToString(), $"%{filter.SearchQuery}%") ||
+                    EF.Functions.ILike(v.DateOfProduction.Year.ToString(), $"%{filter.SearchQuery}%") ||
+                    EF.Functions.ILike(v.Description, $"%{filter.SearchQuery}%"))
+                .Select(v => v.Id)
                 .ToListAsync();
 
             return filteredVehicles;

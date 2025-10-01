@@ -3,6 +3,7 @@
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
+using RentDrive.Web.ViewModels.Enums;
 using RentDrive.Web.ViewModels.VehicleType;
 
 
@@ -24,8 +25,8 @@ namespace RentDrive.Services.Data
         {
             return await this.vehicleTypeRepository
                 .GetAllAsQueryable()
-                .AnyAsync(vt => 
-                    vt.Id == vehicleTypeId && 
+                .AnyAsync(vt =>
+                    vt.Id == vehicleTypeId &&
                     vt.IsDeleted == false);
         }
 
@@ -33,11 +34,20 @@ namespace RentDrive.Services.Data
         {
             List<VehicleTypeViewModel> vehicleTypes = await this.vehicleTypeRepository
                 .GetAllAsQueryable()
+                .Include(vt => vt.Vehicles)
                 .Where(vt => vt.IsDeleted == false)
                 .Select(vt => new VehicleTypeViewModel()
                 {
                     Id = vt.Id,
                     Name = vt.Name,
+                    AvailableFuels = vt.Vehicles
+                        .GroupBy(v => v.FuelType)
+                        .Select(g => new FuelTypeEnumViewModel()
+                        {
+                            Id = (int)g.Key,
+                            Name = g.Key.ToString(),
+                        })
+                        .ToList()
                 })
                 .ToListAsync();
 
@@ -47,7 +57,7 @@ namespace RentDrive.Services.Data
         {
             VehicleType? vehicleType = await this.vehicleTypeRepository
                 .GetAllAsQueryable()
-                .FirstOrDefaultAsync(vt => 
+                .FirstOrDefaultAsync(vt =>
                     vt.Id == id &&
                     vt.IsDeleted == false);
 
@@ -75,7 +85,7 @@ namespace RentDrive.Services.Data
         {
             VehicleType? vehicleType = await this.vehicleTypeRepository
                 .GetAllAsQueryable()
-                .FirstOrDefaultAsync(vt => 
+                .FirstOrDefaultAsync(vt =>
                     vt.Id == viewModel.Id &&
                     vt.IsDeleted == false);
 
