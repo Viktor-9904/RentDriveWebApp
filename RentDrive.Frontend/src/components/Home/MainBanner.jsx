@@ -4,6 +4,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import useAllVehicleTypes from '../Vehicles/hooks/useAllVehicleTypes';
 import useAllVehicleCategories from '../Vehicles/hooks/useAllVehicleCategories';
 import useFuelTypesEnum from '../../hooks/useFuelTypesEnum';
+import { MdLocalFireDepartment } from 'react-icons/md';
 
 export default function MainBanner() {
 
@@ -11,7 +12,7 @@ export default function MainBanner() {
 
     const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
     const { vehicleCategories, loadingVehicleCategories, errorVehicleCategories } = useAllVehicleCategories();
-    const { fuelTypeEnum, loadingfuelTypeEnum, errorfuelTypeEnum } = useFuelTypesEnum();
+    const { fuelTypeEnum, loadingfuelTypeEnum, errorfuelTypeEnum } = useFuelTypesEnum()
 
     const [selectedTypeId, setSelectedTypeId] = useState("");
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
@@ -30,8 +31,10 @@ export default function MainBanner() {
     }, [vehicleCategories])
 
     useEffect(() => {
-        setLocalFuelTypes(fuelTypeEnum)
-    },[fuelTypeEnum])
+        if(localFuelTypes.length === 0) {
+                setLocalFuelTypes(fuelTypeEnum);
+            }
+    }, [localFuelTypes, fuelTypeEnum])
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -39,10 +42,6 @@ export default function MainBanner() {
         const selectedType = localVehicleTypes.find(type => type.id === Number(selectedTypeId))?.name;
         const selectedCategory = localVehicleCategories.find(category => category.id === Number(selectedCategoryId))?.name;
         const selectedFuelType = localFuelTypes.find(fuel => fuel.id === Number(selectedFuelTypeId))?.name;
-
-        console.log(selectedType);
-        console.log(selectedCategory);
-        console.log(selectedFuelType);
 
         const params = new URLSearchParams();
 
@@ -76,6 +75,7 @@ export default function MainBanner() {
                                                 defaultValue=""
                                                 onChange={e => {
                                                     setSelectedTypeId(e.target.value);
+                                                    setLocalFuelTypes(localVehicleTypes.find(type => Number(type.id) === Number(e.target.value))?.availableFuels || [fuelTypeEnum]);
                                                     selectedCategoryId !== "0" ? setSelectedCategoryId("") : "";
                                                 }}
                                             >
@@ -131,7 +131,7 @@ export default function MainBanner() {
                                                     Select Fuel Type
                                                 </option>
                                                 <option value="All">All Fuel Types</option>
-                                                {localFuelTypes.map(fuel => (
+                                                {localFuelTypes?.map(fuel => (
                                                     <option key={fuel.id} value={fuel.id}>
                                                         {fuel.name}
                                                     </option>

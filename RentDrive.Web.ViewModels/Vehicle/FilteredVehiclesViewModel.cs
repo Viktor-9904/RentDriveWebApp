@@ -1,6 +1,6 @@
 ﻿namespace RentDrive.Web.ViewModels.Vehicle
 {
-    public class FilteredVehicleViewModel
+    public class FilteredVehiclesViewModel
     {
         public int? VehicleTypeId { get; set; }
         public int? VehicleTypeCategoryId { get; set; }
@@ -12,5 +12,6 @@
         public int? MinYear { get; set; }
         public int? MaxYear { get; set; }
         public List<FilteredVehicleTypeProperty> Properties { get; set; } = new List<FilteredVehicleTypeProperty>();
+        public string? SearchQuery { get; set; }
     }
 }

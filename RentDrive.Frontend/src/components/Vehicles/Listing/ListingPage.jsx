@@ -9,20 +9,17 @@ import useAllVehicleTypes from '../hooks/useAllVehicleTypes';
 import useAllVehicleCategories from '../hooks/useAllVehicleCategories';
 import useFilterVehiclePropertiesByTypeId from '../hooks/useFilterVehiclePropertiesByTypeId';
 import useBaseFilterProperties from '../hooks/useBaseFilterProperties';
-import useSearchQuery from '../hooks/useSearchQuery';
 
 export default function ListingPage() {
     const backEndURL = useBackendURL();
     const [searchQuery, setSearchQuery] = useState("");
-    const [triggeredQuery, setTriggeredQuery] = useState("");
-
-    const { searchQueryVehicles } = useSearchQuery(triggeredQuery);
+    const [triggeredSearchQuery, setTriggeredSearchQuery] = useState("");
 
     const handleSearch = () => {
-        setTriggeredQuery(searchQuery);
+        setTriggeredSearchQuery(searchQuery);
     };
 
-    const [selectedTypeId, setSelectedTypeId] = useState("");
+    const [selectedTypeId, setSelectedTypeId] = useState(null);
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
 
     const { baseFilterProperties, baseFilterPropertiesLoading, baseFilterPropertiesError } = useBaseFilterProperties(selectedTypeId, selectedCategoryId);
@@ -33,56 +30,19 @@ export default function ListingPage() {
     const { filterVehicleProperties, filterVehiclePropertiesLoading, filterVehiclePropertiesError } = useFilterVehiclePropertiesByTypeId(selectedTypeId);
 
     const [selectedFilters, setSelectedFilters] = useState({});
+
     const [localVehicles, setLocalVehicles] = useState([]);
     const [localVehicleTypes, setLocalVehicleTypes] = useState([]);
     const [localVehicleTypeCategories, setLocalVehicleTypeCategories] = useState([]);
+
     const [localBaseFilterdProperties, setLocalBaseFilteredProperties] = useState([]);
     const [localFilterdVehicleTypeProperties, setLocalFilteredVehicleTypeProperties] = useState([]);
 
     const [searchParams] = useSearchParams();
 
-    useEffect(() => {
-        const typeName = searchParams.get("type");
-        const categoryName = searchParams.get("category");
-        const fuel = searchParams.get("fuel");
-
-        if (fuel) {
-            const normalizedFuel = fuel.charAt(0).toUpperCase() + fuel.slice(1).toLowerCase();
-            setBaseFilters(prev => ({
-                ...prev,
-                fuelType: normalizedFuel,
-            }));
-        } else {
-            setBaseFilters(prev => ({
-                ...prev,
-                fuelType: "",
-            }));
-
-        }
-
-        if (localVehicleTypes.length > 0) {
-            if (typeName) {
-                const matchedType = localVehicleTypes.find(
-                    t => t.name.toLowerCase() === typeName.toLowerCase()
-                );
-                setSelectedTypeId(matchedType ? matchedType.id : 0);
-            } else {
-                setSelectedTypeId(0);
-            }
-        }
-
-        if (localVehicleTypeCategories.length > 0) {
-            if (categoryName) {
-                const matchedCategory = localVehicleTypeCategories.find(
-                    c => c.name.toLowerCase() === categoryName.toLowerCase()
-                );
-                setSelectedCategoryId(matchedCategory ? matchedCategory.id : "");
-            } else {
-                setSelectedCategoryId("");
-            }
-        }
-    }, [searchParams, localVehicleTypes, localVehicleTypeCategories]);
-
+    const [openProperties, setOpenProperties] = useState({});
+    const [makeOpen, setMakeOpen] = useState(false);
+    const [colorOpen, setColorOpen] = useState(false);
 
     const [baseFilters, setBaseFilters] = useState({
         makes: [],
@@ -92,21 +52,7 @@ export default function ListingPage() {
         yearOfProduction: [1970, 1970],
     });
 
-    useEffect(() => {
-        if (localBaseFilterdProperties?.minPrice !== undefined && localBaseFilterdProperties?.maxPrice !== undefined) {
-            setBaseFilters(prev => ({
-                ...prev,
-                pricePerDay: [localBaseFilterdProperties.minPrice, localBaseFilterdProperties.maxPrice],
-                yearOfProduction: [localBaseFilterdProperties.minYearOfProduction, localBaseFilterdProperties.maxYearOfProduction],
-            }));
-        }
-    }, [localBaseFilterdProperties]);
-
-    const [openProperties, setOpenProperties] = useState({});
-    const [makeOpen, setMakeOpen] = useState(false);
-    const [colorOpen, setColorOpen] = useState(false);
-
-    const togglePropertyOpen = (propertyId) => {
+        const togglePropertyOpen = (propertyId) => {
         setOpenProperties(prev => ({
             ...prev,
             [propertyId]: !prev[propertyId]
@@ -173,26 +119,75 @@ export default function ListingPage() {
         </div>
     );
 
+    // Search params
     useEffect(() => {
-        const hasFilters =
-            (selectedTypeId && selectedTypeId !== 0) ||
-            (selectedCategoryId && selectedCategoryId !== 0) ||
-            (baseFilterProperties.fuel && baseFilterProperties.fuel !== "All") ||
-            (selectedFilters && Object.keys(selectedFilters).length > 0);
+        const typeName = searchParams.get("type");
+        const categoryName = searchParams.get("category");
+        const fuel = searchParams.get("fuel");
 
-        if (!hasFilters) {
-            return;
+        if (fuel) {
+            const normalizedFuel = fuel.charAt(0).toUpperCase() + fuel.slice(1).toLowerCase();
+            setBaseFilters(prev => ({
+                ...prev,
+                fuelType: normalizedFuel,
+            }));
+        } else {
+            setBaseFilters(prev => ({
+                ...prev,
+                fuelType: "",
+            }));
+
         }
 
+        if (localVehicleTypes.length > 0) {
+            if (typeName) {
+                const matchedType = localVehicleTypes.find(
+                    t => t.name.toLowerCase() === typeName.toLowerCase()
+                );
+                setSelectedTypeId(matchedType ? matchedType.id : 0);
+            } else {
+                setSelectedTypeId(0);
+            }
+        }
+
+        if (localVehicleTypeCategories.length > 0) {
+            if (categoryName) {
+                const matchedCategory = localVehicleTypeCategories.find(
+                    c => c.name.toLowerCase() === categoryName.toLowerCase()
+                );
+                setSelectedCategoryId(matchedCategory ? matchedCategory.id : "");
+            } else {
+                setSelectedCategoryId("");
+            }
+        }
+    }, [searchParams, localVehicleTypes, localVehicleTypeCategories]);
+
+    // Load Base Filters
+    useEffect(() => {
+        if (localBaseFilterdProperties?.minPrice !== undefined && localBaseFilterdProperties?.maxPrice !== undefined) {
+            setBaseFilters(prev => ({
+                ...prev,
+                pricePerDay: [localBaseFilterdProperties.minPrice, localBaseFilterdProperties.maxPrice],
+                yearOfProduction: [localBaseFilterdProperties.minYearOfProduction, localBaseFilterdProperties.maxYearOfProduction],
+            }));
+        }
+    }, [localBaseFilterdProperties]);
+
+    useEffect(() => {
         const fetchFilteredVehicles = async () => {
             try {
                 const payload = {
-                    VehicleTypeId: selectedTypeId && selectedTypeId !== 0 ? selectedTypeId : null,
-                    VehicleCategoryId: selectedCategoryId && selectedCategoryId !== 0 ? selectedCategoryId : null,
-                    FuelType: baseFilterProperties.fuel && baseFilterProperties.fuel !== "All"
-                        ? baseFilterProperties.fuel
-                        : null,
-                    PropertyFilters: selectedFilters
+                    vehicleTypeId: selectedTypeId || null,
+                    vehicleTypeCategoryId: selectedCategoryId || null,
+                    makes: baseFilters.makes,
+                    colors: baseFilters.colors,
+                    fuelType: baseFilters.fuelType,
+                    minPrice: baseFilters.pricePerDay[0],
+                    maxPrice: baseFilters.pricePerDay[1],
+                    minYear: baseFilters.yearOfProduction[0],
+                    maxYear: baseFilters.yearOfProduction[1],
+                    searchQuery: triggeredSearchQuery,
+                    properties: Object.entries(selectedFilters).map(([propertyId, values]) => ({ propertyId, values }))
                 };
 
                 const res = await fetch(`${backEndURL}/api/vehicle/filter`, {
@@ -201,63 +196,23 @@ export default function ListingPage() {
                     body: JSON.stringify(payload)
                 });
 
-                if (!res.ok) throw new Error("Failed to fetch vehicles");
-                const data = await res.json();
-                setLocalVehicles(data);
+                if (!res.ok) {
+                    throw new Error("Failed to fetch vehicles");
+                }
+                const filteredIds = await res.json();
+                setLocalVehicles(vehicles.filter(v => filteredIds.includes(v.id)));
+
             } catch (err) {
                 console.error(err);
             }
-        };
+        }
 
         fetchFilteredVehicles();
-    }, [selectedFilters, selectedTypeId, selectedCategoryId, baseFilterProperties.fuel]);
-
-
+    }, [selectedTypeId, selectedCategoryId, baseFilters, selectedFilters, triggeredSearchQuery]);
+    
     useEffect(() => {
-        const debounceTimer = setTimeout(() => {
-            const fetchFilteredVehicles = async () => {
-                try {
-                    const payload = {
-                        vehicleTypeId: selectedTypeId || null,
-                        vehicleTypeCategoryId: selectedCategoryId || null,
-                        makes: baseFilters.makes,
-                        colors: baseFilters.colors,
-                        fuelType: baseFilters.fuelType,
-                        minPrice: baseFilters.pricePerDay[0],
-                        maxPrice: baseFilters.pricePerDay[1],
-                        minYear: baseFilters.yearOfProduction[0],
-                        maxYear: baseFilters.yearOfProduction[1],
-                        properties: Object.entries(selectedFilters).map(([propertyId, values]) => ({ propertyId, values }))
-                    };
-
-                    const res = await fetch(`${backEndURL}/api/vehicle/filter`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!res.ok) {
-                        throw new Error("Failed to fetch vehicles");
-                    }
-                    const data = await res.json();
-                    setLocalVehicles(data);
-                } catch (err) {
-                    console.error(err);
-                }
-            };
-
-            fetchFilteredVehicles();
-        }, 250);
-
-        return () => clearTimeout(debounceTimer);
-    }, [selectedTypeId, selectedCategoryId, baseFilters, selectedFilters]);
-
-    useEffect(() => {
-        setLocalVehicles(searchQueryVehicles);
-        if (!searchQueryVehicles || searchQueryVehicles.length === 0) {
-            setLocalVehicles(vehicles);
-        }
-    }, [searchQueryVehicles])
+        setLocalVehicles(vehicles);
+    }, [vehicles])
 
     useEffect(() => {
         setLocalVehicleTypes(vehicleTypes);
@@ -275,10 +230,6 @@ export default function ListingPage() {
         setLocalBaseFilteredProperties(baseFilterProperties)
     }, [baseFilterProperties])
 
-    useEffect(() => {
-        console.log(selectedTypeId)
-    }, [selectedTypeId])
-
     return (
         <div className="listing-page">
             <div className="container">
@@ -291,7 +242,7 @@ export default function ListingPage() {
                                 className="form-select"
                                 value={selectedTypeId}
                                 onChange={e => {
-                                    setSelectedTypeId(e.target.value);
+                                    setSelectedTypeId(e.target.value === "" ? null : e.target.value);
                                     setSelectedCategoryId("");
                                 }}
                             >
@@ -437,7 +388,7 @@ export default function ListingPage() {
                                 </div>
                             </div>
 
-                            {selectedTypeId !== null && selectedTypeId !== undefined && selectedTypeId !== 0 && (
+                            {selectedTypeId !== null && (
                                 <div className="type-properties">
                                     <h6 className="mb-2">
                                         {localVehicleTypes.find(v => v.id === selectedTypeId)?.name} Properties
