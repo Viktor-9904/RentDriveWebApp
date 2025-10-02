@@ -174,7 +174,7 @@ export default function ListingPage() {
     }, [localBaseFilterdProperties]);
 
     useEffect(() => {
-        const controller = new AbortController();
+        if (!vehicles || vehicles.length === 0) return; 
 
         const debounceTimer = setTimeout(() => {
             const fetchFilteredVehicles = async  () => {
@@ -197,7 +197,6 @@ export default function ListingPage() {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(payload),
-                        signal: controller.signal,
                     });
 
                     if (!res.ok) {
@@ -207,9 +206,6 @@ export default function ListingPage() {
                     setLocalVehicles(vehicles.filter(v => filteredIds.includes(v.id)));
 
                 } catch (err) {
-                    if (err.name === "AbortError") {
-                        return;
-                    }
                     console.error(err);
                 }
             }
@@ -217,11 +213,10 @@ export default function ListingPage() {
         }, 250);
 
         return () => {
-            controller.abort();
             clearTimeout(debounceTimer)
         }
 
-    }, [selectedTypeId, selectedCategoryId, baseFilters, selectedFilters, triggeredSearchQuery]);
+    }, [vehicles, selectedTypeId, selectedCategoryId, baseFilters, selectedFilters, triggeredSearchQuery]);
     
     useEffect(() => {
         setLocalVehicleTypes(vehicleTypes);
