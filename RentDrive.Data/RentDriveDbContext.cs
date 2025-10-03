@@ -39,13 +39,15 @@ namespace RentDrive.Data
         public DbSet<Wallet> Wallets { get; set; } = null!;
         public DbSet<WalletTransaction> WalletTransactions { get; set; } = null!;
 
+        public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            modelBuilder.Entity<VehicleType>().HasData(SeedVehicleTypes());
-            modelBuilder.Entity<VehicleTypeCategory>().HasData(SeedVehicleTypeCategories());
+            //modelBuilder.Entity<VehicleType>().HasData(SeedVehicleTypes());
+            //modelBuilder.Entity<VehicleTypeCategory>().HasData(SeedVehicleTypeCategories());
             //modelBuilder.Entity<Vehicle>().HasData(SeedVehicles());
             //modelBuilder.Entity<VehicleImage>().HasData(SeedVehicleImages());
             //modelBuilder.Entity<VehicleTypeProperty>().HasData(SeedVehicleTypeProperties());

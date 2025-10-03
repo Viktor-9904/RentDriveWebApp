@@ -19,5 +19,10 @@ namespace RentDrive.Data.Models
         public ICollection<VehicleReview> ReviewsGiven { get; set; }
              = new List<VehicleReview>();
         public Wallet Wallet { get; set; } = null!;
+        public ICollection<ChatMessage> SentMessages { get; set; }
+            = new List<ChatMessage>();
+        public ICollection<ChatMessage> ReceivedMessages { get; set; }
+            = new List<ChatMessage>();
+
     }
 }
