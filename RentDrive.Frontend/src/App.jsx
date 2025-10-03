@@ -27,6 +27,7 @@ import MyListedVehiclesPage from './pages/Profile/MyListedVehiclesPage'
 import { AccountProvider } from './context/AccountContext'
 import ProfileSettingsPage from './pages/Profile/ProfileSettingsPage'
 import UserWallet from './components/Profile/UserWallet/UserWallet'
+import ChatPage from './pages/ChatPage/ChatPage'
 
 function ManageLayout() {
   return (
@@ -79,6 +80,8 @@ function App() {
           <Route path="settings" element={<ProfileSettingsPage />} />
           <Route path="wallet" element={<UserWallet />} />
         </Route>
+
+        <Route path="chat" element={<ChatPage/>}/>
 
       </Routes>
 

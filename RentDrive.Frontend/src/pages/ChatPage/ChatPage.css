@@ -1,0 +1,31 @@
+.chat-page-container {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  height: calc(100vh - 270px);
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.chat-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  overflow-y: auto;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-main {
+  flex: 0 0 700px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-placeholder {
+  font-size: 1.1rem;
+  color: #6c757d;
+  text-align: center;
+  padding: 20px;
+}
