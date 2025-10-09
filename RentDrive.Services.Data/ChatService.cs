@@ -89,8 +89,8 @@ namespace RentDrive.Services.Data
             IEnumerable<ChatMessageViewModel> messages = await this.chatMessageRepository
                 .GetAllAsQueryable()
                 .Where(cm =>
-                    cm.ReceiverId == receiverId &&
-                    cm.SenderId == senderId)
+                    (cm.ReceiverId == receiverId && cm.SenderId == senderId) ||
+                    (cm.ReceiverId == senderId && cm.SenderId == receiverId))
                 .Select(cm => new ChatMessageViewModel()
                 {
                     SenderId = cm.SenderId,
@@ -98,7 +98,7 @@ namespace RentDrive.Services.Data
                     Text = cm.Text,
                     TimeSent = cm.TimeSent
                 })
-                .OrderByDescending(cmvm => cmvm.TimeSent)
+                .OrderBy(cmvm => cmvm.TimeSent)
                 .ToListAsync();
 
             return messages;
