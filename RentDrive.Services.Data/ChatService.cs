@@ -56,10 +56,13 @@ namespace RentDrive.Services.Data
 
         public async Task<IEnumerable<RecentChatViewModel>> GetRecentChats(string currentUserId)
         {
+            if (!Guid.TryParse(currentUserId, out var currentUserGuid))
+                return [];
+
             List<RecentChatViewModel> recentChats = await this.chatMessageRepository
                 .GetAllAsQueryable()
                 .Include(cm => cm.Receiver)
-                .Where(cm => cm.SenderId.ToString() == currentUserId)
+                .Where(cm => cm.SenderId == currentUserGuid)
                 .GroupBy(cm => cm.ReceiverId)
                 .Select(g => g
                     .OrderByDescending(cm => cm.TimeSent)
