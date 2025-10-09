@@ -32,8 +32,8 @@ export default function Chat({ selectedUser }) {
             .build();
 
         hubConnection.start()
-            .then(() => console.log("Connected"))
-            .catch(err => console.warn("Initial connection attempt failed:", err));
+            // .then(() => console.log("Connected"))
+            // .catch(err => console.warn("Initial connection attempt failed:", err));
 
         //listening for messages
         hubConnection.on("ReceiveMessage", (message) => {

@@ -45,7 +45,7 @@ export default function ChatSidebar({ onSelectUser }) {
             {searchQueryUsersResult.length > 0 ? (
               searchQueryUsersResult.map((user) => (
                 <div
-                  key={user.id}
+                  key={user.userId}
                   className="chat-sidebar-user"
                   onClick={() => {
                     setLocalRecentChats(prev => {
@@ -62,7 +62,7 @@ export default function ChatSidebar({ onSelectUser }) {
                 </div>
               ))
             ) : (
-              <div className="chat-sidebar-noresults">No users found</div>
+              <div key="no-results" className="chat-sidebar-noresults">No users found</div>
             )}
           </div>
         )}
