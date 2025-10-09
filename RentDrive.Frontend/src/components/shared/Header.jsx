@@ -20,6 +20,11 @@ export default function Header() {
     const navigation = [
         { name: 'Home', href: '/' },
         { name: 'Listing', href: '/listing' },
+        ...(isAuthenticated
+            ? [
+                { name: 'Chat', href: '/chat' },
+            ]
+            : []),
         ...(user?.isCompanyEmployee
             ? [
                 {
