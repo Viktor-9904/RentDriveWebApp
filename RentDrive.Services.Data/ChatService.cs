@@ -5,6 +5,8 @@ using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Chat;
 
+using static RentDrive.Common.EntityValidationConstants.ApplicationUserValidationConstants.Company;
+
 namespace RentDrive.Services.Data
 {
     public class ChatService : IChatService
@@ -22,11 +24,15 @@ namespace RentDrive.Services.Data
 
         public async Task<IEnumerable<UserChatDetails>> GetUserChatDetails(string currentUserId, string searchQuery)
         {
+            if (!Guid.TryParse(currentUserId, out var currentUserGuid))
+                return [];
+
             List<UserChatDetails> userDetails = await this.applicationUserRepository
                 .GetAllAsQueryable()
                 .Where(au =>
                     EF.Functions.ILike(au.UserName ?? "".ToLower(), $"%{searchQuery.ToLower()}%") &&
-                    au.Id.ToString() != currentUserId)
+                    au.Id != currentUserGuid &&
+                    au.Id != new Guid(CompanyId))
                 .Select(au => new UserChatDetails()
                 {
                     UserId = au.Id,
