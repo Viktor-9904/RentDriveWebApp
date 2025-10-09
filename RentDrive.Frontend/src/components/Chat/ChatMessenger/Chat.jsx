@@ -60,7 +60,7 @@ export default function Chat({ selectedUser }) {
 
         try {
             const messageObj = {
-                receiverId: selectedUser?.id,
+                receiverId: selectedUser?.userId,
                 text: input.trim(),
             };
 
