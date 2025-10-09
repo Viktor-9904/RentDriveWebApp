@@ -33,9 +33,9 @@ namespace RentDrive.Data.Configuration
                 .HasComment("Message time sent.");
 
             builder
-                .Property(cm => cm.Message)
+                .Property(cm => cm.Text)
                 .IsRequired()
-                .HasComment("Message sent.")
+                .HasComment("Text sent.")
                 .HasMaxLength(ChatMessageMaxLength);
 
             builder

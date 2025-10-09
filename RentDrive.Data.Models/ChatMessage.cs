@@ -8,6 +8,6 @@
         public Guid ReceiverId { get; set; }
         public ApplicationUser Receiver { get; set; } = null!;
         public DateTime TimeSent { get; set; } = DateTime.UtcNow;
-        public string Message { get; set; } = null!;
+        public string Text { get; set; } = null!;
     }
 }

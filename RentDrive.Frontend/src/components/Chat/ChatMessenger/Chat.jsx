@@ -1,79 +1,132 @@
 import React, { useEffect, useRef, useState } from "react";
+import * as signalR from "@microsoft/signalr";
+
+import { useBackendURL } from "../../../hooks/useBackendURL";
+import { useAuth } from "../../../context/AccountContext";
+import useLoadChatHistory from "../../../hooks/useLoadChatHistory";
+
 import "./Chat.css";
-import ChatSidebar from "../ChatSideBar/ChatSideBar";
 
-export default function Chat() {
-    const [messages, setMessages] = useState([
-        { id: 1, sender: "Alice", text: "Hey! How are you?", time: "10:01 AM", fromMe: false },
-        { id: 2, sender: "Me", text: "I’m good, thanks! Working on a new feature.", time: "10:02 AM", fromMe: true },
-        { id: 3, sender: "Alice", text: "Nice — tell me when it's ready 😊", time: "10:03 AM", fromMe: false },
-    ]);
+export default function Chat({ selectedUser }) {
+    const { user, isAuthenticated, loadUser } = useAuth();
+    const backEndURL = useBackendURL();
 
+    const { chatMessages, chatMessagesLoading, chatMessagesError } = useLoadChatHistory(selectedUser?.userId)
+    const [localMessages, setLocalMessages] = useState([]);
     const [input, setInput] = useState("");
+
     const chatBodyRef = useRef(null);
+    const hubRef = useRef(null);
 
     useEffect(() => {
-        if (chatBodyRef.current) {
-            chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
-        }
-    }, [messages]);
+        setLocalMessages(chatMessages);
+    }, [chatMessages])
 
-    const sendMessage = (e) => {
+    useEffect(() => {
+        //connect to signalR
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl(`${backEndURL}/chat`, {
+                withCredentials: true,
+            })
+            .withAutomaticReconnect()
+            .build();
+
+        hubConnection.start()
+            .then(() => console.log("Connected"))
+            .catch(err => console.warn("Initial connection attempt failed:", err));
+
+        //listening for messages
+        hubConnection.on("ReceiveMessage", (message) => {
+            setLocalMessages(prev => [
+                ...prev,
+                {
+                    senderId: message.senderId,
+                    receiverId: message.receiverId,
+                    text: message.text,
+                    timeSent: new Date(),
+                }
+            ]);
+        });
+
+        hubRef.current = hubConnection;
+
+        return () => hubConnection.stop();
+    }, [user]);
+
+    const sendMessage = async (e) => {
         e?.preventDefault();
         const trimmed = input.trim();
-        if (!trimmed) return;
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-        const next = {
-            id: Date.now(),
-            sender: "Me",
-            text: trimmed,
-            time: timeStr,
-            fromMe: true,
-        };
-        setMessages((prev) => [...prev, next]);
-        setInput("");
+        if (!trimmed || !hubRef.current || !user) return;
+
+        try {
+            const messageObj = {
+                receiverId: selectedUser?.id,
+                text: input.trim(),
+            };
+
+            await hubRef.current.invoke("SendMessage", messageObj);
+
+            setLocalMessages(prev => [
+                ...prev,
+                {
+                    id: Date.now(),
+                    senderId: user?.id,
+                    text: trimmed,
+                    timeSent: new Date(),
+                }
+            ]);
+
+            setInput("");
+        } catch (err) {
+            console.error("Error sending message:", err);
+        }
     };
 
     return (
-            <div className="chat-container">
-                <div className="chat-header">
-                    <div className="chat-header-left">
-                        <div className="chat-title">Chat with Alice</div>
-                        <div className="chat-subtitle">Online</div>
-                    </div>
+        <div className="chat-container">
+            <div className="chat-header">
+                <div className="chat-header-left">
+                    <div className="chat-title">Chat with {selectedUser?.username || "..."}</div>
+                    <div className="chat-subtitle">Online</div>
                 </div>
+            </div>
 
-                <main className="chat-body" ref={chatBodyRef} role="log" aria-live="polite">
-                    {messages.map((msg) => (
+            <main className="chat-body" ref={chatBodyRef} role="log" aria-live="polite">
+                {localMessages.map((msg, index) => {
+                    const fromMe = msg.senderId === user?.id;
+                    return (
                         <div
-                            key={msg.id}
-                            className={`message ${msg.fromMe ? "message--me" : "message--them"}`}
-                            title={`${msg.sender} • ${msg.time}`}
+                            key={index}
+                            className={`message ${fromMe ? "message--me" : "message--them"}`}
+                            title={`${fromMe ? "Me" : "Them"} • ${new Date(msg.timeSent).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
                         >
-                            {!msg.fromMe && <div className="message-sender">{msg.sender}</div>}
+                            {!fromMe && <div className="message-sender">{selectedUser?.username}</div>}
                             <div className="message-bubble">
                                 <div className="message-text">{msg.text}</div>
-                                <div className="message-time">{msg.time}</div>
+                                <div className="message-time">
+                                    {new Date(msg.timeSent).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </div>
                             </div>
                         </div>
-                    ))}
-                    <div ref={chatBodyRef} />
-                </main>
+                    );
+                })}
+                <div ref={chatBodyRef} />
+            </main>
 
-                <form className="chat-input-area" onSubmit={sendMessage}>
-                    <input
-                        type="text"
-                        aria-label="Type a message"
-                        placeholder="Type a message..."
-                        className="chat-input"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                    />
-                    <button type="submit" className="chat-send" aria-label="Send message">
-                        Send
-                    </button>
-                </form>
-            </div>
+
+            <form className="chat-input-area" onSubmit={sendMessage}>
+                <input
+                    type="text"
+                    aria-label="Type a message"
+                    placeholder="Type a message..."
+                    className="chat-input"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                />
+                <button type="submit" className="chat-send" aria-label="Send message">
+                    Send
+                </button>
+            </form>
+        </div>
     );
 }

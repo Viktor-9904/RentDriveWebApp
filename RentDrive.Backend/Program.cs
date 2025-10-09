@@ -87,6 +87,8 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddSignalR();
+
 builder.Services.AddScoped<IRepository<ApplicationUser, Guid>, BaseRepository<ApplicationUser, Guid>>();
 builder.Services.AddScoped<IRepository<Vehicle, Guid>, BaseRepository<Vehicle, Guid>>();
 builder.Services.AddScoped<IRepository<VehicleType, Guid>, BaseRepository<VehicleType, Guid>>();
@@ -101,6 +103,7 @@ builder.Services.AddScoped<IRepository<Rental, Guid>, BaseRepository<Rental, Gui
 builder.Services.AddScoped<IRepository<VehicleReview, Guid>, BaseRepository<VehicleReview, Guid>>();
 builder.Services.AddScoped<IRepository<Wallet, Guid>, BaseRepository<Wallet, Guid>>();
 builder.Services.AddScoped<IRepository<WalletTransaction, Guid>, BaseRepository<WalletTransaction, Guid>>();
+builder.Services.AddScoped<IRepository<ChatMessage, Guid>, BaseRepository<ChatMessage, Guid>>();
 
 builder.Services.AddScoped<IVehicleImageService, VehicleImageService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
@@ -115,6 +118,7 @@ builder.Services.AddScoped<IRentalService, RentalService>();
 builder.Services.AddScoped<IVehicleReviewService, VehicleReviewService>();
 builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<IWalletTransaction, WalletTransactionService>();
+builder.Services.AddScoped<IChatService, ChatService>();
 
 WebApplication app = builder.Build();
 
@@ -149,6 +153,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/chat");
 
 app.Run();
 static void IdentityConfiguration(WebApplicationBuilder builder, IdentityOptions cfg)

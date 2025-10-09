@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.ApplicationUser;
+using RentDrive.Web.ViewModels.Chat;
 
 namespace RentDrive.Backend.Controllers
 {

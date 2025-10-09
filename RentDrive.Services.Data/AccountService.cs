@@ -6,6 +6,7 @@ using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.ApplicationUser;
+using RentDrive.Web.ViewModels.Chat;
 using static RentDrive.Common.EntityValidationConstants.RentalValidationConstans.Fees;
 
 namespace RentDrive.Services.Data
@@ -24,6 +25,7 @@ namespace RentDrive.Services.Data
         public AccountService(
             IRepository<ApplicationUser, Guid> applicationUserRepositor,
             IRepository<Rental, Guid> rentalRepository,
+            IRepository<ChatMessage, Guid> chatMessageRepository,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IVehicleService vehicleService,
@@ -47,6 +49,7 @@ namespace RentDrive.Services.Data
             IdentityResult result = await userManager.CreateAsync(user, viewModel.Password);
             return result;
         }
+
         public async Task<SignInResult> LoginUserAsync(string emailOrUsername, string password)
         {
             ApplicationUser? user;
@@ -208,6 +211,19 @@ namespace RentDrive.Services.Data
             };
 
             return userCredentials;
+        }
+
+        public async Task<bool> Exists(string userId)
+        {
+            bool isGuid = Guid.TryParse(userId, out Guid guidId);
+            if (!isGuid)
+            {
+                return false;
+            }
+            
+            return await this.applicationUserRepository
+                .GetAllAsQueryable()
+                .AnyAsync(au => au.Id == guidId);
         }
     }
 }

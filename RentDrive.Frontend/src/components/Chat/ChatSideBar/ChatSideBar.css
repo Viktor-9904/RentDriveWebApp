@@ -71,3 +71,26 @@
   color: #888;
   font-size: 0.9rem;
 }
+
+.chat-sidebar-dropdown {
+  top: 45px;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.chat-sidebar-user:hover {
+  background-color: #f0f2f5;
+}
+
+.chat-sidebar-noresults {
+  padding: 10px 12px;
+  color: #888;
+  font-size: 0.9rem;
+}
