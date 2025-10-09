@@ -15,8 +15,14 @@ export default function Chat({ selectedUser }) {
     const [localMessages, setLocalMessages] = useState([]);
     const [input, setInput] = useState("");
 
-    const chatBodyRef = useRef(null);
+    const bottomRef = useRef(null);
     const hubRef = useRef(null);
+
+    useEffect(() => {
+        if (bottomRef.current) {
+            bottomRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [localMessages]);
 
     useEffect(() => {
         setLocalMessages(chatMessages);
@@ -91,7 +97,7 @@ export default function Chat({ selectedUser }) {
                 </div>
             </div>
 
-            <main className="chat-body" ref={chatBodyRef} role="log" aria-live="polite">
+            <main className="chat-body" role="log" aria-live="polite">
                 {localMessages.map((msg, index) => {
                     const fromMe = msg.senderId === user?.id;
                     return (
@@ -110,7 +116,7 @@ export default function Chat({ selectedUser }) {
                         </div>
                     );
                 })}
-                <div ref={chatBodyRef} />
+                <div ref={bottomRef} />
             </main>
 
 
