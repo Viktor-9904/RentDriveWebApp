@@ -67,18 +67,25 @@ namespace RentDrive.Services.Data
 
             List<RecentChatViewModel> recentChats = await this.chatMessageRepository
                 .GetAllAsQueryable()
+                .Include(cm => cm.Sender)
                 .Include(cm => cm.Receiver)
-                .Where(cm => cm.SenderId == currentUserGuid)
-                .GroupBy(cm => cm.ReceiverId)
+                .Where(cm => cm.SenderId == currentUserGuid || cm.ReceiverId == currentUserGuid)
+                .GroupBy(cm =>
+                    cm.SenderId == currentUserGuid
+                        ? cm.ReceiverId
+                        : cm.SenderId
+                )
                 .Select(g => g
                     .OrderByDescending(cm => cm.TimeSent)
-                    .Select(cm => new RecentChatViewModel()
+                    .Select(cm => new RecentChatViewModel
                     {
-                        UserId = cm.ReceiverId,
-                        Username = cm.Receiver.UserName ?? "Unknown"
+                        UserId = cm.SenderId == currentUserGuid ? cm.ReceiverId : cm.SenderId,
+                        Username = cm.SenderId == currentUserGuid
+                            ? (cm.Receiver.UserName ?? "Unknown")
+                            : (cm.Sender.UserName ?? "Unknown")
                     })
                     .First()
-                 )
+                )
                 .ToListAsync();
 
             return recentChats;
