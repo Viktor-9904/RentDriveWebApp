@@ -37,13 +37,13 @@ The entire application is fully Dockerized and deployed on a Raspberry Pi 4B usi
 - **Wallet System** – Users can top up wallets with card payments and use balance for rentals.  
 - **Availability Calendar** – Check available vs. booked dates for each vehicle, up to 6 months ahead.  
 - **Bookings** – Full-day rentals with status tracking (Active, Canceled, Completed).  
+- **Search** – Quickly find vehicles by keyword (make, model, etc.).  
+- **Chat:** Real-time chat between users.  
 
 ### 🚧 In Progress / Upcoming
-- **Search** – Quickly find vehicles by keyword (make, model, etc.).  
 - **Pickup & Return Logistics:** Manage rental logistics for real-world usage.  
 - **Notifications:** Inform users about booking confirmations, cancellations, etc.  
 - **Roles & Permissions:** Differentiate between managers, admins, and normal users.  
-- **Chat:** Real-time chat between users for inquiries and support.  
 - **Live Chat Support:** Users can interact with company representatives in real-time.  
 - **Admin Dashboard:** Admins can assign manager roles to users and monitor overall system activity.  
 - **Discounts:** Apply promotional or seasonal discounts to rentals.
