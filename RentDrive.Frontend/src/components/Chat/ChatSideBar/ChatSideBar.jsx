@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import useFetchUsersByQuery from "../../../hooks/useFetchUsersByQuery";
 import useRecentChatHistory from "../../../hooks/useRecentChatsHistory";
-import "./ChatSidebar.css";
+import "./ChatSideBar.css";
 
 export default function ChatSidebar({ onSelectUser }) {
   const [search, setSearch] = useState("");
