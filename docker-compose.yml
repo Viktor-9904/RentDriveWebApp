@@ -39,6 +39,7 @@ services:
       DB_USER: rentdrive
       DB_PASS: rentdrive
       ASPNETCORE_ENVIRONMENT: Production
+      Encryption__Key: ${ENCRYPTION_KEY}
     depends_on:
       db:
         condition: service_healthy
