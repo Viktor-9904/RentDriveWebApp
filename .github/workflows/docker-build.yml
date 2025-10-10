@@ -31,7 +31,8 @@ jobs:
           push: true
           tags: viktor9904/rentdrivewebapp-backend:latest
           platforms: linux/arm64
-
+          build-args: |
+            ENCRYPTION_KEY=${{ secrets.ENCRYPTION_KEY }}
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
         with:
