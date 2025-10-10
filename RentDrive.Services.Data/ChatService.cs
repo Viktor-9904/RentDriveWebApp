@@ -13,13 +13,16 @@ namespace RentDrive.Services.Data
     {
         private readonly IRepository<ApplicationUser, Guid> applicationUserRepository;
         private readonly IRepository<ChatMessage, Guid> chatMessageRepository;
+        private readonly IEncryptionService encryptionService;
 
         public ChatService(
             IRepository<ApplicationUser, Guid> applicationUserRepository,
-            IRepository<ChatMessage, Guid> chatMessageRepository)
+            IRepository<ChatMessage, Guid> chatMessageRepository,
+            IEncryptionService encryptionService)
         {
             this.applicationUserRepository = applicationUserRepository;
             this.chatMessageRepository = chatMessageRepository;
+            this.encryptionService = encryptionService;
         }
 
         public async Task<IEnumerable<UserChatDetails>> GetUserChatDetails(string currentUserId, string searchQuery)
@@ -50,7 +53,7 @@ namespace RentDrive.Services.Data
             {
                 SenderId = sentMessage.SenderId,
                 ReceiverId = sentMessage.ReceiverId,
-                Text = sentMessage.Text,
+                Text = this.encryptionService.Encrypt(sentMessage.Text),
                 TimeSent = sentMessage.TimeSent,
             };
 
@@ -95,7 +98,7 @@ namespace RentDrive.Services.Data
                 {
                     SenderId = cm.SenderId,
                     ReceiverId = cm.ReceiverId,
-                    Text = cm.Text,
+                    Text = this.encryptionService.Decrypt(cm.Text),
                     TimeSent = cm.TimeSent
                 })
                 .OrderBy(cmvm => cmvm.TimeSent)

@@ -119,6 +119,7 @@ builder.Services.AddScoped<IVehicleReviewService, VehicleReviewService>();
 builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<IWalletTransaction, WalletTransactionService>();
 builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddSingleton<IEncryptionService>(new EncryptionService(builder.Configuration["Encryption:Key"]));
 
 WebApplication app = builder.Build();
 
