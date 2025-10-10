@@ -38,7 +38,7 @@ The entire application is fully Dockerized and deployed on a Raspberry Pi 4B usi
 - **Availability Calendar** – Check available vs. booked dates for each vehicle, up to 6 months ahead.  
 - **Bookings** – Full-day rentals with status tracking (Active, Canceled, Completed).  
 - **Search** – Quickly find vehicles by keyword (make, model, etc.).  
-- **Chat:** Real-time chat between users.  
+- **Chat:** Real-time chat between users with end-to-end message encryption.  
 
 ### 🚧 In Progress / Upcoming
 - **Pickup & Return Logistics:** Manage rental logistics for real-world usage.  
