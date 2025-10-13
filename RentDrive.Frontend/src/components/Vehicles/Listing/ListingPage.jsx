@@ -435,7 +435,11 @@ export default function ListingPage() {
                                                                                 });
                                                                             }}
                                                                         />
-                                                                        {val.propertyValue}{" "}
+                                                                        {val.propertyValue === "true"
+                                                                            ? "Yes"
+                                                                            : val.propertyValue === "false"
+                                                                                ? "No"
+                                                                                : val.propertyValue}{" "}
                                                                         {val.unitOfMeasurement !== "None" ? val.unitOfMeasurement : ""}{" "}
                                                                         ({val.count})
                                                                     </label>
