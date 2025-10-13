@@ -17,19 +17,21 @@ export default function VehicleTypePropertyManager() {
     const { valueTypeEnum, loadingValueTypeEnum, errorValueTypeEnum } = useValueTypesEnum();
     const { unitsEnum, loadingUnitsEnum, errorUnitsEnum } = useUnitsEnum();
 
+    const [selectedTypeName, setSelectedTypeName] = useState("");
     const [selectedTypeId, setSelectedTypeId] = useState("");
+    const [filteredProperties, setFilteredProperties] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [editValues, setEditValues] = useState({
         name: '',
         valueType: '',
         unitOfMeasurement: '',
         isNew: false,
-    });
-    const [filteredProperties, setFilteredProperties] = useState([]);
-
+    });  
+    
     useEffect(() => {
         if (vehicleTypes.length > 0 && selectedTypeId === "") {
             setSelectedTypeId(vehicleTypes[0].id);
+            setSelectedTypeName(vehicleTypes[0].name)
         }
     }, [vehicleTypes, selectedTypeId]);
 
@@ -82,7 +84,12 @@ export default function VehicleTypePropertyManager() {
                 <select
                     className="form-select"
                     value={selectedTypeId}
-                    onChange={(e) => setSelectedTypeId(Number(e.target.value))}
+                    onChange={
+                        (e) => {
+                            setSelectedTypeId(Number(e.target.value))
+                            setSelectedTypeName(vehicleTypes?.find(type => type.id === Number(e.target.value))?.name)
+                        }                        
+                    }
                 >
                     {vehicleTypes.map(type => (
                         <option key={type.id} value={type.id}>
@@ -110,6 +117,7 @@ export default function VehicleTypePropertyManager() {
                 setEditValues={setEditValues}
                 editValues={editValues}
                 selectedTypeId={selectedTypeId}
+                selectedTypeName={selectedTypeName}
             />
 
         </div>

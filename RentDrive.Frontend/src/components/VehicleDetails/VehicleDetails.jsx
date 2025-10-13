@@ -9,11 +9,11 @@ import RentNowModal from "./RentNowModal";
 import VehicleCalendar from "./VehicleCalendar";
 import ReviewList from "./ReviewList";
 import StarRating from "../shared/VehicleStarRating";
-import DeleteConfirmationModal from "../Vehicles/DeleteConfirmationModal";
-
-import usebookedDates from "../../hooks/useBookedDates";
-import useVehicleDetails from "../Vehicles/hooks/useVehicleDetails";
 import ExpandedVehicleImageModal from "./ExpandedVehicleImageModal/ExpandedVehicleImageModal";
+import DeleteConfirmationModal from "../shared/DeleteConfirmationModal/DeleteConfirmationModal";
+
+import useVehicleDetails from "../Vehicles/hooks/useVehicleDetails";
+import usebookedDates from "../../hooks/useBookedDates";
 
 export default function VehicleDetails() {
     const { id } = useParams();
@@ -228,8 +228,7 @@ export default function VehicleDetails() {
                 show={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}
                 onConfirm={confirmDelete}
-                Make={vehicle?.make}
-                Model={vehicle?.model}
+                item={`${vehicle?.make} ${vehicle?.model}`}
             />
 
             <RentNowModal

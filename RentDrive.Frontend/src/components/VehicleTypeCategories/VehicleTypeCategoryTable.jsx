@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import DeleteConfirmationModal from "./DeleteConfrimationModal";
-import VehicleTypeCategoryTableItem from "./VehicleTypeCategoryTableItem";
+
 import { useBackendURL } from "../../hooks/useBackendURL";
+
+import VehicleTypeCategoryTableItem from "./VehicleTypeCategoryTableItem";
+import DeleteConfirmationModal from "../shared/DeleteConfirmationModal/DeleteConfirmationModal";
 
 export default function VehicleTypeCategoryTable({
   categories,
@@ -193,7 +195,7 @@ export default function VehicleTypeCategoryTable({
         show={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onConfirm={confirmDelete}
-        itemName={categoryToDelete?.name}
+        item={`Vehicle Category - ${categoryToDelete?.name}`}
       />
     </>
   );

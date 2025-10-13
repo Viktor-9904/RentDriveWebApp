@@ -1,6 +1,8 @@
 import { useState } from "react";
-import DeleteConfirmationModal from "./DeleteConfrimationModal";
+
 import { useBackendURL } from "../../hooks/useBackendURL";
+
+import DeleteConfirmationModal from "../shared/DeleteConfirmationModal/DeleteConfirmationModal";
 
 export default function PropertyTable({
   setFilteredProperties,
@@ -14,6 +16,7 @@ export default function PropertyTable({
   setEditValues,
   editValues,
   selectedTypeId,
+  selectedTypeName,
 }) {
   const backEndURL = useBackendURL();
 
@@ -239,7 +242,7 @@ export default function PropertyTable({
         show={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onConfirm={confirmDelete}
-        itemName={propertyToDelete?.name}
+        item={`${selectedTypeName} Property - ${propertyToDelete?.name}`}
       />
     </>
   );

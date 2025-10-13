@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import DeleteConfirmationModal from "./DeleteConfrimationModal";
 import VehicleTypeTableItem from "./VehicleTypeTableItem";
 import { useBackendURL } from "../../hooks/useBackendURL";
+import DeleteConfirmationModal from "../shared/DeleteConfirmationModal/DeleteConfirmationModal";
 
 export default function VehicleTypeTable({
   vehicleTypes,
@@ -173,7 +173,7 @@ const handleSaveClick = async () => {
         show={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onConfirm={confirmDelete}
-        itemName={vehicleTypeToDelete?.name}
+        item={`Vehicle Type - ${vehicleTypeToDelete?.name}`}
       />
     </>
   );

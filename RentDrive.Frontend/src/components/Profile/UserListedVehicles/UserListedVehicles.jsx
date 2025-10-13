@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import DeleteConfirmationModal from "../../Vehicles/DeleteConfirmationModal";
-import useDeleteVehicle from "../../Vehicles/hooks/useDeleteVehicle";
-import useUserVehicles from "../hooks/useUserVehicles";
-import UserVehicleBookingsModal from "./UserVehicleBookingsModal";
-import { ConciergeBellIcon } from "lucide-react";
-import { PiStarAndCrescentDuotone } from "react-icons/pi";
+
 import StarRating from "../../shared/VehicleStarRating";
+import UserVehicleBookingsModal from "./UserVehicleBookingsModal";
+import DeleteConfirmationModal from "../../shared/DeleteConfirmationModal/DeleteConfirmationModal";
+
+import useUserVehicles from "../hooks/useUserVehicles";
 import { useBackendURL } from "../../../hooks/useBackendURL";
+import useDeleteVehicle from "../../Vehicles/hooks/useDeleteVehicle";
 
 export default function UserListedVehicles() {
   const { userVehicles, uservehiclesLoading, uservehiclesError } = useUserVehicles()
@@ -115,13 +115,18 @@ const handleRowClick = async (vehicle) => {
                 </td>
                 <td>
                   <button
-                    onClick={() => handleEdit(vehicle.id)}
-                    className="edit-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(vehicle.id);
+                    }} className="edit-button"
                   >
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(vehicle)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(vehicle);
+                    }}
                     className="delete-button"
                   >
                     Delete
@@ -150,8 +155,7 @@ const handleRowClick = async (vehicle) => {
           setVehicleToDelete({});
         }}
         onConfirm={handleConfirmDelete}
-        Make={vehicleToDelete?.make}
-        Model={vehicleToDelete?.model}
+        item={`${vehicleToDelete?.make} ${vehicleToDelete?.model}`}
       />
     </div>
   );
