@@ -1,10 +1,13 @@
-import PageHeading from "../components/VehicleTypes/PageHeading";
+import PageHeading from "../components/shared/PageHeading";
 import VehicleTypes from "../components/VehicleTypes/VehicleTypes";
 
 export default function ManageVehicleTypes (){
     return(
         <>
-            <PageHeading/>
+            <PageHeading
+                mainTitle="Manage Vehicle Types"
+                subTitle="Inventory Management"
+            />
             <VehicleTypes/>
         </>
     )
