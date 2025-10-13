@@ -13,20 +13,24 @@ import DeleteConfirmationModal from "../Vehicles/DeleteConfirmationModal";
 
 import usebookedDates from "../../hooks/useBookedDates";
 import useVehicleDetails from "../Vehicles/hooks/useVehicleDetails";
+import ExpandedVehicleImageModal from "./ExpandedVehicleImageModal/ExpandedVehicleImageModal";
 
 export default function VehicleDetails() {
     const { id } = useParams();
+    const { user, isAuthenticated, loadUser } = useAuth();
+
     const { vehicle, loadingVehicle } = useVehicleDetails(id);
     const { bookedDates, loadingBookedDates, errorBookedDates } = usebookedDates(id);
+
     const [bookedDatesState, setBookedDatesState] = useState([]);
-    const { user, isAuthenticated, loadUser } = useAuth();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showRentNowModal, setRentNowShowModal] = useState(false);
+    const [showImageModal, setShowImageModal] = useState(false);
 
     const navigate = useNavigate();
-
     const backEndURL = useBackendURL();
+
     useEffect(() => {
         if (bookedDates && bookedDates.length > 0) {
             setBookedDatesState(bookedDates.map(d => new Date(d)));
@@ -129,6 +133,7 @@ export default function VehicleDetails() {
                                 src={`${backEndURL}/${vehicle.imageURLS[currentImageIndex]}`}
                                 alt={`${vehicle.make} ${vehicle.model}`}
                                 className="vehicle-details-image"
+                                onClick={() => setShowImageModal(true)}
                             />
                             <button
                                 onClick={() => setCurrentImageIndex(i => i === 0 ? vehicle.imageURLS.length - 1 : i - 1)}
@@ -234,6 +239,15 @@ export default function VehicleDetails() {
                 pricePerDay={vehicle.pricePerDay}
                 handleRent={handleRent}
                 userBalance={user?.balance}
+            />
+            
+            <ExpandedVehicleImageModal
+                show={showImageModal}
+                onClose={() => setShowImageModal(false)}
+                onPrevious={() => setCurrentImageIndex(i => i === 0 ? vehicle.imageURLS.length - 1 : i - 1)}
+                onNext={() => setCurrentImageIndex(i => i === vehicle.imageURLS.length - 1 ? 0 : i + 1)}
+                vehicleImageUrls={vehicle?.imageURLS}
+                currentIndex={currentImageIndex}
             />
         </>
     );
