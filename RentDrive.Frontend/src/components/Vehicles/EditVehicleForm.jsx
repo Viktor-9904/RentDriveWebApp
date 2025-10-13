@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useBackendURL } from "../../hooks/useBackendURL";
 
-import useFuelTypes from "../../../hooks/useFuelTypesEnum";
-import useVehicleEdit from "../hooks/useVehicleEdit";
-import { useBackendURL } from "../../../hooks/useBackendURL";
-
+import useFuelTypesEnum from "../../hooks/useFuelTypesEnum";
+import useVehicleEdit from "./hooks/useVehicleEdit";
 
 export default function EditVehicleForm() {
   const { id } = useParams();
@@ -12,13 +11,12 @@ export default function EditVehicleForm() {
   const navigate = useNavigate();
 
   const { vehicle, loadingVehicle, errorVehicle } = useVehicleEdit(id)
-  const { fuelTypeEnum, loadingfuelTypeEnum, errorfuelTypeEnum } = useFuelTypes();
+  const { fuelTypeEnum, loadingfuelTypeEnum, errorfuelTypeEnum } = useFuelTypesEnum();
 
   const [selectedTypeId, setSelectedTypeId] = useState("")
   const [selectedCategoryTypeId, setSelectedCategoryTypeId] = useState("");
   const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
-
 
   const [baseData, setBaseData] = useState({
     make: "",

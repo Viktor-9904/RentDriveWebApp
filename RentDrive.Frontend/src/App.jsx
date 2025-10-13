@@ -14,8 +14,8 @@ import Register from './pages/Register/Register'
 import Login from './pages/Login/Login'
 import VehicleDetailsPage from './pages/VehicleDetailsPage'
 import VehicleTypeProperties from './pages/VehicleTypeProperties'
-import CreateVehicle from './pages/CreateVehicle'
-import EditVehicle from './pages/EditVehicle'
+import CreateVehiclePage from './pages/CreateVehiclePage'
+import EditVehiclePage from './pages/EditVehiclePage'
 import ManageVehicleTypes from './pages/ManageVehicleTypes'
 import ManageVehicleTypeCategories from './pages/ManageVehicleTypeCategories'
 
@@ -67,8 +67,8 @@ function App() {
           <Route path="vehicle-type-categories" element={<ManageVehicleTypeCategories />} />
 
           <Route path="vehicles" element={<VehiclesLayout />}>
-            <Route path="create" element={<CreateVehicle />} />
-            <Route path="edit/:id" element={<EditVehicle />} />
+            <Route path="create" element={<CreateVehiclePage />} />
+            <Route path="edit/:id" element={<EditVehiclePage />} />
           </Route>
 
         </Route>

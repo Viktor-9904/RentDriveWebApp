@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AccountContext";
+import { useBackendURL } from "../../hooks/useBackendURL";
 
-import useAllVehicleTypes from "../hooks/useAllVehicleTypes";
-import useAllVehicleTypeProperties from "../hooks/useAllVehicleTypeProperties";
-import useFuelTypes from "../../../hooks/useFuelTypesEnum";
-import useValueTypesEnum from "../../../hooks/useValueTypesEnum";
-import useUnitsEnum from "../../../hooks/useUnitsEnum";
-import useAllVehicleCategories from "../hooks/useAllVehicleCategories";
-import { useAuth } from "../../../context/AccountContext";
-import { useBackendURL } from "../../../hooks/useBackendURL";
-import { formatDate } from "react-calendar/dist/shared/dateFormatter.js";
-
+import useAllVehicleTypes from "./hooks/useAllVehicleTypes";
+import useAllVehicleTypeProperties from "./hooks/useAllVehicleTypeProperties";
+import useAllVehicleCategories from "./hooks/useAllVehicleCategories";
+import useValueTypesEnum from "../../hooks/useValueTypesEnum";
+import useUnitsEnum from "../../hooks/useUnitsEnum";
+import useFuelTypesEnum from "../../hooks/useFuelTypesEnum";
 
 export default function CreateVehicleForm() {
   const backEndURL = useBackendURL();
@@ -22,7 +20,7 @@ export default function CreateVehicleForm() {
 
   const { valueTypeEnum, loadingValueTypeEnum, errorValueTypeEnum } = useValueTypesEnum();
   const { unitsEnum, loadingUnitsEnum, errorUnitsEnum } = useUnitsEnum();
-  const { fuelTypeEnum, loadingfuelTypeEnum, errorfuelTypeEnum } = useFuelTypes();
+  const { fuelTypeEnum, loadingfuelTypeEnum, errorfuelTypeEnum } = useFuelTypesEnum();
 
   const { user, isAuthenticated, loadUser } = useAuth();
 

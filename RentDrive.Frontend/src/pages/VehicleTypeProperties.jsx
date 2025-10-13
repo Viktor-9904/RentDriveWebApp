@@ -1,11 +1,14 @@
-import PageHeading from "../components/VehicleTypeProperties/PageHeading";
+import PageHeading from "../components/shared/PageHeading";
 import VehicleTypePropertiesEditor from "../components/VehicleTypeProperties/VehicleTypeProperties";
 
-export default function VehicleTypeProperties(){
-    return(
+export default function VehicleTypeProperties() {
+    return (
         <>
-            <PageHeading/>
-            <VehicleTypePropertiesEditor/>
+            <PageHeading
+                mainTitle="Manage Vehicle Type Properties"
+                subTitle="Inventory Management"
+            />
+            <VehicleTypePropertiesEditor />
         </>
     )
 }

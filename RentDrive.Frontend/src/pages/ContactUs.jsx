@@ -1,10 +1,13 @@
 import ContactPage from "../components/Contact-Us/ContactPage";
-import PageHeading from "../components/Contact-Us/PageHeading";
+import PageHeading from "../components/shared/PageHeading";
 
 export default function ContactUs() {
     return (
         <>
-            <PageHeading/>
+            <PageHeading
+                subTitle="Keep in touch with us"
+                mainTitle="Feel free to send us a message"
+            />
             <ContactPage/>
         </>
     )
