@@ -1,14 +1,18 @@
-import { unstable_RouterContextProvider, useNavigate, useParams } from "react-router-dom";
-import { use, useEffect, useState } from "react";
-import DeleteConfirmationModal from "../Vehicles/DeleteConfirmationModal";
-import useVehicleDetails from "../Vehicles/hooks/useVehicleDetails";
-import VehicleCalendar from "./VehicleCalendar";
-import usebookedDates from "../../hooks/useBookedDates";
-import RentNowModal from "./RentNowModal";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Check, X } from "lucide-react";
+
 import { useAuth } from "../../context/AccountContext";
-import StarRating from "../shared/VehicleStarRating";
-import ReviewList from "./ReviewList";
 import { useBackendURL } from "../../hooks/useBackendURL";
+
+import RentNowModal from "./RentNowModal";
+import VehicleCalendar from "./VehicleCalendar";
+import ReviewList from "./ReviewList";
+import StarRating from "../shared/VehicleStarRating";
+import DeleteConfirmationModal from "../Vehicles/DeleteConfirmationModal";
+
+import usebookedDates from "../../hooks/useBookedDates";
+import useVehicleDetails from "../Vehicles/hooks/useVehicleDetails";
 
 export default function VehicleDetails() {
     const { id } = useParams();
@@ -86,7 +90,6 @@ export default function VehicleDetails() {
             console.error("Renting failed:", error.message);
         }
     };
-
 
     if (loadingVehicle) return <div className="text-center py-5">Loading vehicle details...</div>;
     if (!vehicle) return <div className="text-center py-5 text-danger">Vehicle not found.</div>;
@@ -180,7 +183,16 @@ export default function VehicleDetails() {
                                 {typeProperties.map((prop, i) => (
                                     <div key={i} className="col-sm-6 mb-3">
                                         <strong className="property-label">{prop.label}:</strong>
-                                        <span className="property-value">{prop.value}</span>
+                                        <span className="property-value">
+                                            {prop.value === "true" ? (
+                                                <Check className="text-green-500 inline" />
+                                            ) : prop.value === "false" ? (
+                                                <X className="text-red-500 inline" />
+                                            ) : (
+                                                prop.value
+                                            )}
+                                        </span>
+
                                     </div>
                                 ))}
                             </div>
