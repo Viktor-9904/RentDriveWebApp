@@ -18,16 +18,16 @@ export default function ExpandedVehicleImageModal({
     return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>✕</button>
-        <button className="modal-prev" onClick={onPrevious}>‹</button>
+    <div className="image-modal-overlay" onClick={onClose}>
+      <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="image-modal-close" onClick={onClose}>✕</button>
+        <button className="image-modal-prev" onClick={onPrevious}>‹</button>
         <img
           src={`${backEndURL}/${vehicleImageUrls[currentIndex]}`}
           alt="Vehicle"
-          className="modal-image"
+          className="image-modal-image"
         />
-        <button className="modal-next" onClick={onNext}>›</button>
+        <button className="image-modal-next" onClick={onNext}>›</button>
       </div>
     </div>
   );
