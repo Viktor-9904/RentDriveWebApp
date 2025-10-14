@@ -6,7 +6,7 @@ import { useAuth } from '../../../context/AccountContext';
 
 export default function Register() {
 
-    const {registerUser, loading, error } = useRegisterPost()
+    const { registerUser, loading, error } = useRegisterPost()
     const navigate = useNavigate()
     const { user, isAuthenticated, loadUser } = useAuth();
 
@@ -31,7 +31,7 @@ export default function Register() {
         confirmPasswordTouched,
     });
 
-    if(isAuthenticated){
+    if (isAuthenticated) {
         navigate('/')
     }
 
@@ -44,7 +44,7 @@ export default function Register() {
         setConfirmPasswordTouched(true);
 
         const hasErrors = Object.values(errors).some(error => error !== "")
-        if(hasErrors){
+        if (hasErrors) {
             return;
         }
 
@@ -56,84 +56,81 @@ export default function Register() {
         }
         const wasUserSuccessfullyRegistered = await registerUser(payload)
 
-        if(wasUserSuccessfullyRegistered){
+        if (wasUserSuccessfullyRegistered) {
             console.log("Registered successfully!")
             await loadUser()
-            navigate('/')            
-        } else{
+            navigate('/')
+        } else {
             console.log("Failed to register.")
         }
 
     };
 
-    return (
-        <>
-            <div className="page-heading">
-                <div className="container">
-                    <div className="col-lg-5 mx-auto">
-                        <div className="section-heading text-center mb-5">
-                            <h2>Create an Account</h2>
-                            <p>Join us today! Fill in the details to register.</p>
-                        </div>
-                        <form onSubmit={handleSubmit}>
-                            <div className="form-group mb-3">
-                                <input
-                                    type="text"
-                                    name="username"
-                                    className="form-control"
-                                    placeholder="Username"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    onBlur={() => setUsernameTouched(true)}
-                                />
-                                {errors.username && <small className="error-text">{errors.username}</small>}
-                            </div>
-                            <div className="form-group mb-3">
-                                <input
-                                    type="email"
-                                    name="email"
-                                    className="form-control"
-                                    placeholder="Email Address"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    onBlur={() => setEmailTouched(true)}
-                                />
-                                {errors.email && <small className="error-text">{errors.email}</small>}
-                            </div>
-                            <div className="form-group mb-3">
-                                <input
-                                    type="password"
-                                    name="password"
-                                    className="form-control"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    onBlur={() => setPasswordTouched(true)}
-                                />
-                                {errors.password && <small className="error-text">{errors.password}</small>}
-                            </div>
-                            <div className="form-group mb-4">
-                                <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    className="form-control"
-                                    placeholder="Confirm Password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    onBlur={() => setConfirmPasswordTouched(true)}
-                                />
-                                {errors.confirmPassword && <small className="error-text">{errors.confirmPassword}</small>}
-                            </div>
-                            <button type="submit" className="btn btn-primary btn-block main-button">
-                                Register
-                            </button>
-                        </form>
-                        <p className="text-center mt-3">
-                            Already have an account? <Link to="/login">Login here</Link>
-                        </p>
-                    </div>
-                </div>
+return (
+    <div className="auth-page-container">
+        <div className="auth-form-wrapper">
+            <div className="auth-form-heading">
+                <h2>Create an Account</h2>
+                <p>Join us today! Fill in the details to register.</p>
             </div>
-        </>
-    );
+            <form onSubmit={handleSubmit}>
+                <div className="auth-form-group">
+                    <input
+                        type="text"
+                        name="username"
+                        className="form-control"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        onBlur={() => setUsernameTouched(true)}
+                    />
+                    {errors.username && <small className="auth-error-text">{errors.username}</small>}
+                </div>
+                <div className="auth-form-group">
+                    <input
+                        type="email"
+                        name="email"
+                        className="form-control"
+                        placeholder="Email Address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        onBlur={() => setEmailTouched(true)}
+                    />
+                    {errors.email && <small className="auth-error-text">{errors.email}</small>}
+                </div>
+                <div className="auth-form-group">
+                    <input
+                        type="password"
+                        name="password"
+                        className="form-control"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onBlur={() => setPasswordTouched(true)}
+                    />
+                    {errors.password && <small className="auth-error-text">{errors.password}</small>}
+                </div>
+                <div className="auth-form-group">
+                    <input
+                        type="password"
+                        name="confirmPassword"
+                        className="form-control"
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        onBlur={() => setConfirmPasswordTouched(true)}
+                    />
+                    {errors.confirmPassword && <small className="auth-error-text">{errors.confirmPassword}</small>}
+                </div>
+                <button type="submit" className="auth-main-button">
+                    Register
+                </button>
+            </form>
+            <p className="auth-footer-text">
+                Already have an account? <Link to="/login">Login here</Link>
+            </p>
+        </div>
+    </div>
+);
+
 }
