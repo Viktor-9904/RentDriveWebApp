@@ -13,19 +13,21 @@
 
 .image-modal-content {
   position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
   display: flex;
-  justify-content: center;
   align-items: center;
-  max-width: 60vw;
-  max-height: 80vh;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 4px;
-  padding: 50px;
+  justify-content: center;
 }
 
 .image-modal-image {
   max-width: 100%;
-  max-height: 100%;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
   object-fit: contain;
   display: block;
 }
