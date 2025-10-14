@@ -377,12 +377,12 @@ namespace RentDrive.Services.Data
         {
             IQueryable<Vehicle> vehiclesQuery = this.vehicleRepository.GetAllAsQueryable().Where(v => v.IsDeleted == false);
 
-            if (vehicleTypeId.HasValue)
+            if (vehicleTypeId.HasValue && vehicleTypeId.Value > 0)
             {
                 vehiclesQuery = vehiclesQuery.Where(v => v.VehicleTypeId == vehicleTypeId.Value);
             }
 
-            if (vehicleTypeCategoryId.HasValue)
+            if (vehicleTypeCategoryId.HasValue && vehicleTypeCategoryId.Value > 0)
             {
                 vehiclesQuery = vehiclesQuery.Where(v => v.VehicleTypeCategoryId == vehicleTypeCategoryId.Value);
             }
