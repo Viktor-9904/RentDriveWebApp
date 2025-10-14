@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRegisterValidation } from './useRegisterValidation';
 import { useRegisterPost } from './useRegisterPost';
-import { useAuth } from '../../context/AccountContext';
+import { useAuth } from '../../../context/AccountContext';
 
 export default function Register() {
 

@@ -1,18 +1,17 @@
 import { useState } from "react";
-import { useBackendURL } from "../../hooks/useBackendURL";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
-export function useRegisterPost() {
+export function useLoginPost() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const backEndURL = useBackendURL();
 
-    
-    const registerUser = async (payload) => {
+    const loginUser = async (payload) => {
         setLoading(true)
         setError(null)
 
         try {
-            const response = await fetch(`${backEndURL}/api/account/register`, {
+            const response = await fetch(`${backEndURL}/api/account/login`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -20,10 +19,10 @@ export function useRegisterPost() {
                 },
                 body: JSON.stringify(payload)
             })
-
+            
             if (!response.ok) {
                 let errorData
-                try{
+                try {
                     errorData = await response.clone().json();
                 } catch {
                     errorData = await response.text();
@@ -43,5 +42,5 @@ export function useRegisterPost() {
             return false
         }
     }
-    return {registerUser, loading, error}
+    return { loginUser, loading, error }
 }
