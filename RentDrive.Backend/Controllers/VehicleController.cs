@@ -180,5 +180,10 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(allMakes);
         }
+        [HttpGet("active-listings")]
+        public async Task<IActionResult> GetActiveListings()
+        {
+            return Ok(await this.vehicleService.GetActiveListings());
+        }
     }
 }

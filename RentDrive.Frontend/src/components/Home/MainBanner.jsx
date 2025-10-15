@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
 
 import useAllVehicleTypes from '../Vehicles/hooks/useAllVehicleTypes';
 import useAllVehicleCategories from '../Vehicles/hooks/useAllVehicleCategories';
 import useFuelTypesEnum from '../../hooks/useFuelTypesEnum';
-import { MdLocalFireDepartment } from 'react-icons/md';
+import useActiveListings from '../../hooks/useActiveListings';
 
 export default function MainBanner() {
 
@@ -13,6 +13,7 @@ export default function MainBanner() {
     const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
     const { vehicleCategories, loadingVehicleCategories, errorVehicleCategories } = useAllVehicleCategories();
     const { fuelTypeEnum, loadingfuelTypeEnum, errorfuelTypeEnum } = useFuelTypesEnum()
+    const { activeListings, loadingActiveListings, errorActiveListing } = useActiveListings();
 
     const [selectedTypeId, setSelectedTypeId] = useState("");
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
@@ -59,7 +60,7 @@ export default function MainBanner() {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="top-text header-text">
-                                <h6>Over 100+ Active Listings</h6>
+                                <h6>Over {activeListings - activeListings % 10}+ Active Listings</h6>
                                 <h2>Find Your Next Ride</h2>
                             </div>
                         </div>
@@ -149,11 +150,11 @@ export default function MainBanner() {
                         </div>
                         <div className="col-lg-10 offset-lg-1">
                             <ul className="categories">
-                                <li><Link to="/categories"><span className="icon"><img src="assets/images/search-icon-01.png" alt="Home" /></span> Apartments</Link></li>
-                                <li><Link to="/listing"><span className="icon"><img src="assets/images/search-icon-02.png" alt="Food" /></span> Food &amp; Life</Link></li>
-                                <li><Link to="#"><span className="icon"><img src="assets/images/search-icon-03.png" alt="Vehicle" /></span> Cars</Link></li>
-                                <li><Link to="#"><span className="icon"><img src="assets/images/search-icon-04.png" alt="Shopping" /></span> Shopping</Link></li>
-                                <li><Link to="#"><span className="icon"><img src="assets/images/search-icon-05.png" alt="Travel" /></span> Traveling</Link></li>
+                                <li><Link to="/listing?type=Car"><span className="icon"><img src="assets/images/car.png" alt="Car" /></span> Cars</Link></li>
+                                <li><Link to="/listing?type=Truck"><span className="icon"><img src="assets/images/truck.png" alt="Truck" /></span> Trucks</Link></li>
+                                <li><Link to="/listing?type=Motorcycle"><span className="icon"><img src="assets/images/motorcycle.png" alt="Motorcycle" /></span>Motorcycles</Link></li>
+                                <li><Link to="/listing?type=Bicycle"><span className="icon"><img src="assets/images/bicycle.png" alt="Bicycle" /></span> Bicycles</Link></li>
+                                <li><Link to="/listing?type=Electric Scooter"><span className="icon"><img src="assets/images/electric-scooter.png" alt="Electric Scooter" /></span> Electric Scooters</Link></li>
                             </ul>
                         </div>
                     </div>
