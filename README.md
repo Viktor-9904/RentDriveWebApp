@@ -60,7 +60,7 @@ The entire application is fully Dockerized and deployed on a Raspberry Pi 4B usi
 - Or manually:  
   - Node.js  
   - .NET 9 SDK  
-  - MS SQL Server  
+  - PostgreSQL
 
 ### Installation & Setup  
 
