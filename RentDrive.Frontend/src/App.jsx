@@ -4,7 +4,7 @@ import './App.css'
 
 import Home from './pages/Home'
 
-import Spinner from './components/shared/Spinner'
+import Spinner from './components/shared/Spinner/Spinner'
 import Header from './components/shared/Header'
 import Footer from './components/shared/Footer'
 
@@ -48,8 +48,6 @@ function VehiclesLayout() {
 function App() {
   return (
     <AccountProvider>
-      {/* <Spinner/> */}
-
       <Header />
 
       <Routes>

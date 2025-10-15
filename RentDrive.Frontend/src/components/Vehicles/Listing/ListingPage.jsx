@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Range, getTrackBackground } from "react-range";
 import { useSearchParams } from "react-router-dom";
+
+import Spinner from '../../shared/Spinner/Spinner';
 
 import { useBackendURL } from '../../../hooks/useBackendURL';
 import ListingPageItem from './ListingPageItem';
@@ -32,6 +34,7 @@ export default function ListingPage() {
     const [selectedFilters, setSelectedFilters] = useState({});
 
     const [localVehicles, setLocalVehicles] = useState([]);
+    const [localVehiclesLoading, setLocalVehiclesLoading] = useState(true);
     const [localVehicleTypes, setLocalVehicleTypes] = useState([]);
     const [localVehicleTypeCategories, setLocalVehicleTypeCategories] = useState([]);
 
@@ -176,6 +179,7 @@ export default function ListingPage() {
     useEffect(() => {
         if (!vehicles || vehicles.length === 0) return; 
 
+        setLocalVehiclesLoading(true);
         const debounceTimer = setTimeout(() => {
             const fetchFilteredVehicles = async  () => {
                 try {
@@ -207,6 +211,9 @@ export default function ListingPage() {
 
                 } catch (err) {
                     console.error(err);
+                }
+                finally{
+                    setLocalVehiclesLoading(false);
                 }
             }
             fetchFilteredVehicles();
@@ -474,10 +481,13 @@ export default function ListingPage() {
                                 </div>
                             </div>
                         </div>
-
                         <div className="col-lg-12">
                             <div className="row">
-                                {localVehicles?.length > 0 ? (
+                                {localVehiclesLoading ? (
+                                    <div className="col-12">
+                                        <Spinner />
+                                    </div>
+                                ) : localVehicles?.length > 0 ? (
                                     localVehicles.map(vehicle => (
                                         <ListingPageItem
                                             key={vehicle.id}
@@ -502,6 +512,7 @@ export default function ListingPage() {
                                 )}
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
