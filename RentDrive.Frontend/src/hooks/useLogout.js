@@ -11,16 +11,20 @@ export default function useLogout() {
 
     const logout = async () => {
         try {
-            fetch(`${backEndURL}/api/account/logout`, {
+            const response = await fetch(`${backEndURL}/api/account/logout`, {
                 method: 'POST',
                 credentials: 'include',
-            })
-        } catch (err) {
-            setError(err)
-        } finally{
+            });
+
+            if (!response.ok) {
+                throw new Error('Logout failed');
+            }
+            await loadUser();
             navigate('/');
+        } catch (err) {
+            setError(err);
+            console.error('Logout error:', err);
         }
-        await loadUser()
     };
     return logout;
 }
