@@ -19,5 +19,6 @@ namespace RentDrive.Services.Data.Interfaces
         Task<IEnumerable<Guid>> GetFilteredVehicles(FilteredVehiclesViewModel filter);
         Task<IEnumerable<ListingVehicleViewModel>> GetSearchQueryVehicles(string searchQuery);
         Task<IEnumerable<string>> GetAllVehicleMakesAsync();
+        Task<int> GetActiveListings();
     }
 }

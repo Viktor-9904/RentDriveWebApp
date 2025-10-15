@@ -585,5 +585,13 @@ namespace RentDrive.Services.Data
 
             return makes;
         }
+
+        public async Task<int> GetActiveListings()
+        {
+            return await this.vehicleRepository
+                .GetAllAsQueryable()
+                .Where(v => v.IsDeleted == false)
+                .CountAsync();
+        }
     }
 }

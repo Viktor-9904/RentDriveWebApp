@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 
 import useAllVehicleTypes from '../Vehicles/hooks/useAllVehicleTypes';
 import useAllVehicleCategories from '../Vehicles/hooks/useAllVehicleCategories';
 import useFuelTypesEnum from '../../hooks/useFuelTypesEnum';
+import useActiveListings from '../../hooks/useActiveListings';
 
 export default function MainBanner() {
 
@@ -12,6 +13,7 @@ export default function MainBanner() {
     const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
     const { vehicleCategories, loadingVehicleCategories, errorVehicleCategories } = useAllVehicleCategories();
     const { fuelTypeEnum, loadingfuelTypeEnum, errorfuelTypeEnum } = useFuelTypesEnum()
+    const { activeListings, loadingActiveListings, errorActiveListing } = useActiveListings();
 
     const [selectedTypeId, setSelectedTypeId] = useState("");
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
@@ -58,7 +60,7 @@ export default function MainBanner() {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="top-text header-text">
-                                <h6>Over 100+ Active Listings</h6>
+                                <h6>Over {activeListings - activeListings % 10}+ Active Listings</h6>
                                 <h2>Find Your Next Ride</h2>
                             </div>
                         </div>
