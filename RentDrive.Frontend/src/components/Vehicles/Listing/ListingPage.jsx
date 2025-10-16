@@ -485,7 +485,7 @@ export default function ListingPage() {
                             <div className="row">
                                 {localVehiclesLoading ? (
                                     <div className="col-12">
-                                        <Spinner />
+                                        <Spinner message={"Vehicles"}/>
                                     </div>
                                 ) : localVehicles?.length > 0 ? (
                                     localVehicles.map(vehicle => (

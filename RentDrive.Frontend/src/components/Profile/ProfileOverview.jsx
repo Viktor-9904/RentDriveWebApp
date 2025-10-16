@@ -1,9 +1,10 @@
+import Spinner from "../shared/Spinner/Spinner";
 import { useOverview } from "./hooks/useOverview";
 
 export default function ProfileOverview() {
   const { overviewData, overviewLoading, overviewError } = useOverview();
 
-  if (overviewLoading) return <p>Loading...</p>;
+  if (overviewLoading) return <Spinner message={"User Details"}/>
   if (overviewError) return <p className="overviewError">Error: {overviewError}</p>;
   if (!overviewData) return null;
 

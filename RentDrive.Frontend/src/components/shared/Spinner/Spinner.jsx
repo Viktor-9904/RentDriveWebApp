@@ -1,6 +1,6 @@
 import "./Spinner.css"
 
-export default function Spinner() {
+export default function Spinner({message = ""}) {
   return (
     <div className="local-spinner-wrapper">
       <div className="local-spinner-box">
@@ -9,7 +9,7 @@ export default function Spinner() {
           alt="Loading..."
           className="local-spinner"
         />
-        <p className="local-spinner-text">Loading vehicles...</p>
+        <p className="local-spinner-text">Loading {message}...</p>
       </div>
     </div>
   );

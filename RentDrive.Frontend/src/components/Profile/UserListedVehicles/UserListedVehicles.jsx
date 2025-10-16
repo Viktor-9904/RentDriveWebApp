@@ -5,9 +5,10 @@ import StarRating from "../../shared/VehicleStarRating";
 import UserVehicleBookingsModal from "./UserVehicleBookingsModal";
 import DeleteConfirmationModal from "../../shared/DeleteConfirmationModal/DeleteConfirmationModal";
 
-import useUserVehicles from "../hooks/useUserVehicles";
 import { useBackendURL } from "../../../hooks/useBackendURL";
+import useUserVehicles from "../hooks/useUserVehicles";
 import useDeleteVehicle from "../../Vehicles/hooks/useDeleteVehicle";
+import Spinner from "../../shared/Spinner/Spinner";
 
 export default function UserListedVehicles() {
   const { userVehicles, uservehiclesLoading, uservehiclesError } = useUserVehicles()
@@ -16,8 +17,8 @@ export default function UserListedVehicles() {
   const [vehicleToDelete, setVehicleToDelete] = useState({});
   const backEndURL = useBackendURL();
   const [selectedVehicle, setSelectedVehicle] = useState(null);
-const [selectedBookings, setSelectedBookings] = useState([]);
-const [showBookingModal, setShowBookingModal] = useState(false);
+  const [selectedBookings, setSelectedBookings] = useState([]);
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
   useEffect(() => {
     if (userVehicles) {
@@ -25,19 +26,19 @@ const [showBookingModal, setShowBookingModal] = useState(false);
     }
   }, [userVehicles])
 
-const handleRowClick = async (vehicle) => {
-  try {
-    const res = await fetch(`${backEndURL}/api/rental/vehicle/${vehicle.id}`, {
-      credentials: "include",
-    });
-    const data = await res.json();
-    setSelectedBookings(data);
-    setSelectedVehicle(vehicle);
-    setShowBookingModal(true);
-  } catch (err) {
-    console.log("Failed to fetch vehicle bookings: ", err);
-  }
-};
+  const handleRowClick = async (vehicle) => {
+    try {
+      const res = await fetch(`${backEndURL}/api/rental/vehicle/${vehicle.id}`, {
+        credentials: "include",
+      });
+      const data = await res.json();
+      setSelectedBookings(data);
+      setSelectedVehicle(vehicle);
+      setShowBookingModal(true);
+    } catch (err) {
+      console.log("Failed to fetch vehicle bookings: ", err);
+    }
+  };
 
   const { deleteVehicle } = useDeleteVehicle();
 
@@ -71,6 +72,8 @@ const handleRowClick = async (vehicle) => {
     }
   };
 
+  if (uservehiclesLoading) return <Spinner message={"My Vehicles"} />
+
   return (
     <div className="my-vehicles-container">
       <div className="my-vehicles-header">
@@ -81,7 +84,7 @@ const handleRowClick = async (vehicle) => {
       </div>
 
 
-      {myVehicles.length > 0 ? (
+      {myVehicles?.length > 0 ? (
         <table className="my-vehicles-table">
           <thead>
             <tr>
@@ -135,7 +138,7 @@ const handleRowClick = async (vehicle) => {
               </tr>
             ))}
           </tbody>
-          
+
         </table>
       ) : (
         <p className="no-vehicles-message">No vehicles posted.</p>

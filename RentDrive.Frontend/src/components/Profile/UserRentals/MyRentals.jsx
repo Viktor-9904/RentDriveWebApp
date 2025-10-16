@@ -6,6 +6,7 @@ import CancelConfirmationModal from "./CancelConfrimationModal";
 import { Flag } from "lucide-react";
 import { useAuth } from "../../../context/AccountContext";
 import { useBackendURL } from "../../../hooks/useBackendURL";
+import Spinner from "../../shared/Spinner/Spinner";
 
 export default function MyRentals() {
     const { user, isAuthenticated, loadUser } = useAuth();
@@ -116,7 +117,7 @@ export default function MyRentals() {
         }
     };
 
-    if (rentalsLoading) return <p>Loading rentals...</p>;
+    if (rentalsLoading) return <Spinner message={"My Rentals"}/>
     if (rentalError) return <p>Error: {rentalError}</p>;
 
     return (
@@ -124,8 +125,7 @@ export default function MyRentals() {
             <h3 className="rentals-heading">My Rentals</h3>
 
             <div className="rental-table-wrapper">
-
-                <table className="rentals-table">
+                {localRentals?.length > 0 ? (<table className="rentals-table">
                     <thead>
                         <tr>
                             <th>Vehicle</th>
@@ -197,6 +197,11 @@ export default function MyRentals() {
                         ))}
                     </tbody>
                 </table>
+                ) : (
+                    <div className="col-12 text-center p-5">
+                        <p>No rentals found.</p>
+                    </div>)}
+
             </div>
             <ReviewModal
                 show={showReviewModal}
