@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import VehicleTypeTableItem from "./VehicleTypeTableItem";
 import { useBackendURL } from "../../hooks/useBackendURL";
+import VehicleTypeTableItem from "./VehicleTypeTableItem";
 import DeleteConfirmationModal from "../shared/DeleteConfirmationModal/DeleteConfirmationModal";
 
 export default function VehicleTypeTable({
@@ -14,7 +14,7 @@ export default function VehicleTypeTable({
 
   const [vehicleTypeToDelete, setVehicleTypeToDelete] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [localVehicleTypes, setLocalVehicleTypes] = useState(vehicleTypes);
+  const [localVehicleTypes, setLocalVehicleTypes] = useState([]);
   const [inputModel, setInputModel] = useState(null);
 
   useEffect(() => {

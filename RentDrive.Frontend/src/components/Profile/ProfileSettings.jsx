@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useUserProfileDetails } from "./hooks/useUserProfileDetails";
 import { useBackendURL } from "../../hooks/useBackendURL";
+import Spinner from "../shared/Spinner/Spinner";
 
 export default function ProfileSettings() {
   const backEndURL = useBackendURL();
@@ -104,7 +105,7 @@ export default function ProfileSettings() {
     }
   };
 
-  if (userProfileDetailsLoading) return <p>Loading profile...</p>;
+  if (userProfileDetailsLoading) return <Spinner message={"Settings"}/>;
   if (userProfileDetailsError) return <p>Error loading profile: {userProfileDetailsError.message}</p>;
 
   return (

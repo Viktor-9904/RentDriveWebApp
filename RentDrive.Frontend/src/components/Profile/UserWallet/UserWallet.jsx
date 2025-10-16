@@ -5,6 +5,8 @@ import { useWalletTransactionHistory } from '../hooks/useWalletTransactionHistor
 
 import AddFundsToBalance from './AddFundsModal';
 import { useBackendURL } from '../../../hooks/useBackendURL';
+import { useFetcher } from 'react-router-dom';
+import Spinner from '../../shared/Spinner/Spinner';
 
 
 export default function UserWallet() {
@@ -62,6 +64,8 @@ export default function UserWallet() {
                 return 'transaction-neutral';
         }
     }
+
+    if (walletTransactionHistoryLoading) return <Spinner message={"Transaction History"}/>
 
     return (
         <div className="user-wallet-container">

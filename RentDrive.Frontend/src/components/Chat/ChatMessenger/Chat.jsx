@@ -6,17 +6,24 @@ import { useAuth } from "../../../context/AccountContext";
 import useLoadChatHistory from "../../../hooks/useLoadChatHistory";
 
 import "./Chat.css";
+import Spinner from "../../shared/Spinner/Spinner";
 
 export default function Chat({ selectedUser }) {
     const { user, isAuthenticated, loadUser } = useAuth();
     const backEndURL = useBackendURL();
 
-    const { chatMessages, chatMessagesLoading, chatMessagesError } = useLoadChatHistory(selectedUser?.userId)
+    const { chatMessages, chatMessagesError } = useLoadChatHistory(selectedUser?.userId)
     const [localMessages, setLocalMessages] = useState([]);
     const [input, setInput] = useState("");
+    const [loadingChatMessages, setLoadingChatMessages] = useState(true);
 
     const bottomRef = useRef(null);
     const hubRef = useRef(null);
+
+    useEffect(() => {
+        setLocalMessages([]);
+        setLoadingChatMessages(true);
+    }, [selectedUser])
 
     useEffect(() => {
         if (bottomRef.current) {
@@ -26,6 +33,7 @@ export default function Chat({ selectedUser }) {
 
     useEffect(() => {
         setLocalMessages(chatMessages);
+        setLoadingChatMessages(false);
     }, [chatMessages])
 
     useEffect(() => {
@@ -98,27 +106,28 @@ export default function Chat({ selectedUser }) {
             </div>
 
             <main className="chat-body" role="log" aria-live="polite">
-                {localMessages.map((msg, index) => {
-                    const fromMe = msg.senderId === user?.id;
-                    return (
-                        <div
-                            key={index}
-                            className={`message ${fromMe ? "message--me" : "message--them"}`}
-                            title={`${fromMe ? "Me" : "Them"} • ${new Date(msg.timeSent).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
-                        >
-                            {!fromMe && <div className="message-sender">{selectedUser?.username}</div>}
-                            <div className="message-bubble">
-                                <div className="message-text">{msg.text}</div>
-                                <div className="message-time">
-                                    {new Date(msg.timeSent).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {loadingChatMessages ? <Spinner message={"Chat"} /> : (
+                    localMessages.map((msg, index) => {
+                        const fromMe = msg.senderId === user?.id;
+                        return (
+                            <div
+                                key={index}
+                                className={`message ${fromMe ? "message--me" : "message--them"}`}
+                                title={`${fromMe ? "Me" : "Them"} • ${new Date(msg.timeSent).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
+                            >
+                                {!fromMe && <div className="message-sender">{selectedUser?.username}</div>}
+                                <div className="message-bubble">
+                                    <div className="message-text">{msg.text}</div>
+                                    <div className="message-time">
+                                        {new Date(msg.timeSent).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })
+                )}
                 <div ref={bottomRef} />
             </main>
-
 
             <form className="chat-input-area" onSubmit={sendMessage}>
                 <input

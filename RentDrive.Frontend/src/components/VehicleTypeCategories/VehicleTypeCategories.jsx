@@ -2,6 +2,7 @@ import { useState } from "react";
 import useAllVehicleCategories from "../Vehicles/hooks/useAllVehicleCategories";
 import useAllVehicleTypes from "../Vehicles/hooks/useAllVehicleTypes";
 import VehicleTypeCategoryTable from "./VehicleTypeCategoryTable";
+import Spinner from "../shared/Spinner/Spinner";
 
 export default function VehicleTypeCategories() {
   const { vehicleCategories, loadingVehicleCategories, errorVehicleCategories } = useAllVehicleCategories();
@@ -13,6 +14,8 @@ export default function VehicleTypeCategories() {
     description: "",
     vehicleTypeId: ""
   });
+
+  if (loadingVehicleCategories || loadingVehicleTypes) return <Spinner message={"Vehicle Type Categories"} />
 
   return (
     <div className="container py-5">
