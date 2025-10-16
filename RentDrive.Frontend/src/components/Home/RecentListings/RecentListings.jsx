@@ -1,21 +1,20 @@
 import { useEffect, useState } from 'react';
 
 import RecentListingsItem from './RecentListingsItem';
-import { useBackendURL } from '../../../hooks/useBackendURL';
+import Spinner from '../../shared/Spinner/Spinner';
+import useRecentVehicles from '../../Vehicles/hooks/useRecentVehicles';
 
 export default function RecentListing() {
 
-    const backEndURL = useBackendURL();
-    const [recentVehicles, setRecentVehicles] = useState([])
+    const { recentVehicles, recentVehiclesLoading, recentVehiclesError } = useRecentVehicles();
+    const [localRecentVehicles, setLocalRecentVehicles] = useState([])
 
     useEffect(() => {
-        fetch(`${backEndURL}/api/vehicle/recent`)
-            .then(res => res.json())
-            .then(data => {
-                setRecentVehicles(data)
-            })
-            .catch(err => console.error("API error:", err));
-    }, []);
+        setLocalRecentVehicles(recentVehicles)
+    }, [recentVehicles])
+
+
+    if (recentVehiclesLoading) return <Spinner message={"Recent Vehicles"} />
 
     return (
         <>
@@ -28,11 +27,11 @@ export default function RecentListing() {
                                 <h6>Check Them Out</h6>
                             </div>
                         </div>
-                        {recentVehicles.length > 0 &&
-                            recentVehicles.map(vehicle => <RecentListingsItem
+                        {localRecentVehicles.length > 0 &&
+                            localRecentVehicles.map(vehicle => <RecentListingsItem
                                 key={vehicle.id}
                                 id={vehicle.id}
-                                make={vehicle.make} 
+                                make={vehicle.make}
                                 model={vehicle.model}
                                 imageURL={vehicle.imageURL}
                                 pricePerDay={vehicle.pricePerDay}
