@@ -9,10 +9,14 @@ export function AccountProvider({ children }) {
 
   const loadUser = async () => {
     try {
-      const response = await fetch(`${backEndURL}/api/account/me`, { credentials: 'include' });
+      const response = await fetch(`${backEndURL}/api/account/me`,
+        {
+          credentials: 'include'
+        });
       if (!response.ok) throw new Error('Not authenticated');
       const data = await response.json();
       setUser(data);
+      
     } catch {
       setUser(null);
     }
@@ -22,10 +26,11 @@ export function AccountProvider({ children }) {
     loadUser();
   }, []);
 
+  const isCompanyEmployee = user?.isCompanyEmployee;
   const isAuthenticated = Boolean(user);
 
   return (
-    <AccountContext.Provider value={{ user, isAuthenticated, loadUser }}>
+    <AccountContext.Provider value={{ user, isAuthenticated, isCompanyEmployee, loadUser }}>
       {children}
     </AccountContext.Provider>
   );

@@ -1,4 +1,4 @@
-import { Routes, Route, Outlet } from 'react-router'
+import { Routes, Route, Outlet, Navigate } from 'react-router'
 
 import './App.css'
 
@@ -24,11 +24,61 @@ import ProfileOverviewPage from './pages/Profile/ProfileOverviewPage'
 import MyRentals from './components/Profile/UserRentals/MyRentals'
 import MyListedVehiclesPage from './pages/Profile/MyListedVehiclesPage'
 
-import { AccountProvider } from './context/AccountContext'
+import { AccountProvider, useAuth } from './context/AccountContext'
 import ProfileSettingsPage from './pages/Profile/ProfileSettingsPage'
 import UserWallet from './components/Profile/UserWallet/UserWallet'
 import ChatPage from './pages/ChatPage/ChatPage'
 import ScrollToTop from './components/shared/ScrollToTop'
+
+function App() {
+  return (
+    <AccountProvider>
+      <Header />
+      <ScrollToTop />
+
+      <Routes>
+
+        <Route index element={<Home />} />
+        <Route path="/listing" element={<Listing />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/api/vehicle/:id" element={<VehicleDetailsPage />} />
+
+        <Route element={<EmployeeRoute />}>
+          <Route path="/manage" element={<ManageLayout />}>
+            <Route path="vehicle-type-properties" element={<VehicleTypeProperties />} />
+            <Route path="vehicle-types" element={<ManageVehicleTypes />} />
+            <Route path="vehicle-type-categories" element={<ManageVehicleTypeCategories />} />
+          </Route>
+
+        </Route>
+
+        <Route element={<AuthenticatedRoute />}>
+          <Route path="/manage" element={<ManageLayout />}>
+            <Route path="vehicles" element={<VehiclesLayout />}>
+              <Route path="create" element={<CreateVehiclePage />} />
+              <Route path="edit/:id" element={<EditVehiclePage />} />
+            </Route>
+          </Route>
+
+          <Route path="/profile" element={<ProfileLayoutPage />}>
+            <Route index element={<ProfileOverviewPage />} />
+            <Route path="rentals" element={<MyRentals />} />
+            <Route path="vehicles" element={<MyListedVehiclesPage />} />
+            <Route path="settings" element={<ProfileSettingsPage />} />
+            <Route path="wallet" element={<UserWallet />} />
+          </Route>
+
+            <Route path="chat" element={<ChatPage />} />
+        </Route>
+
+      </Routes>
+
+      <Footer />
+    </AccountProvider>
+  )
+}
 
 function ManageLayout() {
   return (
@@ -46,49 +96,24 @@ function VehiclesLayout() {
   )
 }
 
-function App() {
-  return (
-    <AccountProvider>
-      <Header />
-      <ScrollToTop/>
+function AuthenticatedRoute() {
+  const { isAuthenticated } = useAuth();
 
-      <Routes>
-        <Route index element={<Home />} />
-        <Route path="/listing" element={<Listing />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/api/vehicle/:id" element={<VehicleDetailsPage />} />
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
-        <Route path="/manage" element={<ManageLayout />}>
-
-          <Route path="vehicle-type-properties" element={<VehicleTypeProperties />} />
-          <Route path="vehicle-types" element={<ManageVehicleTypes />} />
-          <Route path="vehicle-type-categories" element={<ManageVehicleTypeCategories />} />
-
-          <Route path="vehicles" element={<VehiclesLayout />}>
-            <Route path="create" element={<CreateVehiclePage />} />
-            <Route path="edit/:id" element={<EditVehiclePage />} />
-          </Route>
-
-        </Route>
-
-        <Route path="/profile" element={<ProfileLayoutPage />}>
-          <Route index element={<ProfileOverviewPage />} />
-          <Route path="rentals" element={<MyRentals />} />
-          <Route path="vehicles" element={<MyListedVehiclesPage />} />
-          <Route path="settings" element={<ProfileSettingsPage />} />
-          <Route path="wallet" element={<UserWallet />} />
-        </Route>
-
-        <Route path="chat" element={<ChatPage/>}/>
-
-      </Routes>
-
-      <Footer />
-    </AccountProvider>
-  )
+  return <Outlet />;
 }
 
+function EmployeeRoute() {
+  const { isAuthenticated, isCompanyEmployee } = useAuth();
+
+  if (!isAuthenticated || !isCompanyEmployee) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <Outlet />;
+}
 
 export default App
