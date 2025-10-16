@@ -7,6 +7,7 @@ import useAllVehicleTypeProperties from "../Vehicles/hooks/useAllVehicleTypeProp
 import useValueTypesEnum from "../../hooks/useValueTypesEnum";
 import useUnitsEnum from "../../hooks/useUnitsEnum";
 import useAllVehicles from "../Vehicles/hooks/useAllVehicles";
+import Spinner from "../shared/Spinner/Spinner";
 
 export default function VehicleTypePropertyManager() {
 
@@ -76,6 +77,8 @@ export default function VehicleTypePropertyManager() {
             isNew: true,
         });
     };
+
+    if (loading || loadingVehicleTypeProperties || loadingVehicleTypes) return <Spinner message={"Vehicle Type Properties"}/>;
 
     return (
         <div className="container py-5">
