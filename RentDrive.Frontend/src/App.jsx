@@ -28,6 +28,7 @@ import { AccountProvider } from './context/AccountContext'
 import ProfileSettingsPage from './pages/Profile/ProfileSettingsPage'
 import UserWallet from './components/Profile/UserWallet/UserWallet'
 import ChatPage from './pages/ChatPage/ChatPage'
+import ScrollToTop from './components/shared/ScrollToTop'
 
 function ManageLayout() {
   return (
@@ -49,6 +50,7 @@ function App() {
   return (
     <AccountProvider>
       <Header />
+      <ScrollToTop/>
 
       <Routes>
         <Route index element={<Home />} />
