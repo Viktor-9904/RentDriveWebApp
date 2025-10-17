@@ -31,6 +31,10 @@ export default function VehicleDetails() {
     const navigate = useNavigate();
     const backEndURL = useBackendURL();
 
+    useEffect(() =>{
+        console.log(vehicle)
+    },[vehicle])
+
     useEffect(() => {
         if (bookedDates && bookedDates.length > 0) {
             setBookedDatesState(bookedDates.map(d => new Date(d)));
@@ -156,12 +160,14 @@ export default function VehicleDetails() {
                                 bookedDates={bookedDatesState}
                                 setRentNowShowModal={setRentNowShowModal}
                             />
-                            <button
-                                className="btn btn-success rent-now-btn mt-3 w-100"
-                                onClick={() => setRentNowShowModal(true)}
-                            >
-                                Rent Now
-                            </button>
+                            {user?.isAuthenticated && vehicle?.ownerId !== user?.id &&
+                                <button
+                                    className="btn btn-success rent-now-btn mt-3 w-100"
+                                    onClick={() => setRentNowShowModal(true)}
+                                >
+                                    Rent Now
+                                </button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -238,6 +244,7 @@ export default function VehicleDetails() {
                 pricePerDay={vehicle.pricePerDay}
                 handleRent={handleRent}
                 userBalance={user?.balance}
+                isAuthenticated={isAuthenticated}
             />
             
             <ExpandedVehicleImageModal

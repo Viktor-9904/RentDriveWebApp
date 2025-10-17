@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import RentNowCalendar from "./RentNowCalendar";
+import { useNavigate } from "react-router-dom";
 
-export default function RentNowModal({ showRentNowModal, onClose, bookedDates, pricePerDay, handleRent, userBalance = 0 }) {
+export default function RentNowModal({ showRentNowModal, onClose, bookedDates, pricePerDay, handleRent,isAuthenticated, userBalance = 0 }) {
     const [selectedDates, setSelectedDates] = useState([]);
+    const navigate = useNavigate();
 
     const formatDate = (date) => {
         if (!date) return "";
@@ -16,6 +18,7 @@ export default function RentNowModal({ showRentNowModal, onClose, bookedDates, p
     const canAfford = userBalance >= totalPrice;
 
     if (!showRentNowModal) return null;
+    if (!isAuthenticated) return navigate("/login")
 
     const clearSelection = () => {
         setSelectedDates([]);

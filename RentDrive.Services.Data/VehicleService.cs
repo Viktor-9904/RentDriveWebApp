@@ -118,6 +118,7 @@ namespace RentDrive.Services.Data
         {
             VehicleDetailsViewModel? vehicleDetails = await this.vehicleRepository
                 .GetAllAsQueryable()
+                .Include(v => v.Owner)
                 .Include(v => v.VehicleImages)
                 .Include(v => v.Reviews)
                 .ThenInclude(vr => vr.Reviewer)
@@ -127,6 +128,7 @@ namespace RentDrive.Services.Data
                     Id = v.Id,
                     Make = v.Make,
                     Model = v.Model,
+                    OwnerId = v.OwnerId ?? Guid.Empty,
                     OwnerName = v.Owner.UserName,
                     VehicleTypeId = v.VehicleTypeId,
                     VehicleType = v.VehicleType.Name,
