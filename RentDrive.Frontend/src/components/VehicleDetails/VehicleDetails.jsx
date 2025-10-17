@@ -8,6 +8,7 @@ import { useBackendURL } from "../../hooks/useBackendURL";
 import RentNowModal from "./RentNowModal";
 import VehicleCalendar from "./VehicleCalendar";
 import ReviewList from "./ReviewList";
+import Spinner from "../shared/Spinner/Spinner";
 import StarRating from "../shared/VehicleStarRating";
 import ExpandedVehicleImageModal from "./ExpandedVehicleImageModal/ExpandedVehicleImageModal";
 import DeleteConfirmationModal from "../shared/DeleteConfirmationModal/DeleteConfirmationModal";
@@ -17,7 +18,7 @@ import usebookedDates from "../../hooks/useBookedDates";
 
 export default function VehicleDetails() {
     const { id } = useParams();
-    const { user, isAuthenticated, loadUser } = useAuth();
+    const { user, isAuthenticated, loadUser, isUserLoading } = useAuth();
 
     const { vehicle, loadingVehicle } = useVehicleDetails(id);
     const { bookedDates, loadingBookedDates, errorBookedDates } = usebookedDates(id);
@@ -30,10 +31,6 @@ export default function VehicleDetails() {
 
     const navigate = useNavigate();
     const backEndURL = useBackendURL();
-
-    useEffect(() =>{
-        console.log(vehicle)
-    },[vehicle])
 
     useEffect(() => {
         if (bookedDates && bookedDates.length > 0) {
@@ -99,7 +96,7 @@ export default function VehicleDetails() {
         }
     };
 
-    if (loadingVehicle) return <div className="text-center py-5">Loading vehicle details...</div>;
+    if (loadingVehicle || isUserLoading) return <Spinner message={"Vehicle Details"}/>;
     if (!vehicle) return <div className="text-center py-5 text-danger">Vehicle not found.</div>;
 
     const baseProperties = [
@@ -160,14 +157,14 @@ export default function VehicleDetails() {
                                 bookedDates={bookedDatesState}
                                 setRentNowShowModal={setRentNowShowModal}
                             />
-                            {user?.isAuthenticated && vehicle?.ownerId !== user?.id &&
+                            {isAuthenticated && vehicle?.ownerId !== user?.id && (
                                 <button
                                     className="btn btn-success rent-now-btn mt-3 w-100"
                                     onClick={() => setRentNowShowModal(true)}
                                 >
                                     Rent Now
                                 </button>
-                            }
+                            )}
                         </div>
                     </div>
                 </div>

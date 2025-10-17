@@ -6,6 +6,7 @@ const AccountContext = createContext();
 export function AccountProvider({ children }) {
   const backEndURL = useBackendURL();
   const [user, setUser] = useState(null);
+  const [isUserLoading, setIsUserLoading] = useState(true);
 
   const loadUser = async () => {
     try {
@@ -20,6 +21,9 @@ export function AccountProvider({ children }) {
     } catch {
       setUser(null);
     }
+    finally{
+      setIsUserLoading(false)
+    }
   };
 
   useEffect(() => {
@@ -30,7 +34,7 @@ export function AccountProvider({ children }) {
   const isAuthenticated = Boolean(user);
 
   return (
-    <AccountContext.Provider value={{ user, isAuthenticated, isCompanyEmployee, loadUser }}>
+    <AccountContext.Provider value={{ user, isAuthenticated, isCompanyEmployee, isUserLoading, loadUser }}>
       {children}
     </AccountContext.Provider>
   );
