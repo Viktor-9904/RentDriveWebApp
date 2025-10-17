@@ -39,14 +39,14 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(units);
         }
-        protected bool IsGuidValid(string id, ref Guid guidId)
+        protected bool IsGuidValid(string? id, ref Guid guidId)
         {
             if (String.IsNullOrWhiteSpace(id))
             {
                 return false;
             }
             bool isGuidValid = Guid.TryParse(id, out guidId);
-            if (!isGuidValid)
+            if (!isGuidValid || guidId == Guid.Empty)
             {
                 return false;
             }

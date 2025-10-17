@@ -10,11 +10,13 @@ namespace RentDrive.Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RentalController : ControllerBase
+    public class RentalController : BaseController
     {
         public readonly IRentalService rentalService;
 
-        public RentalController(IRentalService rentalService)
+        public RentalController(
+            IRentalService rentalService,
+            IBaseService baseService) : base(baseService)
         {
             this.rentalService = rentalService;
         }
@@ -34,15 +36,16 @@ namespace RentDrive.Backend.Controllers
                 return BadRequest(ModelState);
             }
 
+            Guid guidUserId = Guid.Empty;
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (string.IsNullOrEmpty(userId))
+            if (!IsGuidValid(userId, ref guidUserId))
             {
                 return Unauthorized();
             }
 
             bool wasVehicleBooked = await this.rentalService
-                .RentVehicle(vehicleId, userId, viewModel.BookedDates);
+                .RentVehicle(vehicleId, guidUserId, viewModel.BookedDates);
 
             if (!wasVehicleBooked)
             {

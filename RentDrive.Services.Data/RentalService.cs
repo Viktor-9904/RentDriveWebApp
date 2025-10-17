@@ -61,13 +61,13 @@ namespace RentDrive.Services.Data
             return bookedDates.ToList();
         }
 
-        public async Task<bool> RentVehicle(Guid vehicleId, string renterId, IEnumerable<DateTime> bookedDates)
+        public async Task<bool> RentVehicle(Guid vehicleId, Guid renterId, IEnumerable<DateTime> bookedDates)
         {
             bool areDatesValid = await AreDatesValid(vehicleId, bookedDates);
 
             if (!areDatesValid)
             {
-                return false;
+                return false; // invalid selected dates
             }
 
             List<DateTime> orderedDates = bookedDates
@@ -78,36 +78,39 @@ namespace RentDrive.Services.Data
             ApplicationUser? renter = await this.applicationUserRepository
                 .GetAllAsQueryable()
                 .Include(au => au.Wallet)
-                .FirstOrDefaultAsync(au => au.Id.ToString() == renterId);
+                .FirstOrDefaultAsync(au => au.Id == renterId);
 
             if (renter == null || renter?.Wallet == null)
             {
-                return false;
+                return false; // user wallet not found
             }
 
-            Vehicle vehicle = await this.vehicleRepository
-                .GetByIdAsync(vehicleId);
+            Vehicle? vehicle = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .Include(v => v.Owner)
+                .ThenInclude(au => au.Wallet)
+                .FirstOrDefaultAsync(v => v.Id == vehicleId);
 
             if (vehicle == null)
             {
-                return false;
+                return false; // vehicle not found
             }
 
-            ApplicationUser? owner = await this.applicationUserRepository
-                .GetAllAsQueryable()
-                .Include(au => au.Wallet)
-                .FirstOrDefaultAsync(au => au.Id == vehicle.OwnerId);
-
-            if (owner == null || owner?.Wallet == null)
+            if (renterId == vehicle.OwnerId)
             {
-                return false;
+                return false; // cannot rent your own vehicle
+            }
+
+            if (vehicle.Owner == null || vehicle.Owner.Wallet == null)
+            {
+                return false; // owner not found
             }
 
             decimal totalRentalPrice = vehicle.PricePerDay * orderedDates.Count;
 
             if (renter.Wallet.Balance < totalRentalPrice)
             {
-                return false;
+                return false; // insufficient balance
             }
 
             using var transaction = await dbContext.Database.BeginTransactionAsync();
@@ -148,6 +151,7 @@ namespace RentDrive.Services.Data
                 throw;
             }
         }
+
         public async Task<bool> AreDatesValid(Guid vehicleId, IEnumerable<DateTime> dates)
         {
             if (dates == null || !dates.Any())
