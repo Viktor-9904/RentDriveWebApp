@@ -1,5 +1,5 @@
 import PageHeading from "../components/shared/PageHeading";
-import VehicleDetails from "../components/VehicleDetails/VehicleDetails";
+import VehicleDetails from "../components/VehicleDetails/VehicleDetails/VehicleDetails";
 
 export default function VehicleDetailsPage() {
     return (

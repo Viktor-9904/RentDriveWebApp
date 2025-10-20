@@ -131,7 +131,7 @@ export default function EditVehicleForm() {
         throw new Error("Failed to save vehicle");
       }
 
-      navigate('/listing');
+      navigate(`/api/vehicle/${id}`);
     } catch (error) {
       alert(error.message);
       console.error("Error uploading vehicle:", error);

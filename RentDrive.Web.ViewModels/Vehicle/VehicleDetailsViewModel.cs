@@ -7,6 +7,7 @@ namespace RentDrive.Web.ViewModels.Vehicle
         public Guid Id { get; set; }
         public string Make { get; set; } = null!;
         public string Model { get; set; } = null!;
+        public bool IsCompanyProperty { get; set; }
         public Guid OwnerId { get; set; }
         public string? OwnerName { get; set; }
         public int VehicleTypeId { get; set; }

@@ -128,6 +128,7 @@ namespace RentDrive.Services.Data
                     Id = v.Id,
                     Make = v.Make,
                     Model = v.Model,
+                    IsCompanyProperty = v.OwnerId == new Guid(CompanyId),
                     OwnerId = v.OwnerId ?? Guid.Empty,
                     OwnerName = v.Owner.UserName,
                     VehicleTypeId = v.VehicleTypeId,
@@ -187,8 +188,8 @@ namespace RentDrive.Services.Data
 
             UserType currentUserType = currentUser.UserType;
 
-            bool canDelete = 
-                currentUserType == UserType.CompanyEmployee || 
+            bool canDelete =
+                currentUserType == UserType.CompanyEmployee ||
                 vehicleToDelete.OwnerId == currentUser.Id;
 
             if (!canDelete)

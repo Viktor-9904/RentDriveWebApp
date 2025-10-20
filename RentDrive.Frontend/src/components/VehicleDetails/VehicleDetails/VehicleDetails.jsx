@@ -1,21 +1,23 @@
-import { useNavigate, useParams } from "react-router-dom";
+import "./VehicleDetails.css"
+
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Check, X } from "lucide-react";
+import { Check, MoreVertical, MoreVerticalIcon, Settings, X } from "lucide-react";
 
-import { useAuth } from "../../context/AccountContext";
-import { useBackendURL } from "../../hooks/useBackendURL";
+import { useAuth } from "../../../context/AccountContext";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
-import RentNowModal from "./RentNowModal";
-import VehicleCalendar from "./VehicleCalendar";
-import ReviewList from "./ReviewList";
-import Spinner from "../shared/Spinner/Spinner";
-import StarRating from "../shared/VehicleStarRating";
-import ExpandedVehicleImageModal from "./ExpandedVehicleImageModal/ExpandedVehicleImageModal";
-import DeleteConfirmationModal from "../shared/DeleteConfirmationModal/DeleteConfirmationModal";
+import RentNowModal from "../RentNowModal";
+import VehicleCalendar from "../VehicleCalendar";
+import ReviewList from "../ReviewList";
+import Spinner from "../../shared/Spinner/Spinner";
+import StarRating from "../../shared/VehicleStarRating";
+import ExpandedVehicleImageModal from "../ExpandedVehicleImageModal/ExpandedVehicleImageModal";
+import DeleteConfirmationModal from "../../shared/DeleteConfirmationModal/DeleteConfirmationModal";
 
-import useVehicleDetails from "../Vehicles/hooks/useVehicleDetails";
-import usebookedDates from "../../hooks/useBookedDates";
-import useDeleteVehicle from "../Vehicles/hooks/useDeleteVehicle";
+import useVehicleDetails from "../../Vehicles/hooks/useVehicleDetails";
+import usebookedDates from "../../../hooks/useBookedDates";
+import useDeleteVehicle from "../../Vehicles/hooks/useDeleteVehicle";
 
 export default function VehicleDetails() {
     const { id } = useParams();
@@ -47,8 +49,7 @@ export default function VehicleDetails() {
         const { success, error } = await deleteVehicle(vehicle?.id);
 
         if (!success) {
-            console.error("Delete failed:", error);
-            alert(error);
+            alert("Failed to remove vehicle");
         }
     };
 
@@ -91,7 +92,7 @@ export default function VehicleDetails() {
         }
     };
 
-    if (loadingVehicle || isUserLoading) return <Spinner message={"Vehicle Details"}/>;
+    if (loadingVehicle || isUserLoading) return <Spinner message={"Vehicle Details"} />;
     if (!vehicle) return <div className="text-center py-5 text-danger">Vehicle not found.</div>;
 
     const baseProperties = [
@@ -113,14 +114,26 @@ export default function VehicleDetails() {
             <div className="container py-5 vehicle-details">
 
                 <div className="vehicle-header mb-4 d-flex justify-content-between align-items-center">
-                    <div>
-                        <h2 className="make-model mb-1">{vehicle.make} {vehicle.model}</h2>
+                    <div className="vehicle-info">
+                        <div className="name-and-dots">
+                            <h2 className="make-model mb-1">{vehicle.make} {vehicle.model}</h2>
+                            {isAuthenticated && (user?.isCompanyEmployee || user?.id === vehicle.ownerId) && (
+                                <div className="dropdown">
+                                    <MoreVerticalIcon className="dots-icon" />
+                                    <ul className="dropdown-menu">
+                                        {(user?.id === vehicle.ownerId || (vehicle.isCompanyProperty && user?.isCompanyEmployee)) && (<li onClick={handleEdit}>Edit</li>)}
+                                        <li onClick={handleDelete}>Delete</li>
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
                         <StarRating rating={vehicle.starsRating} reviewCount={vehicle.reviewCount} />
                     </div>
                     <div className="price-tag">
                         {vehicle.pricePerDay.toFixed(2)} € / day
                     </div>
                 </div>
+
 
                 <div className="row g-4">
                     <div className="col-md-7">
@@ -160,7 +173,7 @@ export default function VehicleDetails() {
                                     Rent Now
                                 </button>
                             )}
-                        </div>
+                            </div>
                     </div>
                 </div>
 
@@ -213,11 +226,6 @@ export default function VehicleDetails() {
                         </div>
                     </div>
                 )}
-
-                <div className="mt-4 d-flex gap-2">
-                    <button className="btn btn-primary" onClick={handleEdit}>Edit</button>
-                    <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
-                </div>
             </div>
 
             <ReviewList reviews={vehicle.vehicleReviews} />
@@ -238,7 +246,7 @@ export default function VehicleDetails() {
                 userBalance={user?.balance}
                 isAuthenticated={isAuthenticated}
             />
-            
+
             <ExpandedVehicleImageModal
                 show={showImageModal}
                 onClose={() => setShowImageModal(false)}
