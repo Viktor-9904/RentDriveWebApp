@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Interfaces;
@@ -182,28 +182,57 @@ namespace RentDrive.Services.Data
             return true;
         }
 
-        public async Task<VehicleEditFormViewModel?> GetEditVehicleDetailsByIdAsync(Guid id)
+        public async Task<VehicleEditFormViewModel?> GetEditVehicleDetailsByIdAsync(Guid editorId, Guid vehicleId)
         {
-            VehicleEditFormViewModel? editVehicle = await this.vehicleRepository
+            Vehicle? vehicleEntity = await this.vehicleRepository
                 .GetAllAsQueryable()
-                .Where(v => v.Id == id && !v.IsDeleted)
-                .Select(v => new VehicleEditFormViewModel()
-                {
-                    Id = v.Id,
-                    Make = v.Make,
-                    Model = v.Model,
-                    FuelType = v.FuelType,
-                    VehicleTypeId = v.VehicleTypeId,
-                    VehicleType = v.VehicleType.Name,
-                    VehicleTypeCategoryId = v.VehicleTypeCategoryId,
-                    VehicleTypeCategory = v.VehicleTypeCategory.Name,
-                    Color = v.Color,
-                    PricePerDay = v.PricePerDay,
-                    DateOfProduction = v.DateOfProduction,
-                    CurbWeightInKg = v.CurbWeightInKg,
-                    Description = v.Description,
-                })
-                .FirstOrDefaultAsync();
+                .Include(v => v.Owner)
+                .Include(v => v.VehicleType)
+                .Include(v => v.VehicleTypeCategory)
+                .FirstOrDefaultAsync(v => v.Id == vehicleId && !v.IsDeleted);
+
+            if (vehicleEntity == null || vehicleEntity.Owner == null)
+            {
+                return null;
+            }
+
+            ApplicationUser? editor = await this.applicationUserRepository
+                .GetByIdAsync(editorId);
+
+            if (editor == null)
+            {
+                return null; // editor user not found;
+            }
+
+
+            bool vehicleIsCompanyOwned = vehicleEntity.OwnerId == new Guid(CompanyId);
+            UserType currentUserType = editor.UserType;
+
+            bool canEdit =
+                (vehicleIsCompanyOwned && currentUserType == UserType.CompanyEmployee) ||
+                (!vehicleIsCompanyOwned && vehicleEntity.OwnerId == editorId);
+
+            if (!canEdit)
+            {
+                return null; // unauthorized user
+            }
+
+            VehicleEditFormViewModel? editVehicle = new VehicleEditFormViewModel()
+            {
+                Id = vehicleEntity.Id,
+                Make = vehicleEntity.Make,
+                Model = vehicleEntity.Model,
+                FuelType = vehicleEntity.FuelType,
+                VehicleTypeId = vehicleEntity.VehicleTypeId,
+                VehicleType = vehicleEntity.VehicleType.Name,
+                VehicleTypeCategoryId = vehicleEntity.VehicleTypeCategoryId,
+                VehicleTypeCategory = vehicleEntity.VehicleTypeCategory.Name,
+                Color = vehicleEntity.Color,
+                PricePerDay = vehicleEntity.PricePerDay,
+                DateOfProduction = vehicleEntity.DateOfProduction,
+                CurbWeightInKg = vehicleEntity.CurbWeightInKg,
+                Description = vehicleEntity.Description,
+            };
 
             if (editVehicle == null)
             {
@@ -211,10 +240,10 @@ namespace RentDrive.Services.Data
             }
 
             editVehicle.VehicleTypePropertyValues = await this.vehicleTypePropertyValueService
-                .GetVehicleTypePropertyValuesByVehicleIdAsync(id);
+                .GetVehicleTypePropertyValuesByVehicleIdAsync(vehicleId);
 
             editVehicle.ImageURLs = await this.vehicleImageService
-                .GetAllImagesByVehicleIdAsync(id);
+                .GetAllImagesByVehicleIdAsync(vehicleId);
 
             return editVehicle;
         }
@@ -277,22 +306,45 @@ namespace RentDrive.Services.Data
             return true;
         }
 
-        public async Task<bool> UpdateVehicle(VehicleEditFormViewModel viewModel)
+        public async Task<bool> UpdateVehicle(Guid editorId, VehicleEditFormViewModel viewModel)
         {
+            Vehicle? vehicleToUpdate = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .Include(v => v.Owner)
+                .FirstOrDefaultAsync(v => v.Id == viewModel.Id);
+
+            if (vehicleToUpdate == null)
+            {
+                return false; // vehicle not found
+            }
+
+
+            ApplicationUser? editor = await this.applicationUserRepository
+                .GetByIdAsync(editorId);
+
+            if (editor == null)
+            {
+                return false; // editor user not found;
+            }
+
+            bool vehicleIsCompanyOwned = vehicleToUpdate.OwnerId == new Guid(CompanyId);
+            UserType currentUserType = editor.UserType;
+
+            bool canEdit =
+                (vehicleIsCompanyOwned && currentUserType == UserType.CompanyEmployee) ||
+                (!vehicleIsCompanyOwned && vehicleToUpdate.OwnerId == editorId);
+
+            if (!canEdit)
+            {
+                return false; // unauthorized user
+            }
+
             bool hasValidPropertyValueTypes = await this.vehicleTypePropertyService
                 .ValidateVehicleTypeProperties(viewModel.VehicleTypeId, viewModel.VehicleTypePropertyInputValues);
 
             if (!hasValidPropertyValueTypes)
             {
-                return false;
-            }
-
-            Vehicle vehicleToUpdate = await this.vehicleRepository
-                .GetByIdAsync(viewModel.Id);
-
-            if (vehicleToUpdate == null)
-            {
-                return false;
+                return false; // edited vehicle doesn't have valid property types
             }
 
             vehicleToUpdate.Make = viewModel.Make;

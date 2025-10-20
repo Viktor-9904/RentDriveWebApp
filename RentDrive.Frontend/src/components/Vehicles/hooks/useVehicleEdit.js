@@ -14,6 +14,7 @@ const useVehicleEdit = (id) => {
             try {
                 const response = await fetch(`${backEndURL}/api/vehicle/edit/${id}`, {
                     method: "GET",
+                    credentials: "include",
                     headers: { "Content-Type": "application/json" },
                 });
 

@@ -123,6 +123,7 @@ export default function EditVehicleForm() {
     try {
       const response = await fetch(`${backEndURL}/api/vehicle/edit/${id}`, {
         method: "Put",
+        credentials: "include",
         body: formData,
       });
       

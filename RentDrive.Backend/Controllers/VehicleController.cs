@@ -70,11 +70,23 @@ namespace RentDrive.Backend.Controllers
 
             return Ok(vehicleDetails);
         }
-        [HttpGet("edit/{id}")]
-        public async Task<IActionResult> GetEditVehicleDetailsById(Guid id)
+        [HttpGet("edit/{vehicleId}")]
+        public async Task<IActionResult> GetEditVehicleDetailsById(Guid vehicleId)
         {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(userId, ref guidUserId))
+            {
+                return BadRequest();
+            }
+
             VehicleEditFormViewModel? vehicleDetails = await this.vehicleService
-                .GetEditVehicleDetailsByIdAsync(id);
+                .GetEditVehicleDetailsByIdAsync(guidUserId, vehicleId);
 
             if (vehicleDetails == null)
             {
@@ -96,8 +108,20 @@ namespace RentDrive.Backend.Controllers
                 return BadRequest(ModelState);
             }
 
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(userId, ref guidUserId))
+            {
+                return BadRequest();
+            }
+
             bool wasVehicleUpdated = await this.vehicleService
-                .UpdateVehicle(viewModel);
+                .UpdateVehicle(guidUserId, viewModel);
 
             if (!wasVehicleUpdated)
             {
