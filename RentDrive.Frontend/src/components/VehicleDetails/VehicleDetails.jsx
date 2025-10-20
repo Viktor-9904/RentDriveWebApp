@@ -15,6 +15,7 @@ import DeleteConfirmationModal from "../shared/DeleteConfirmationModal/DeleteCon
 
 import useVehicleDetails from "../Vehicles/hooks/useVehicleDetails";
 import usebookedDates from "../../hooks/useBookedDates";
+import useDeleteVehicle from "../Vehicles/hooks/useDeleteVehicle";
 
 export default function VehicleDetails() {
     const { id } = useParams();
@@ -22,6 +23,7 @@ export default function VehicleDetails() {
 
     const { vehicle, loadingVehicle } = useVehicleDetails(id);
     const { bookedDates, loadingBookedDates, errorBookedDates } = usebookedDates(id);
+    const { deleteVehicle } = useDeleteVehicle();
 
     const [bookedDatesState, setBookedDatesState] = useState([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -42,18 +44,11 @@ export default function VehicleDetails() {
     const handleDelete = () => setShowDeleteModal(true);
 
     const confirmDelete = async () => {
-        try {
-            const res = await fetch(`${backEndURL}/api/vehicle/delete/${vehicle.id}`, {
-                method: "DELETE"
-            });
-            if (!res.ok) {
-                throw new Error("Failed to delete vehicle")
-            };
+        const { success, error } = await deleteVehicle(vehicle?.id);
 
-            navigate("/listing");
-
-        } catch (err) {
-            alert(err.message);
+        if (!success) {
+            console.error("Delete failed:", error);
+            alert(error);
         }
     };
 

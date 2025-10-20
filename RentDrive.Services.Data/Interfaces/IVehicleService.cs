@@ -11,7 +11,7 @@ namespace RentDrive.Services.Data.Interfaces
         Task<VehicleEditFormViewModel?> GetEditVehicleDetailsByIdAsync(Guid editorId, Guid vehicleId);
         Task<bool> CreateVehicle(string userId, VehicleCreateFormViewModel viewModel);
         Task<bool> UpdateVehicle(Guid editorId, VehicleEditFormViewModel viewModel);
-        Task<bool> SoftDeleteVehicleByIdAsync(Guid id);
+        Task<bool> SoftDeleteVehicleByIdAsync(Guid deletedByUserId,Guid vehicleId);
         Task<decimal> GetVehiclePricePerDayByVehicleId(Guid id);
         Task<int> GetUserListedVehicleCountAsync(Guid userId);
         Task<IEnumerable<UserVehicleViewModel>> GetUserVehiclesByIdAsync(string userId);

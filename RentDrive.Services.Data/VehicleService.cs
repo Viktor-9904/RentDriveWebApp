@@ -165,14 +165,35 @@ namespace RentDrive.Services.Data
             return vehicleDetails;
         }
 
-        public async Task<bool> SoftDeleteVehicleByIdAsync(Guid id)
+        public async Task<bool> SoftDeleteVehicleByIdAsync(Guid deletedByUserId, Guid vehicleId)
         {
-            Vehicle vehicleToDelete = await this.vehicleRepository
-                .GetByIdAsync(id);
+            ApplicationUser currentUser = await this.applicationUserRepository
+                .GetByIdAsync(deletedByUserId);
+
+            if (currentUser == null)
+            {
+                return false; // user not found
+            }
+
+            Vehicle? vehicleToDelete = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .Include(v => v.Owner)
+                .FirstOrDefaultAsync(v => v.Id == vehicleId);
 
             if (vehicleToDelete == null)
             {
-                return false;
+                return false; // vehicle not found
+            }
+
+            UserType currentUserType = currentUser.UserType;
+
+            bool canDelete = 
+                currentUserType == UserType.CompanyEmployee || 
+                vehicleToDelete.OwnerId == currentUser.Id;
+
+            if (!canDelete)
+            {
+                return false; // unauthorized user
             }
 
             vehicleToDelete.IsDeleted = true;

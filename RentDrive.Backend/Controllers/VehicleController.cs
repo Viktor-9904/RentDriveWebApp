@@ -157,8 +157,20 @@ namespace RentDrive.Backend.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(userId, ref guidUserId))
+            {
+                return BadRequest();
+            }
+
             bool wasVehicleSuccessfullySoftDeleted = await this.vehicleService
-                .SoftDeleteVehicleByIdAsync(id);
+                .SoftDeleteVehicleByIdAsync(guidUserId, id);
 
             if (!wasVehicleSuccessfullySoftDeleted)
             {
