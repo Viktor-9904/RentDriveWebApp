@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Chat;
 using System.Security.Claims;
@@ -24,28 +25,52 @@ namespace RentDrive.Backend.Controllers
             string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (currentUserId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            IEnumerable<UserChatDetails> availableUsers = await this.chatMessageService
-                .GetUserChatDetails(currentUserId, searchQuery);
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(currentUserId, ref guidUserId))
+            {
+                return Unauthorized("Unauthorized User!");
+            }
 
-            return Ok(availableUsers);
+            ServiceResponse<IEnumerable<UserChatDetails>> response = await this.chatMessageService
+                .GetUserChatDetails(guidUserId, searchQuery);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpGet("recent-chats")]
         public async Task<IActionResult> GetUserRecentChats()
         {
             string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (currentUserId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            IEnumerable<RecentChatViewModel> recentChats = await this.chatMessageService
-                .GetRecentChats(currentUserId);
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(currentUserId, ref guidUserId))
+            {
+                return Unauthorized("Unauthorized User!");
+            }
 
-            return Ok(recentChats);
+            ServiceResponse<IEnumerable<RecentChatViewModel>> response = await this.chatMessageService
+                .GetRecentChats(guidUserId);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpGet("load-chat-history/{receiverId}")]
         public async Task<IActionResult> LoadChatHistory(Guid receiverId)
         {
@@ -56,18 +81,21 @@ namespace RentDrive.Backend.Controllers
 
             string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Guid guidCurrentUserId = Guid.Empty;
-            bool isCurrentUserValid = IsGuidValid(currentUserId!, ref guidCurrentUserId);
-
-            if (!isCurrentUserValid || receiverId == Guid.Empty)
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(currentUserId, ref guidUserId))
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            IEnumerable<ChatMessageViewModel> messages = await this.chatMessageService
-                .LoadChatHistory(guidCurrentUserId, receiverId);
+            ServiceResponse<IEnumerable<ChatMessageViewModel>> response = await this.chatMessageService
+                .LoadChatHistory(guidUserId, receiverId);
 
-            return Ok(messages);
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
     }
 }

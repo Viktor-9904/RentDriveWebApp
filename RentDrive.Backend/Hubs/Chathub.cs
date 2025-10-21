@@ -43,9 +43,9 @@ public class ChatHub : Hub
             Text = sentMessage.Text,
         };
 
-        bool wasMessageSaved = await chatService.SaveChatMessage(chatMessage);
+        ServiceResponse<bool> response = await chatService.SaveChatMessage(chatMessage);
 
-        if (wasMessageSaved)
+        if (response.Success)
         {
             await Clients.User(sentMessage.ReceiverId.ToString())
                 .SendAsync("ReceiveMessage", sentMessage);

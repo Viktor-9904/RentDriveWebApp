@@ -2,6 +2,7 @@
 
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Chat;
 
@@ -25,16 +26,13 @@ namespace RentDrive.Services.Data
             this.encryptionService = encryptionService;
         }
 
-        public async Task<IEnumerable<UserChatDetails>> GetUserChatDetails(string currentUserId, string searchQuery)
+        public async Task<ServiceResponse<IEnumerable<UserChatDetails>>> GetUserChatDetails(Guid guidUserId, string searchQuery)
         {
-            if (!Guid.TryParse(currentUserId, out var currentUserGuid))
-                return [];
-
             List<UserChatDetails> userDetails = await this.applicationUserRepository
                 .GetAllAsQueryable()
                 .Where(au =>
                     EF.Functions.ILike(au.UserName ?? "".ToLower(), $"%{searchQuery.ToLower()}%") &&
-                    au.Id != currentUserGuid &&
+                    au.Id != guidUserId &&
                     au.Id != new Guid(CompanyId))
                 .Select(au => new UserChatDetails()
                 {
@@ -44,10 +42,10 @@ namespace RentDrive.Services.Data
                 .Take(5)
                 .ToListAsync();
 
-            return userDetails;
+            return ServiceResponse<IEnumerable<UserChatDetails>>.Ok(userDetails);
         }
 
-        public async Task<bool> SaveChatMessage(ChatMessageViewModel sentMessage)
+        public async Task<ServiceResponse<bool>> SaveChatMessage(ChatMessageViewModel sentMessage)
         {
             ChatMessage newChatMessage = new ChatMessage()
             {
@@ -60,21 +58,18 @@ namespace RentDrive.Services.Data
             await this.chatMessageRepository.AddAsync(newChatMessage);
             await this.chatMessageRepository.SaveChangesAsync();
 
-            return true;
+            return ServiceResponse<bool>.Ok(true);
         }
 
-        public async Task<IEnumerable<RecentChatViewModel>> GetRecentChats(string currentUserId)
+        public async Task<ServiceResponse<IEnumerable<RecentChatViewModel>>> GetRecentChats(Guid guidUserId)
         {
-            if (!Guid.TryParse(currentUserId, out var currentUserGuid))
-                return [];
-
             List<RecentChatViewModel> recentChats = await this.chatMessageRepository
                 .GetAllAsQueryable()
                 .Include(cm => cm.Sender)
                 .Include(cm => cm.Receiver)
-                .Where(cm => cm.SenderId == currentUserGuid || cm.ReceiverId == currentUserGuid)
+                .Where(cm => cm.SenderId == guidUserId || cm.ReceiverId == guidUserId)
                 .GroupBy(cm =>
-                    cm.SenderId == currentUserGuid
+                    cm.SenderId == guidUserId
                         ? cm.ReceiverId
                         : cm.SenderId
                 )
@@ -82,8 +77,8 @@ namespace RentDrive.Services.Data
                     .OrderByDescending(cm => cm.TimeSent)
                     .Select(cm => new RecentChatViewModel
                     {
-                        UserId = cm.SenderId == currentUserGuid ? cm.ReceiverId : cm.SenderId,
-                        Username = cm.SenderId == currentUserGuid
+                        UserId = cm.SenderId == guidUserId ? cm.ReceiverId : cm.SenderId,
+                        Username = cm.SenderId == guidUserId
                             ? (cm.Receiver.UserName ?? "Unknown")
                             : (cm.Sender.UserName ?? "Unknown")
                     })
@@ -91,10 +86,10 @@ namespace RentDrive.Services.Data
                 )
                 .ToListAsync();
 
-            return recentChats;
+            return ServiceResponse<IEnumerable<RecentChatViewModel>>.Ok(recentChats);
         }
 
-        public async Task<IEnumerable<ChatMessageViewModel>> LoadChatHistory(Guid senderId, Guid receiverId)
+        public async Task<ServiceResponse<IEnumerable<ChatMessageViewModel>>> LoadChatHistory(Guid senderId, Guid receiverId)
         {
             IEnumerable<ChatMessageViewModel> messages = await this.chatMessageRepository
                 .GetAllAsQueryable()
@@ -106,12 +101,12 @@ namespace RentDrive.Services.Data
                     SenderId = cm.SenderId,
                     ReceiverId = cm.ReceiverId,
                     Text = this.encryptionService.Decrypt(cm.Text),
-                    TimeSent = cm.TimeSent
+                    TimeSent = DateTime.SpecifyKind(cm.TimeSent, DateTimeKind.Utc)
                 })
                 .OrderBy(cmvm => cmvm.TimeSent)
                 .ToListAsync();
 
-            return messages;
+            return ServiceResponse<IEnumerable<ChatMessageViewModel>>.Ok(messages);
         }
     }
 }
