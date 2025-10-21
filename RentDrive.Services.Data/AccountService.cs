@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
+
 using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
 using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.ApplicationUser;
-using RentDrive.Web.ViewModels.Chat;
+
 using static RentDrive.Common.EntityValidationConstants.RentalValidationConstans.Fees;
 
 namespace RentDrive.Services.Data
@@ -39,7 +39,7 @@ namespace RentDrive.Services.Data
             this.vehicleService = vehicleService;
             this.rentalService = rentalService;
         }
-        public async Task<IdentityResult> RegisterUserAsync(RegisterUserInputViewModel viewModel)
+        public async Task<ServiceResponse<IdentityResult>> RegisterUserAsync(RegisterUserInputViewModel viewModel)
         {
             ApplicationUser user = new ApplicationUser()
             {
@@ -48,10 +48,16 @@ namespace RentDrive.Services.Data
             };
 
             IdentityResult result = await userManager.CreateAsync(user, viewModel.Password);
-            return result;
+
+            if (!result.Succeeded)
+            {
+                return ServiceResponse<IdentityResult>.Fail("Failed To Create User!");
+            }
+
+            return ServiceResponse<IdentityResult>.Ok(result);
         }
 
-        public async Task<SignInResult> LoginUserAsync(string emailOrUsername, string password)
+        public async Task<ServiceResponse<SignInResult>> LoginUserAsync(string emailOrUsername, string password)
         {
             ApplicationUser? user;
 
@@ -66,30 +72,31 @@ namespace RentDrive.Services.Data
 
             if (user == null)
             {
-                return SignInResult.Failed;
+                return ServiceResponse<SignInResult>.Fail("Failed To Login!");
             }
 
-            return await this.signInManager.PasswordSignInAsync(user, password, isPersistent: true, lockoutOnFailure: false);
+            SignInResult result = await this.signInManager.PasswordSignInAsync(user, password, isPersistent: true, lockoutOnFailure: false);
+
+            if (!result.Succeeded)
+            {
+                return ServiceResponse<SignInResult>.Fail("Failed To Login!");
+            }
+
+            return ServiceResponse<SignInResult>.Ok(result);
         }
 
         public async Task LogoutUserAsync()
         {
-            await this.signInManager.SignOutAsync();
+           await this.signInManager.SignOutAsync();
         }
 
-        public async Task<ApplicationUser?> GetUserByIdAsync(string id)
-        {
-            ApplicationUser? user = await userManager.FindByIdAsync(id);
-            return user;
-        }
-
-        public async Task<OverviewDetailsViewModel?> GetOverviewDetailsByUserIdAsync(string userId)
+        public async Task<ServiceResponse<OverviewDetailsViewModel?>> GetOverviewDetailsByUserIdAsync(string userId)
         {
             ApplicationUser? user = await userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
-                return null;
+                return ServiceResponse<OverviewDetailsViewModel?>.Fail("User Not Found!");
             }
 
             OverviewDetailsViewModel overviewDetails = new OverviewDetailsViewModel()
@@ -109,23 +116,22 @@ namespace RentDrive.Services.Data
 
             if (!listedVehicleCountResponse.Success)
             {
-                // todo;
+                return ServiceResponse<OverviewDetailsViewModel?>.Fail("Failed To Get User Listed Vehicle Count!");
             }
 
             overviewDetails.VehiclesListedCount = listedVehicleCountResponse.Result;
-
             //overviewDetails.UserRating = TODO
 
-            return overviewDetails;
+            return ServiceResponse<OverviewDetailsViewModel?>.Ok(overviewDetails);
         }
 
-        public async Task<UserProfileDetailsViewModel?> GetUserProfileDetailsByIdAsync(string userId)
+        public async Task<ServiceResponse<UserProfileDetailsViewModel?>> GetUserProfileDetailsByIdAsync(string userId)
         {
             ApplicationUser? user = await userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
-                return null;
+                return ServiceResponse<UserProfileDetailsViewModel?>.Fail("User Not Found!");
             }
 
             UserProfileDetailsViewModel userDetails = new UserProfileDetailsViewModel()
@@ -135,16 +141,16 @@ namespace RentDrive.Services.Data
                 PhoneNumber = user.PhoneNumber,
             };
 
-            return userDetails;
+            return ServiceResponse<UserProfileDetailsViewModel?>.Ok(userDetails);
         }
 
-        public async Task<UserProfileDetailsViewModel?> UpdateUserProfileDetails(string userId, UserProfileDetailsViewModel viewModel)
+        public async Task<ServiceResponse<UserProfileDetailsViewModel?>> UpdateUserProfileDetails(string userId, UserProfileDetailsViewModel viewModel)
         {
             ApplicationUser? user = await userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
-                return null;
+                return ServiceResponse<UserProfileDetailsViewModel?>.Fail("User Not Found!");
             }
 
             user.UserName = viewModel.Username;
@@ -155,7 +161,7 @@ namespace RentDrive.Services.Data
 
             if (!result.Succeeded)
             {
-                return null;
+                return ServiceResponse<UserProfileDetailsViewModel?>.Fail("Failed To Update User Profile!");
             }
 
             UserProfileDetailsViewModel userDetails = new UserProfileDetailsViewModel()
@@ -165,42 +171,46 @@ namespace RentDrive.Services.Data
                 PhoneNumber = user.PhoneNumber,
             };
 
-            return userDetails;
+            return ServiceResponse<UserProfileDetailsViewModel?>.Ok(userDetails);
         }
 
-        public async Task<bool> UpdatedUserPasswordAsync(string userId, UserChangePasswordInpuViewModel viewModel)
+        public async Task<ServiceResponse<bool>> UpdatedUserPasswordAsync(string userId, UserChangePasswordInpuViewModel viewModel)
         {
             ApplicationUser? user = await userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("User Not Found!");
             }
 
             IdentityResult result = await userManager.ChangePasswordAsync(user, viewModel.CurrentPassword, viewModel.NewPassword);
 
-            return result.Succeeded;
+            if (!result.Succeeded)
+            {
+                return ServiceResponse<bool>.Fail("Failed To Change Password!");
+            }
+
+            return ServiceResponse<bool>.Ok(true);
         }
 
-        public async Task<UserCredentialsViewModel?> GetUserCredentialsByIdAsync(string userId)
+        public async Task<ServiceResponse<UserCredentialsViewModel?>> GetUserCredentialsByIdAsync(Guid userId)
         {
-
             ApplicationUser? user = await this.applicationUserRepository
                 .GetAllAsQueryable()
                 .Include(au => au.Wallet)
                 .Include(au => au.Rentals)
-                .FirstOrDefaultAsync(au => au.Id.ToString() == userId);
+                .FirstOrDefaultAsync(au => au.Id == userId);
 
             if (user == null)
             {
-                return null;
+                return ServiceResponse<UserCredentialsViewModel?>.Fail("User Not Found!");
             }
 
             decimal pendingBalance = await this.rentalRepository
                 .GetAllAsQueryable()
                 .Include(r => r.Vehicle)
                 .Where(r =>
-                    r.Vehicle.OwnerId.ToString() == userId &&
+                    r.Vehicle.OwnerId == userId &&
                     r.Status == RentalStatus.Active)
                 .Select(r => r.TotalPrice)
                 .SumAsync()
@@ -218,20 +228,21 @@ namespace RentDrive.Services.Data
                 PendingBalance = pendingBalance
             };
 
-            return userCredentials;
+            return ServiceResponse<UserCredentialsViewModel?>.Ok(userCredentials);
         }
 
-        public async Task<bool> Exists(string userId)
+        public async Task<ServiceResponse<bool>> Exists(string userId)
         {
-            bool isGuid = Guid.TryParse(userId, out Guid guidId);
-            if (!isGuid)
+            bool isGuidValid = Guid.TryParse(userId, out Guid guidId);
+            if (!isGuidValid)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Invalid User Id!");
             }
-            
-            return await this.applicationUserRepository
+
+            return ServiceResponse<bool>.Ok(
+                await this.applicationUserRepository
                 .GetAllAsQueryable()
-                .AnyAsync(au => au.Id == guidId);
+                .AnyAsync(au => au.Id == guidId));
         }
     }
 }

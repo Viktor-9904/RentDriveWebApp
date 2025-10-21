@@ -1,11 +1,10 @@
-﻿using System.Security.Claims;
-
+﻿using Azure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.ApplicationUser;
-using RentDrive.Web.ViewModels.Chat;
+using System.Security.Claims;
 
 namespace RentDrive.Backend.Controllers
 {
@@ -30,28 +29,23 @@ namespace RentDrive.Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult registerUser = await accountService.RegisterUserAsync(viewModel);
+            ServiceResponse<IdentityResult> registerResponse = await accountService.RegisterUserAsync(viewModel);
 
-            if (!registerUser.Succeeded)
+            if (!registerResponse.Success)
             {
-                foreach (IdentityError error in registerUser.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-
-                return BadRequest(ModelState);
+                return BadRequest(registerResponse.ErrorMessage);
             }
 
-            var loginUser = await this.accountService.LoginUserAsync(viewModel.Email, viewModel.Password);
+            ServiceResponse<Microsoft.AspNetCore.Identity.SignInResult> loginResponse = await this.accountService.LoginUserAsync(viewModel.Email, viewModel.Password);
 
-            if (!loginUser.Succeeded)
+            if (!loginResponse.Success)
             {
-                ModelState.AddModelError(string.Empty, "User was successfully registered but could not be logged in.");
-                return BadRequest(ModelState);
+                return BadRequest(loginResponse.ErrorMessage);
             }
 
-            return Ok("Successful registration.");
+            return Ok(loginResponse.Result);
         }
+
         [HttpPost("login", Name = "Login User")]
         public async Task<IActionResult> Login([FromBody] LoginUserInputViewModel viewModel)
         {
@@ -60,58 +54,70 @@ namespace RentDrive.Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await this.accountService.LoginUserAsync(viewModel.EmailOrUsername, viewModel.Password);
+            ServiceResponse<Microsoft.AspNetCore.Identity.SignInResult> response = await this.accountService.LoginUserAsync(viewModel.EmailOrUsername, viewModel.Password);
 
-            if (!result.Succeeded)
+            if (!response.Success)
             {
-                return Unauthorized("Invalid credentials.");
+                return BadRequest(response.ErrorMessage);
             }
-            return Ok("Logged in successfully!");
+
+            return Ok(response.Result);
         }
+
         [HttpPost("logout", Name = "Logout User")]
         public async Task<IActionResult> Logout()
         {
             await this.accountService.LogoutUserAsync();
             return Ok("User logged out");
         }
+
         [HttpGet("me", Name = "User credentials")]
         public async Task<IActionResult> GetUser()
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            UserCredentialsViewModel? userCredentials = await this.accountService
-                .GetUserCredentialsByIdAsync(userId);
-
-            if (userCredentials == null)
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(userId, ref guidUserId))
             {
-                return NotFound();
+                return Unauthorized("Unauthorized User!");
             }
 
-            return Ok(userCredentials);
+
+            ServiceResponse<UserCredentialsViewModel?> response = await this.accountService
+                .GetUserCredentialsByIdAsync(guidUserId);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpGet("overview-details", Name = "User overview")]
         public async Task<IActionResult> GetOverviewDetails()
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            OverviewDetailsViewModel? overviewDetails = await this.accountService
+           ServiceResponse<OverviewDetailsViewModel?> response = await this.accountService
                 .GetOverviewDetailsByUserIdAsync(userId);
 
-            if (overviewDetails == null)
+            if (!response.Success)
             {
-                return NotFound();
+                return BadRequest(response.ErrorMessage);
             }
 
-            return Ok(overviewDetails);
+            return Ok(response.Result);
         }
+
         [HttpGet("user-profile-details")]
         public async Task<IActionResult> GetUserProfileDetails()
         {
@@ -121,16 +127,17 @@ namespace RentDrive.Backend.Controllers
                 return Unauthorized();
             }
 
-            UserProfileDetailsViewModel? userDetails  = await this.accountService
+           ServiceResponse<UserProfileDetailsViewModel?> response = await this.accountService
                 .GetUserProfileDetailsByIdAsync(userId);
 
-            if (userDetails == null)
+            if (!response.Success)
             {
-                return BadRequest();
+                return BadRequest(response.ErrorMessage);
             }
 
-            return Ok(userDetails);
+            return Ok(response.Result);
         }
+
         [HttpPut("update-profile-details")]
         public async Task<IActionResult> UpdateUserDetails([FromBody] UserProfileDetailsViewModel viewModel)
         {
@@ -140,16 +147,17 @@ namespace RentDrive.Backend.Controllers
                 return Unauthorized();
             }
 
-            UserProfileDetailsViewModel? userDetails = await this.accountService
+            ServiceResponse<UserProfileDetailsViewModel?> response = await this.accountService
                 .UpdateUserProfileDetails(userId, viewModel);
 
-            if (userDetails == null)
+            if (!response.Success)
             {
-                return BadRequest();
+                return BadRequest(response.ErrorMessage);
             }
 
-            return Ok(userDetails);
+            return Ok(response.Result);
         }
+
         [HttpPost("update-password")]
         public async Task<IActionResult> UpdateUserPassword([FromBody] UserChangePasswordInpuViewModel viewModel)
         {
@@ -161,18 +169,18 @@ namespace RentDrive.Backend.Controllers
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            bool updatedPassword = await this.accountService
+            ServiceResponse<bool> response = await this.accountService
                 .UpdatedUserPasswordAsync(userId, viewModel);
 
-            if (!updatedPassword)
+            if (!response.Success)
             {
-                return BadRequest("Failed to update password.");
+                return BadRequest(response.ErrorMessage);
             }
 
-            return Ok("Successfully updated password.");
+            return Ok(response.Result);
         }
     }
 }

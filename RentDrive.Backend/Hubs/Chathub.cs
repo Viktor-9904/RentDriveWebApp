@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Chat;
 using System.Security.Claims;
@@ -24,7 +25,9 @@ public class ChatHub : Hub
             return;
         }
 
-        if (!await accountService.Exists(currentUserId))
+        ServiceResponse<bool> currentUserExistsResponse = await accountService.Exists(currentUserId);
+
+        if (!currentUserExistsResponse.Success)
         {
             return;
         }
