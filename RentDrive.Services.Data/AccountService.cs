@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.ApplicationUser;
 using RentDrive.Web.ViewModels.Chat;
@@ -103,8 +104,15 @@ namespace RentDrive.Services.Data
             overviewDetails.CompletedRentalsCount = await this.rentalService
                 .GetCompletedRentalsCountByUserIdAsync(user.Id);
 
-            overviewDetails.VehiclesListedCount = await this.vehicleService
+            ServiceResponse<int> listedVehicleCountResponse = await this.vehicleService
                 .GetUserListedVehicleCountAsync(user.Id);
+
+            if (!listedVehicleCountResponse.Success)
+            {
+                // todo;
+            }
+
+            overviewDetails.VehiclesListedCount = listedVehicleCountResponse.Result;
 
             //overviewDetails.UserRating = TODO
 

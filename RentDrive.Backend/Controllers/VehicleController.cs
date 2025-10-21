@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
-using RentDrive.Services.Data;
+﻿using Azure;
+using Microsoft.AspNetCore.Mvc;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Vehicle;
 using System.Security.Claims;
@@ -20,35 +20,59 @@ namespace RentDrive.Backend.Controllers
         }
 
         [HttpGet("recent")]
-        public async Task<IEnumerable<RecentVehicleIndexViewModel>> GetRecentVehicles()
+        public async Task<IActionResult> GetRecentVehicles()
         {
-            IEnumerable<RecentVehicleIndexViewModel> recentVehiclesViewModels
-                = await this.vehicleService.IndexGetTop3RecentVehiclesAsync();
+            ServiceResponse<IEnumerable<RecentVehicleIndexViewModel>> response = await this.vehicleService
+                .IndexGetTop3RecentVehiclesAsync();
 
-            return recentVehiclesViewModels;
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpGet("all")]
-        public async Task<IEnumerable<ListingVehicleViewModel>> GetAllVehicles()
+        public async Task<IActionResult> GetAllVehicles()
         {
-            IEnumerable<ListingVehicleViewModel> allVehiclesViewModels = await this.vehicleService
+            ServiceResponse<IEnumerable<ListingVehicleViewModel>> response = await this.vehicleService
                 .GetAllVehiclesAsync();
 
-            return allVehiclesViewModels;
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpGet("user-vehicles")]
         public async Task<IActionResult> GetUserVehicles()
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            IEnumerable<UserVehicleViewModel> userVehicles = await this.vehicleService
-                .GetUserVehiclesByIdAsync(userId);
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(userId, ref guidUserId))
+            {
+                return Unauthorized("Unauthorized User");
+            }
 
-            return Ok(userVehicles);
+            ServiceResponse<IEnumerable<UserVehicleViewModel>> response = await this.vehicleService
+                .GetUserVehiclesByIdAsync(guidUserId);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicleDetailsById(string id)
         {
@@ -57,50 +81,52 @@ namespace RentDrive.Backend.Controllers
 
             if (!isVehicleIdValid)
             {
-                return NotFound();
+                return NotFound("Invalid Vehicle Id!");
             }
 
-            VehicleDetailsViewModel? vehicleDetails = await this.vehicleService
+            ServiceResponse<VehicleDetailsViewModel?> response = await this.vehicleService
                 .GetVehicleDetailsByIdAsync(vehicleGuidId);
 
-            if (vehicleDetails == null)
+            if (!response.Success)
             {
-                return BadRequest(ModelState);
+                return BadRequest(response.ErrorMessage);
             }
 
-            return Ok(vehicleDetails);
+            return Ok(response.Result);
         }
+
         [HttpGet("edit/{vehicleId}")]
         public async Task<IActionResult> GetEditVehicleDetailsById(Guid vehicleId)
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
             Guid guidUserId = Guid.Empty;
             if (!IsGuidValid(userId, ref guidUserId))
             {
-                return BadRequest();
+                return Unauthorized("Unauthorized User!");
             }
 
-            VehicleEditFormViewModel? vehicleDetails = await this.vehicleService
+            ServiceResponse<VehicleEditFormViewModel?> response = await this.vehicleService
                 .GetEditVehicleDetailsByIdAsync(guidUserId, vehicleId);
 
-            if (vehicleDetails == null)
+            if (!response.Success)
             {
-                return BadRequest(ModelState);
+                return BadRequest(response.ErrorMessage);
             }
 
-            return Ok(vehicleDetails);
+            return Ok(response.Result);
         }
+
         [HttpPut("edit/{id}")]
         public async Task<IActionResult> UpdateVehicle(Guid id, [FromForm] VehicleEditFormViewModel viewModel) //TODO: Fix updating vehicle when older vehicle does not contain a newly created vehicleTypeProperty.
         {
             if (id != viewModel.Id)
             {
-                return BadRequest("Mismatched ID");
+                return BadRequest("Mismatched Vehicle Id!");
             }
 
             if (!ModelState.IsValid)
@@ -117,19 +143,20 @@ namespace RentDrive.Backend.Controllers
             Guid guidUserId = Guid.Empty;
             if (!IsGuidValid(userId, ref guidUserId))
             {
-                return BadRequest();
+                return Unauthorized("Unauthorized User!");
             }
 
-            bool wasVehicleUpdated = await this.vehicleService
+            ServiceResponse<bool> response = await this.vehicleService
                 .UpdateVehicle(guidUserId, viewModel);
 
-            if (!wasVehicleUpdated)
+            if (!response.Success)
             {
-                return BadRequest("Failed to update Vehicle.");
+                return BadRequest(response.ErrorMessage);
             }
 
-            return Ok();
+            return Ok(response.Result);
         }
+
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromForm] VehicleCreateFormViewModel viewModel)
         {
@@ -141,85 +168,125 @@ namespace RentDrive.Backend.Controllers
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            bool wasVehicleCreated = await this.vehicleService
-                .CreateVehicle(userId, viewModel);
-
-            if (!wasVehicleCreated)
+            Guid userGuidId = Guid.Empty;
+            if (!IsGuidValid(userId, ref userGuidId))
             {
-                return BadRequest("Failed to create Vehicle.");
+                return Unauthorized("Unauthorized User!");
             }
 
-            return Ok();
+            ServiceResponse<bool> response = await this.vehicleService
+                .CreateVehicle(userGuidId, viewModel);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
             Guid guidUserId = Guid.Empty;
             if (!IsGuidValid(userId, ref guidUserId))
             {
-                return BadRequest();
+                return Unauthorized("Unauthorized User!");
             }
 
-            bool wasVehicleSuccessfullySoftDeleted = await this.vehicleService
+            ServiceResponse<bool> response = await this.vehicleService
                 .SoftDeleteVehicleByIdAsync(guidUserId, id);
 
-            if (!wasVehicleSuccessfullySoftDeleted)
+            if (!response.Success)
             {
-                return BadRequest("Failed to remove Vehicle");
+                return BadRequest(response.ErrorMessage);
             }
 
-            return Ok();
+            return Ok(response.Result);
         }
+
         [HttpGet("base-filter-properties")]
         public async Task<IActionResult> GetBaseFilterProperties([FromQuery] int? vehicleTypeId = null, [FromQuery] int? vehicleTypeCategoryId = null)
         {
-            BaseFilterProperties baseProperties = await vehicleService.GetBaseFilterPropertiesAsync(vehicleTypeId, vehicleTypeCategoryId);
+            ServiceResponse<BaseFilterProperties> response = await vehicleService
+                .GetBaseFilterPropertiesAsync(vehicleTypeId, vehicleTypeCategoryId);
 
-            return Ok(baseProperties);
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpPost("filter")]
         public async Task<IActionResult> FilterVehicles([FromBody] FilteredVehiclesViewModel filter)
         {
             if (filter == null)
-                return BadRequest("Filter is required.");
+                return BadRequest("Filter is required!");
 
-            IEnumerable<Guid> vehicles = await vehicleService
+            ServiceResponse<IEnumerable<Guid>> response = await vehicleService
                 .GetFilteredVehicles(filter);
 
-            return Ok(vehicles);
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpGet("search-vehicles")]
         public async Task<IActionResult> SearchVehicles([FromQuery] string searchQuery)
         {
             if (string.IsNullOrWhiteSpace(searchQuery))
-                return BadRequest("Search query is required.");
+                return BadRequest("Search query is required!");
 
-            IEnumerable<ListingVehicleViewModel> vehicles = await vehicleService
+            ServiceResponse<IEnumerable<ListingVehicleViewModel>> response = await vehicleService
                 .GetSearchQueryVehicles(searchQuery);
 
-            return Ok(vehicles);
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpGet("all-makes")]
         public async Task<IActionResult> GetAllMakes()
         {
-            IEnumerable<string> allMakes = await this.vehicleService
+            ServiceResponse<IEnumerable<string>> response = await this.vehicleService
                 .GetAllVehicleMakesAsync();
 
-            return Ok(allMakes);
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpGet("active-listings")]
         public async Task<IActionResult> GetActiveListings()
         {
-            return Ok(await this.vehicleService.GetActiveListings());
+            ServiceResponse<int> response = await this.vehicleService.GetActiveListings();
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
     }
 }

@@ -2,13 +2,13 @@
 using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Enums;
 using RentDrive.Web.ViewModels.Vehicle;
 using RentDrive.Web.ViewModels.VehicleReview;
 
 using static RentDrive.Common.EntityValidationConstants.ApplicationUserValidationConstants.Company;
-using static RentDrive.Common.EntityValidationConstants.VehicleValidationConstants.Vehicle;
 using static RentDrive.Common.EntityValidationConstants.VehicleValidationConstants.VehicleImages;
 
 namespace RentDrive.Services.Data
@@ -44,7 +44,7 @@ namespace RentDrive.Services.Data
             this.vehicleTypePropertyValueService = vehicleTypePropertyValueService;
         }
 
-        public async Task<IEnumerable<ListingVehicleViewModel>> GetAllVehiclesAsync()
+        public async Task<ServiceResponse<IEnumerable<ListingVehicleViewModel>>> GetAllVehiclesAsync()
         {
             IEnumerable<ListingVehicleViewModel> allVehicles = await this.vehicleRepository
                 .GetAllAsQueryable()
@@ -68,16 +68,21 @@ namespace RentDrive.Services.Data
                 })
                 .ToListAsync();
 
+            if (!allVehicles.Any())
+            {
+                return ServiceResponse<IEnumerable<ListingVehicleViewModel>>.Fail("No Vehicles Found!");
+            }
+
             foreach (ListingVehicleViewModel vehicle in allVehicles)
             {
                 string currentVehicleImageURL = await this.vehicleImageService.GetFirstImageByVehicleIdAsync(vehicle.Id);
                 vehicle.ImageURL = currentVehicleImageURL;
             }
 
-            return allVehicles;
+            return ServiceResponse<IEnumerable<ListingVehicleViewModel>>.Ok(allVehicles);
         }
 
-        public async Task<IEnumerable<RecentVehicleIndexViewModel>> IndexGetTop3RecentVehiclesAsync()
+        public async Task<ServiceResponse<IEnumerable<RecentVehicleIndexViewModel>>> IndexGetTop3RecentVehiclesAsync()
         {
             IEnumerable<RecentVehicleIndexViewModel> top3RecentVehicles = await this.vehicleRepository
                 .GetAllAsQueryable()
@@ -105,16 +110,21 @@ namespace RentDrive.Services.Data
                 })
                 .ToArrayAsync();
 
+            if (!top3RecentVehicles.Any())
+            {
+                return ServiceResponse<IEnumerable<RecentVehicleIndexViewModel>>.Fail("No Vehicles Found!");
+            }
+
             foreach (RecentVehicleIndexViewModel vehicle in top3RecentVehicles)
             {
                 string currentVehicleImageURL = await this.vehicleImageService.GetFirstImageByVehicleIdAsync(vehicle.Id);
                 vehicle.ImageURL = currentVehicleImageURL;
             }
 
-            return top3RecentVehicles;
+            return ServiceResponse<IEnumerable<RecentVehicleIndexViewModel>>.Ok(top3RecentVehicles);
         }
 
-        public async Task<VehicleDetailsViewModel?> GetVehicleDetailsByIdAsync(Guid id)
+        public async Task<ServiceResponse<VehicleDetailsViewModel?>> GetVehicleDetailsByIdAsync(Guid id)
         {
             VehicleDetailsViewModel? vehicleDetails = await this.vehicleRepository
                 .GetAllAsQueryable()
@@ -157,23 +167,23 @@ namespace RentDrive.Services.Data
 
             if (vehicleDetails == null)
             {
-                return null;
+                return ServiceResponse<VehicleDetailsViewModel?>.Fail("Vehicle Not Found!");
             }
 
             vehicleDetails.VehicleProperties = await this.vehicleTypePropertyValueService
                 .GetVehicleTypePropertyValuesByVehicleIdAsync(id);
 
-            return vehicleDetails;
+            return ServiceResponse<VehicleDetailsViewModel?>.Ok(vehicleDetails);
         }
 
-        public async Task<bool> SoftDeleteVehicleByIdAsync(Guid deletedByUserId, Guid vehicleId)
+        public async Task<ServiceResponse<bool>> SoftDeleteVehicleByIdAsync(Guid deletedByUserId, Guid vehicleId)
         {
             ApplicationUser currentUser = await this.applicationUserRepository
                 .GetByIdAsync(deletedByUserId);
 
             if (currentUser == null)
             {
-                return false; // user not found
+                return ServiceResponse<bool>.Fail("User Not Found!");
             }
 
             Vehicle? vehicleToDelete = await this.vehicleRepository
@@ -183,7 +193,7 @@ namespace RentDrive.Services.Data
 
             if (vehicleToDelete == null)
             {
-                return false; // vehicle not found
+                return ServiceResponse<bool>.Fail("Vehicle Not Found!");
             }
 
             UserType currentUserType = currentUser.UserType;
@@ -194,28 +204,33 @@ namespace RentDrive.Services.Data
 
             if (!canDelete)
             {
-                return false; // unauthorized user
+                return ServiceResponse<bool>.Fail("Unauthorized User!");
             }
 
             vehicleToDelete.IsDeleted = true;
 
             await vehicleRepository.SaveChangesAsync();
 
-            return true;
+            return ServiceResponse<bool>.Ok(true);
         }
 
-        public async Task<VehicleEditFormViewModel?> GetEditVehicleDetailsByIdAsync(Guid editorId, Guid vehicleId)
+        public async Task<ServiceResponse<VehicleEditFormViewModel?>> GetEditVehicleDetailsByIdAsync(Guid editorId, Guid vehicleId)
         {
-            Vehicle? vehicleEntity = await this.vehicleRepository
+            Vehicle? vehicleEntityToEdit = await this.vehicleRepository
                 .GetAllAsQueryable()
                 .Include(v => v.Owner)
                 .Include(v => v.VehicleType)
                 .Include(v => v.VehicleTypeCategory)
                 .FirstOrDefaultAsync(v => v.Id == vehicleId && !v.IsDeleted);
 
-            if (vehicleEntity == null || vehicleEntity.Owner == null)
+            if (vehicleEntityToEdit == null)
             {
-                return null;
+                return ServiceResponse<VehicleEditFormViewModel?>.Fail("Vehicle Not Found!");
+            }
+
+            if (vehicleEntityToEdit.Owner == null)
+            {
+                return ServiceResponse<VehicleEditFormViewModel?>.Fail("Vehicle Has No Owner!");
             }
 
             ApplicationUser? editor = await this.applicationUserRepository
@@ -223,43 +238,38 @@ namespace RentDrive.Services.Data
 
             if (editor == null)
             {
-                return null; // editor user not found;
+                return ServiceResponse<VehicleEditFormViewModel?>.Fail("Current User Not Found!");
             }
 
 
-            bool vehicleIsCompanyOwned = vehicleEntity.OwnerId == new Guid(CompanyId);
+            bool vehicleIsCompanyOwned = vehicleEntityToEdit.OwnerId == new Guid(CompanyId);
             UserType currentUserType = editor.UserType;
 
             bool canEdit =
                 (vehicleIsCompanyOwned && currentUserType == UserType.CompanyEmployee) ||
-                (!vehicleIsCompanyOwned && vehicleEntity.OwnerId == editorId);
+                (!vehicleIsCompanyOwned && vehicleEntityToEdit.OwnerId == editorId);
 
             if (!canEdit)
             {
-                return null; // unauthorized user
+                return ServiceResponse<VehicleEditFormViewModel?>.Fail("Unnauthorized User");
             }
 
             VehicleEditFormViewModel? editVehicle = new VehicleEditFormViewModel()
             {
-                Id = vehicleEntity.Id,
-                Make = vehicleEntity.Make,
-                Model = vehicleEntity.Model,
-                FuelType = vehicleEntity.FuelType,
-                VehicleTypeId = vehicleEntity.VehicleTypeId,
-                VehicleType = vehicleEntity.VehicleType.Name,
-                VehicleTypeCategoryId = vehicleEntity.VehicleTypeCategoryId,
-                VehicleTypeCategory = vehicleEntity.VehicleTypeCategory.Name,
-                Color = vehicleEntity.Color,
-                PricePerDay = vehicleEntity.PricePerDay,
-                DateOfProduction = vehicleEntity.DateOfProduction,
-                CurbWeightInKg = vehicleEntity.CurbWeightInKg,
-                Description = vehicleEntity.Description,
+                Id = vehicleEntityToEdit.Id,
+                Make = vehicleEntityToEdit.Make,
+                Model = vehicleEntityToEdit.Model,
+                FuelType = vehicleEntityToEdit.FuelType,
+                VehicleTypeId = vehicleEntityToEdit.VehicleTypeId,
+                VehicleType = vehicleEntityToEdit.VehicleType.Name,
+                VehicleTypeCategoryId = vehicleEntityToEdit.VehicleTypeCategoryId,
+                VehicleTypeCategory = vehicleEntityToEdit.VehicleTypeCategory.Name,
+                Color = vehicleEntityToEdit.Color,
+                PricePerDay = vehicleEntityToEdit.PricePerDay,
+                DateOfProduction = vehicleEntityToEdit.DateOfProduction,
+                CurbWeightInKg = vehicleEntityToEdit.CurbWeightInKg,
+                Description = vehicleEntityToEdit.Description,
             };
-
-            if (editVehicle == null)
-            {
-                return null;
-            }
 
             editVehicle.VehicleTypePropertyValues = await this.vehicleTypePropertyValueService
                 .GetVehicleTypePropertyValuesByVehicleIdAsync(vehicleId);
@@ -267,18 +277,18 @@ namespace RentDrive.Services.Data
             editVehicle.ImageURLs = await this.vehicleImageService
                 .GetAllImagesByVehicleIdAsync(vehicleId);
 
-            return editVehicle;
+            return ServiceResponse<VehicleEditFormViewModel?>.Ok(editVehicle);
         }
 
-        public async Task<bool> CreateVehicle(string userdId, VehicleCreateFormViewModel viewModel)
+        public async Task<ServiceResponse<bool>> CreateVehicle(Guid userdId, VehicleCreateFormViewModel viewModel)
         {
             ApplicationUser? user = await this.applicationUserRepository
                 .GetAllAsQueryable()
-                .FirstOrDefaultAsync(au => au.Id.ToString() == userdId);
+                .FirstOrDefaultAsync(au => au.Id == userdId);
 
             if (user == null)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Editor User Not Found!");
             }
 
             bool hasValidPropertyValueTypes = await this.vehicleTypePropertyService
@@ -286,7 +296,7 @@ namespace RentDrive.Services.Data
 
             if (!hasValidPropertyValueTypes)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Invalid Vehicle Type Properties!");
             }
 
             Vehicle newVehicle = new Vehicle()
@@ -312,7 +322,7 @@ namespace RentDrive.Services.Data
 
             if (!successfullyAddedPropertyValues)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Failed To Add Vehicle Type Property Values!");
             }
 
             bool successfullyAddedVehicleImages = await this.vehicleImageService
@@ -320,15 +330,15 @@ namespace RentDrive.Services.Data
 
             if (!successfullyAddedVehicleImages)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Failed To Save Vehicle Images!");
             }
 
             await this.vehicleRepository.SaveChangesAsync();
 
-            return true;
+            return ServiceResponse<bool>.Ok(true);
         }
 
-        public async Task<bool> UpdateVehicle(Guid editorId, VehicleEditFormViewModel viewModel)
+        public async Task<ServiceResponse<bool>> UpdateVehicle(Guid editorId, VehicleEditFormViewModel viewModel)
         {
             Vehicle? vehicleToUpdate = await this.vehicleRepository
                 .GetAllAsQueryable()
@@ -337,7 +347,7 @@ namespace RentDrive.Services.Data
 
             if (vehicleToUpdate == null)
             {
-                return false; // vehicle not found
+                return ServiceResponse<bool>.Fail("Vehicle Not Found!");
             }
 
 
@@ -346,7 +356,7 @@ namespace RentDrive.Services.Data
 
             if (editor == null)
             {
-                return false; // editor user not found;
+                return ServiceResponse<bool>.Fail("Editor User Not Found!");
             }
 
             bool vehicleIsCompanyOwned = vehicleToUpdate.OwnerId == new Guid(CompanyId);
@@ -358,7 +368,7 @@ namespace RentDrive.Services.Data
 
             if (!canEdit)
             {
-                return false; // unauthorized user
+                return ServiceResponse<bool>.Fail("Unauthorized User!");
             }
 
             bool hasValidPropertyValueTypes = await this.vehicleTypePropertyService
@@ -366,7 +376,7 @@ namespace RentDrive.Services.Data
 
             if (!hasValidPropertyValueTypes)
             {
-                return false; // edited vehicle doesn't have valid property types
+                return ServiceResponse<bool>.Fail("Vehicle Doesn't Have Valid Properties!");
             }
 
             vehicleToUpdate.Make = viewModel.Make;
@@ -383,7 +393,7 @@ namespace RentDrive.Services.Data
 
             if (!successfullyAddedPropertyValues)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Failed To Add Vehicle Type Property Values");
             }
 
             bool hasNewImages = viewModel.NewImages.Count > 0;
@@ -395,42 +405,47 @@ namespace RentDrive.Services.Data
 
                 if (!successfullyAddedVehicleImages)
                 {
-                    return false;
+                    return ServiceResponse<bool>.Fail("Failed To Add New Images!");
                 }
 
             }
 
             await this.vehicleRepository.SaveChangesAsync();
 
-            return true;
+            return ServiceResponse<bool>.Ok(true);
         }
 
-        public async Task<decimal> GetVehiclePricePerDayByVehicleId(Guid id)
+        public async Task<ServiceResponse<decimal>> GetVehiclePricePerDayByVehicleId(Guid id)
         {
             Vehicle vehicle = await this.vehicleRepository
                 .GetByIdAsync(id);
 
-            return vehicle.PricePerDay;
+            if (vehicle == null)
+            {
+                return ServiceResponse<decimal>.Fail("Vehicle Not Found!");
+            }
+
+            return ServiceResponse<decimal>.Ok(vehicle.PricePerDay);
         }
 
-        public async Task<int> GetUserListedVehicleCountAsync(Guid userId)
+        public async Task<ServiceResponse<int>> GetUserListedVehicleCountAsync(Guid userId)
         {
             int ownedVehicleCount = await this.vehicleRepository
                 .GetAllAsQueryable()
                 .Where(v => v.OwnerId == userId)
                 .CountAsync();
 
-            return ownedVehicleCount;
+            return ServiceResponse<int>.Ok(ownedVehicleCount);
         }
 
-        public async Task<IEnumerable<UserVehicleViewModel>> GetUserVehiclesByIdAsync(string userId)
+        public async Task<ServiceResponse<IEnumerable<UserVehicleViewModel>>> GetUserVehiclesByIdAsync(Guid userId)
         {
             IEnumerable<UserVehicleViewModel> userVehicles = await this.vehicleRepository
                 .GetAllAsQueryable()
                 .Include(v => v.VehicleImages)
                 .Include(v => v.Rentals)
                 .Where(v =>
-                    v.OwnerId.ToString() == userId &&
+                    v.OwnerId == userId &&
                     v.IsDeleted == false)
                 .Select(v => new UserVehicleViewModel()
                 {
@@ -446,10 +461,10 @@ namespace RentDrive.Services.Data
                 })
                 .ToListAsync();
 
-            return userVehicles;
+            return ServiceResponse<IEnumerable<UserVehicleViewModel>>.Ok(userVehicles);
         }
 
-        public async Task<BaseFilterProperties> GetBaseFilterPropertiesAsync(int? vehicleTypeId = null, int? vehicleTypeCategoryId = null)
+        public async Task<ServiceResponse<BaseFilterProperties>> GetBaseFilterPropertiesAsync(int? vehicleTypeId = null, int? vehicleTypeCategoryId = null)
         {
             IQueryable<Vehicle> vehiclesQuery = this.vehicleRepository.GetAllAsQueryable().Where(v => v.IsDeleted == false);
 
@@ -465,16 +480,18 @@ namespace RentDrive.Services.Data
 
             if (!await vehiclesQuery.AnyAsync())
             {
-                return new BaseFilterProperties
-                {
-                    Makes = new List<PropertyWithCount>(),
-                    Colors = new List<PropertyWithCount>(),
-                    FuelTypes = new List<FuelTypeEnumViewModel>(),
-                    MinPrice = 0,
-                    MaxPrice = 0,
-                    MinYearOfProduction = 0,
-                    MaxYearOfProduction = 0
-                };
+                return ServiceResponse<BaseFilterProperties>.Ok(
+                    new BaseFilterProperties
+                    {
+                        Makes = new List<PropertyWithCount>(),
+                        Colors = new List<PropertyWithCount>(),
+                        FuelTypes = new List<FuelTypeEnumViewModel>(),
+                        MinPrice = 0,
+                        MaxPrice = 0,
+                        MinYearOfProduction = 0,
+                        MaxYearOfProduction = 0
+                    }
+                );
             }
 
             List<PropertyWithCount> makesWithCounts = await vehiclesQuery
@@ -524,10 +541,10 @@ namespace RentDrive.Services.Data
                 MaxYearOfProduction = maxYear,
             };
 
-            return baseProperties;
+            return ServiceResponse<BaseFilterProperties>.Ok(baseProperties);
         }
 
-        public async Task<IEnumerable<Guid>> GetFilteredVehicles(FilteredVehiclesViewModel filter)
+        public async Task<ServiceResponse<IEnumerable<Guid>>> GetFilteredVehicles(FilteredVehiclesViewModel filter)
         {
             IQueryable<Vehicle> query = this.vehicleRepository
                 .GetAllAsQueryable()
@@ -610,10 +627,10 @@ namespace RentDrive.Services.Data
                 .Select(v => v.Id)
                 .ToListAsync();
 
-            return filteredVehicles;
+            return ServiceResponse<IEnumerable<Guid>>.Ok(filteredVehicles);
         }
 
-        public async Task<IEnumerable<ListingVehicleViewModel>> GetSearchQueryVehicles(string searchQuery)
+        public async Task<ServiceResponse<IEnumerable<ListingVehicleViewModel>>> GetSearchQueryVehicles(string searchQuery)
         {
             IEnumerable<ListingVehicleViewModel> result = await this.vehicleRepository
                 .GetAllAsQueryable()
@@ -648,10 +665,10 @@ namespace RentDrive.Services.Data
                 .ThenBy(lvvm => lvvm.Model)
                 .ToListAsync();
 
-            return result;
+            return ServiceResponse<IEnumerable<ListingVehicleViewModel>>.Ok(result);
         }
 
-        public async Task<IEnumerable<string>> GetAllVehicleMakesAsync()
+        public async Task<ServiceResponse<IEnumerable<string>>> GetAllVehicleMakesAsync()
         {
             IEnumerable<string> makes = await this.vehicleRepository
                 .GetAllAsQueryable()
@@ -659,15 +676,16 @@ namespace RentDrive.Services.Data
                 .Select(v => v.Make)
                 .ToListAsync();
 
-            return makes;
+            return ServiceResponse<IEnumerable<string>>.Ok(makes);
         }
 
-        public async Task<int> GetActiveListings()
+        public async Task<ServiceResponse<int>> GetActiveListings()
         {
-            return await this.vehicleRepository
+            return ServiceResponse<int>.Ok(
+                await this.vehicleRepository
                 .GetAllAsQueryable()
                 .Where(v => v.IsDeleted == false)
-                .CountAsync();
+                .CountAsync());
         }
     }
 }
