@@ -1,4 +1,5 @@
 ﻿using RentDrive.Common.Enums;
+using RentDrive.Services.Data.Common;
 using RentDrive.Web.ViewModels.Enums;
 using RentDrive.Web.ViewModels.VehicleTypeProperty;
 
@@ -42,37 +43,31 @@ namespace RentDrive.Services.Data.Interfaces
 
             return units;
         }
-        public bool IsValueTypeValid(PropertyValueType valueType, string value, out string error)
+        public ServiceResponse<bool> IsValueTypeValid(PropertyValueType valueType, string value)
         {
-            error = null;
-
             switch (valueType)
             {
                 case PropertyValueType.Int:
                     if (!int.TryParse(value, out _))
                     {
-                        error = "Must be an integer.";
-                        return false;
+                        return ServiceResponse<bool>.Fail("Value Must Be An Integer!");
                     }
                     break;
                 case PropertyValueType.Double:
                     if (!double.TryParse(value, out _))
                     {
-                        error = "Must be a double number.";
-                        return false;
+                        return ServiceResponse<bool>.Fail("Value Must Be An Double!");
                     }
                     break;
                 case PropertyValueType.Boolean:
                     if (!bool.TryParse(value, out _))
                     {
-                        error = "Must be true or false.";
-                        return false;
+                        return ServiceResponse<bool>.Fail("Value Must Be A Boolean!");
                     }
                     break;
             }
 
-            return true;
+            return ServiceResponse<bool>.Ok(true);
         }
-
     }
 }

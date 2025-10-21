@@ -3,6 +3,7 @@
 using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.VehicleTypeProperty;
 using RentDrive.Web.ViewModels.VehicleTypePropertyValue;
@@ -136,9 +137,11 @@ namespace RentDrive.Services.Data
                     return false;
                 }
 
-                if (!this.baseService.IsValueTypeValid(currentExpectedProperty.ValueType, submittedValue.Value, out string? error))
+                ServiceResponse<bool> isCurrentValueTypeValid = this.baseService.IsValueTypeValid(currentExpectedProperty.ValueType, submittedValue.Value);
+
+                if (!isCurrentValueTypeValid.Success)
                 {
-                    return false;
+                    // todo return .IsFailed()
                 }
             }
             return true;
