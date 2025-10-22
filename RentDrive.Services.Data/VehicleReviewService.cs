@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.VehicleReview;
 
@@ -20,17 +22,17 @@ namespace RentDrive.Services.Data
             this.rentalRepository = rentalRepository;
         }
 
-        public async Task<int> GetVehicleReviewCountByIdAsync(Guid vehicleId)
+        public async Task<ServiceResponse<int>> GetVehicleReviewCountByIdAsync(Guid vehicleId)
         {
             int reviewCount = await this.vehicleReviewRepository
                 .GetAllAsQueryable()
                 .Where(vr => vr.VehicleId == vehicleId)
                 .CountAsync();
 
-            return reviewCount;
+            return ServiceResponse<int>.Ok(reviewCount);
         }
 
-        public async Task<double> GetVehicleStarRatingByIdAsync(Guid vehicleId)
+        public async Task<ServiceResponse<double>> GetVehicleStarRatingByIdAsync(Guid vehicleId)
         {
             double averageRating = await this.vehicleReviewRepository
                 .GetAllAsQueryable()
@@ -38,30 +40,31 @@ namespace RentDrive.Services.Data
                 .Select(vr => (double?)vr.Stars)
                 .AverageAsync() ?? 0;
 
-            return averageRating;
+            return ServiceResponse<double>.Ok(averageRating);
         }
-        public async Task<bool> AddVehicleReview(string userId, AddNewReviewViewModel viewModel)
+
+        public async Task<ServiceResponse<bool>> AddVehicleReview(Guid userId, AddNewReviewViewModel viewModel)
         {
             Rental? rentalToReview = await this.rentalRepository
                 .GetAllAsQueryable()
                 .Include(r => r.Review)
                 .FirstOrDefaultAsync(r =>
-                    r.RenterId.ToString() == userId &&
+                    r.RenterId == userId &&
                     r.Id == viewModel.RentalId);
 
             if (rentalToReview == null)
             {
-                return false; // Rental not found.
+                return ServiceResponse<bool>.Fail("Rental Not Found!");
             }
 
             if (rentalToReview.Status != RentalStatus.Completed)
             {
-                return false; // Cannot review a rental that is not completed.
+                return ServiceResponse<bool>.Fail("Can't Review An Active Rental!");
             }
 
             if (rentalToReview.Review != null)
             {
-                return false; // Rental is already reviewed.
+                return ServiceResponse<bool>.Fail("Rental Is Already Reviewed!");
             }
 
             VehicleReview newReview = new VehicleReview()
@@ -76,7 +79,7 @@ namespace RentDrive.Services.Data
             await this.vehicleReviewRepository.AddAsync(newReview);
             await this.vehicleReviewRepository.SaveChangesAsync();
 
-            return true;
+            return ServiceResponse<bool>.Ok(true);
         }
     }
 }
