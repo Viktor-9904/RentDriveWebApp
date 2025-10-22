@@ -108,7 +108,6 @@ builder.Services.AddScoped<IRepository<ChatMessage, Guid>, BaseRepository<ChatMe
 builder.Services.AddScoped<IVehicleImageService, VehicleImageService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IVehicleTypePropertyValueService, VehicleTypePropertyValueService>();
 builder.Services.AddScoped<IVehicleTypePropertyService, VehicleTypePropertyService>();
 builder.Services.AddScoped<IVehicleTypeService, VehicleTypeService>();
