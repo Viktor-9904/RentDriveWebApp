@@ -184,8 +184,15 @@ namespace RentDrive.Services.Data
                 return ServiceResponse<VehicleDetailsViewModel?>.Fail("Vehicle Not Found!");
             }
 
-            vehicleDetails.VehicleProperties = await this.vehicleTypePropertyValueService
+            ServiceResponse<List<VehicleTypePropertyValuesViewModel>> loadVehiclePropertiesResponse = await this.vehicleTypePropertyValueService
                 .GetVehicleTypePropertyValuesByVehicleIdAsync(id);
+
+            if (!loadVehiclePropertiesResponse.Success)
+            {
+                return ServiceResponse<VehicleDetailsViewModel?>.Fail("Failed To Load Vehicle Type Property Values!");
+            }
+
+            vehicleDetails.VehicleProperties = loadVehiclePropertiesResponse.Result!;
 
             return ServiceResponse<VehicleDetailsViewModel?>.Ok(vehicleDetails);
         }
@@ -285,8 +292,15 @@ namespace RentDrive.Services.Data
                 Description = vehicleEntityToEdit.Description,
             };
 
-            editVehicle.VehicleTypePropertyValues = await this.vehicleTypePropertyValueService
+            ServiceResponse<List<VehicleTypePropertyValuesViewModel>> loadVehiclePropertiesResponse = await this.vehicleTypePropertyValueService
                 .GetVehicleTypePropertyValuesByVehicleIdAsync(vehicleId);
+
+            if (!loadVehiclePropertiesResponse.Success)
+            {
+                return ServiceResponse<VehicleEditFormViewModel?>.Fail("Failed To Load Vehicle Type Property Values!");
+            }
+
+            editVehicle.VehicleTypePropertyValues = loadVehiclePropertiesResponse.Result!;
 
             ServiceResponse<List<string>> editedVehicleImageURLsResponse = await this.vehicleImageService
                 .GetAllImagesByVehicleIdAsync(vehicleId);
@@ -338,10 +352,10 @@ namespace RentDrive.Services.Data
 
             await vehicleRepository.AddAsync(newVehicle);
 
-            bool successfullyAddedPropertyValues = await this.vehicleTypePropertyValueService
+            ServiceResponse<bool> addedProperyValuesResponse = await this.vehicleTypePropertyValueService
                 .AddVehicleTypePropertyValuesAsync(newVehicle.Id, viewModel.PropertyValues);
 
-            if (!successfullyAddedPropertyValues)
+            if (!addedProperyValuesResponse.Success)
             {
                 return ServiceResponse<bool>.Fail("Failed To Add Vehicle Type Property Values!");
             }
@@ -409,10 +423,10 @@ namespace RentDrive.Services.Data
             vehicleToUpdate.Description = viewModel.Description;
             vehicleToUpdate.FuelType = viewModel.FuelType;
 
-            bool successfullyAddedPropertyValues = await this.vehicleTypePropertyValueService
+            ServiceResponse<bool> addedPropertyValuesResponse = await this.vehicleTypePropertyValueService
                 .UpdateVehicleTypePropertyValuesAsync(vehicleToUpdate.Id, viewModel.VehicleTypePropertyInputValues);
 
-            if (!successfullyAddedPropertyValues)
+            if (!addedPropertyValuesResponse.Success)
             {
                 return ServiceResponse<bool>.Fail("Failed To Add Vehicle Type Property Values");
             }

@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using RentDrive.Common.Enums;
+﻿using Microsoft.EntityFrameworkCore;
+
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Vehicle;
-using RentDrive.Web.ViewModels.VehicleTypeProperty;
 using RentDrive.Web.ViewModels.VehicleTypePropertyValue;
-using System.Transactions;
 
 namespace RentDrive.Services.Data
 {
@@ -27,7 +25,7 @@ namespace RentDrive.Services.Data
             this.vehicleTypeRepository = vehicleTypeRepository;
         }
 
-        public async Task<List<VehicleTypePropertyValuesViewModel>> GetVehicleTypePropertyValuesByVehicleIdAsync(Guid vehicleId)
+        public async Task<ServiceResponse<List<VehicleTypePropertyValuesViewModel>>> GetVehicleTypePropertyValuesByVehicleIdAsync(Guid vehicleId)
         {
             List<VehicleTypePropertyValuesViewModel> vehicleTypePropertyValues = await this.vehicleTypePropertyValueRepository
                 .GetAllAsQueryable()
@@ -43,10 +41,10 @@ namespace RentDrive.Services.Data
                 })
                 .ToListAsync();
 
-            return vehicleTypePropertyValues;
+            return ServiceResponse<List<VehicleTypePropertyValuesViewModel>>.Ok(vehicleTypePropertyValues);
         }
 
-        public async Task<bool> AddVehicleTypePropertyValuesAsync(Guid vehicleId, IEnumerable<VehicleTypePropertyValueInputViewModel> submittedPropertyValues)
+        public async Task<ServiceResponse<bool>> AddVehicleTypePropertyValuesAsync(Guid vehicleId, IEnumerable<VehicleTypePropertyValueInputViewModel> submittedPropertyValues)
         {
             List<VehicleTypePropertyValue> propertyValues = new List<VehicleTypePropertyValue>();
 
@@ -64,10 +62,10 @@ namespace RentDrive.Services.Data
 
             await vehicleTypePropertyValueRepository.AddRangeAsync(propertyValues.ToArray());
 
-            return true;
+            return ServiceResponse<bool>.Ok(true);
         }
 
-        public async Task<bool> UpdateVehicleTypePropertyValuesAsync(Guid vehicleId, IEnumerable<VehicleTypePropertyValueInputViewModel> submittedPropertyValues)
+        public async Task<ServiceResponse<bool>> UpdateVehicleTypePropertyValuesAsync(Guid vehicleId, IEnumerable<VehicleTypePropertyValueInputViewModel> submittedPropertyValues)
         {
             foreach (VehicleTypePropertyValueInputViewModel currentProperty in submittedPropertyValues)
             {
@@ -79,17 +77,17 @@ namespace RentDrive.Services.Data
 
                 if (propertyValueToUpdate == null)
                 {
-                    return false;
+                    return ServiceResponse<bool>.Fail("Property Value Not Found!");
                 }
 
                 propertyValueToUpdate.PropertyValue = currentProperty.Value;
             }
 
             await this.vehicleTypePropertyValueRepository.SaveChangesAsync();
-            return true;
+            return ServiceResponse<bool>.Ok(true);
         }
 
-        public async Task<FilterTypeProperties?> LoadTypePropertyValuesByTypeIdAsync(int vehicleTypeId)
+        public async Task<ServiceResponse<FilterTypeProperties?>> LoadTypePropertyValuesByTypeIdAsync(int vehicleTypeId)
         {
             VehicleType? vehicleType = await this.vehicleTypeRepository
                 .GetAllAsQueryable()
@@ -98,7 +96,7 @@ namespace RentDrive.Services.Data
 
             if (vehicleType == null)
             {
-                return null;
+                return ServiceResponse<FilterTypeProperties?>.Fail("Vehicle Type Not Found!");
             }
 
             List<VehicleTypeProperty> properties = await this.vehicleTypePropertyRepository
@@ -108,7 +106,7 @@ namespace RentDrive.Services.Data
 
             if (properties == null)
             {
-                return null;
+                return ServiceResponse<FilterTypeProperties?>.Fail("Vehicle Type Properties Not Found!");
             }
 
             List<FilterProperty> filterProperties = new List<FilterProperty>();
@@ -136,12 +134,14 @@ namespace RentDrive.Services.Data
                 });
             }
 
-            return new FilterTypeProperties
-            {
-                TypeId = vehicleType.Id,
-                Name = vehicleType.Name,
-                Properties = filterProperties
-            };
+            return ServiceResponse<FilterTypeProperties?>.Ok(
+                new FilterTypeProperties
+                {
+                    TypeId = vehicleType.Id,
+                    Name = vehicleType.Name,
+                    Properties = filterProperties
+                }
+            );
         }
     }
 }

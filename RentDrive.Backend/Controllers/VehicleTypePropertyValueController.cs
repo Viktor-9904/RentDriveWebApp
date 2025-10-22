@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.VehicleTypePropertyValue;
 
@@ -19,10 +20,15 @@ namespace RentDrive.Backend.Controllers
         [HttpGet("filter/{vehicleTypeId}")]
         public async Task<IActionResult> GetTypePropertiesDetails(int vehicleTypeId)
         {
-            FilterTypeProperties? filterTypeProperties = await this.vehicleTypePropertyValueService
+            ServiceResponse<FilterTypeProperties?> response = await this.vehicleTypePropertyValueService
                 .LoadTypePropertyValuesByTypeIdAsync(vehicleTypeId);
 
-            return Ok(filterTypeProperties);
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
     }
 }
