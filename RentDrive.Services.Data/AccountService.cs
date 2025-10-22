@@ -108,8 +108,15 @@ namespace RentDrive.Services.Data
                 MemberSince = user.CreatedOn
             };
 
-            overviewDetails.CompletedRentalsCount = await this.rentalService
+            ServiceResponse<int> completedRentalsCountResponse = await this.rentalService
                 .GetCompletedRentalsCountByUserIdAsync(user.Id);
+
+            if (!completedRentalsCountResponse.Success)
+            {
+                //return fail ...
+            }
+
+            overviewDetails.CompletedRentalsCount = completedRentalsCountResponse.Result;
 
             ServiceResponse<int> listedVehicleCountResponse = await this.vehicleService
                 .GetUserListedVehicleCountAsync(user.Id);

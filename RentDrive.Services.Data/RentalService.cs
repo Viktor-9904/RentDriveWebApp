@@ -1,16 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
+﻿using System.Globalization;
+
+using Microsoft.EntityFrameworkCore;
+
 using RentDrive.Common.Enums;
 using RentDrive.Data;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Rental;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Metrics;
-using System.Globalization;
-using System.Numerics;
+
 using static RentDrive.Common.EntityValidationConstants.ApplicationUserValidationConstants.Company;
 using static RentDrive.Common.EntityValidationConstants.RentalValidationConstans.Fees;
 
@@ -37,7 +36,7 @@ namespace RentDrive.Services.Data
             this.walletTransactionRepository = walletTransactionRepository;
             this.vehicleRepository = vehicleRepository;
         }
-        public async Task<IEnumerable<DateTime>> GetBookedDatesByVehicleIdAsync(Guid vehicleId)
+        public async Task<ServiceResponse<IEnumerable<DateTime>>> GetBookedDatesByVehicleIdAsync(Guid vehicleId)
         {
             var rentals = await this.rentalRepository
                 .GetAllAsQueryable()
@@ -58,16 +57,16 @@ namespace RentDrive.Services.Data
                 }
             }
 
-            return bookedDates.ToList();
+            return ServiceResponse<IEnumerable<DateTime>>.Ok(bookedDates);
         }
 
-        public async Task<bool> RentVehicle(Guid vehicleId, Guid renterId, IEnumerable<DateTime> bookedDates)
+        public async Task<ServiceResponse<bool>> RentVehicle(Guid vehicleId, Guid renterId, IEnumerable<DateTime> bookedDates)
         {
-            bool areDatesValid = await AreDatesValid(vehicleId, bookedDates);
+            ServiceResponse<bool> areDatesValidResponse = await AreDatesValid(vehicleId, bookedDates);
 
-            if (!areDatesValid)
+            if (!areDatesValidResponse.Success)
             {
-                return false; // invalid selected dates
+                return ServiceResponse<bool>.Fail("Invalid Selected Dates!");
             }
 
             List<DateTime> orderedDates = bookedDates
@@ -82,7 +81,7 @@ namespace RentDrive.Services.Data
 
             if (renter == null || renter?.Wallet == null)
             {
-                return false; // user wallet not found
+                return ServiceResponse<bool>.Fail("Current User Not Found!");
             }
 
             Vehicle? vehicle = await this.vehicleRepository
@@ -93,24 +92,24 @@ namespace RentDrive.Services.Data
 
             if (vehicle == null)
             {
-                return false; // vehicle not found
+                return ServiceResponse<bool>.Fail("Rent Vehicle Not Found!");
             }
 
             if (renterId == vehicle.OwnerId)
             {
-                return false; // cannot rent your own vehicle
+                return ServiceResponse<bool>.Fail("You Can't Rent Your Own Vehicle!");
             }
 
             if (vehicle.Owner == null || vehicle.Owner.Wallet == null)
             {
-                return false; // owner not found
+                return ServiceResponse<bool>.Fail("Vehicle Owner Not Found!");
             }
 
             decimal totalRentalPrice = vehicle.PricePerDay * orderedDates.Count;
 
             if (renter.Wallet.Balance < totalRentalPrice)
             {
-                return false; // insufficient balance
+                return ServiceResponse<bool>.Fail("Insufficient Balance");
             }
 
             using var transaction = await dbContext.Database.BeginTransactionAsync();
@@ -143,7 +142,7 @@ namespace RentDrive.Services.Data
                 await this.rentalRepository.SaveChangesAsync();
 
                 await transaction.CommitAsync();
-                return true;
+                return ServiceResponse<bool>.Ok(true); ;
             }
             catch
             {
@@ -152,11 +151,11 @@ namespace RentDrive.Services.Data
             }
         }
 
-        public async Task<bool> AreDatesValid(Guid vehicleId, IEnumerable<DateTime> dates)
+        public async Task<ServiceResponse<bool>> AreDatesValid(Guid vehicleId, IEnumerable<DateTime> dates)
         {
             if (dates == null || !dates.Any())
             {
-                return false;
+                return ServiceResponse<bool>.Fail("No Dates Selected!");
             }
 
             List<DateTime> requested = dates
@@ -164,29 +163,29 @@ namespace RentDrive.Services.Data
                 .OrderBy(d => d)
                 .ToList();
 
-            IEnumerable<DateTime> alreadyBookedDates = await GetBookedDatesByVehicleIdAsync(vehicleId);
+            ServiceResponse<IEnumerable<DateTime>> alreadyBookedDatesResponse = await GetBookedDatesByVehicleIdAsync(vehicleId);
 
-            HashSet<DateTime> bookedDatesSet = alreadyBookedDates
+            HashSet<DateTime> bookedDatesSet = alreadyBookedDatesResponse.Result!
                 .Select(d => d.Date)
                 .ToHashSet();
 
             if (requested.Any(bookedDatesSet.Contains))
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Already Booked Dates Selected!");
             }
 
             for (int i = 1; i < requested.Count; i++) // check for gaps
             {
                 if ((requested[i] - requested[i - 1]).Days != 1)
                 {
-                    return false;
+                    return ServiceResponse<bool>.Fail("Rental Dates Are Not Consecutive!");
                 }
             }
 
-            return true;
+            return ServiceResponse<bool>.Ok(true);
         }
 
-        public async Task<int> GetCompletedRentalsCountByUserIdAsync(Guid userId)
+        public async Task<ServiceResponse<int>> GetCompletedRentalsCountByUserIdAsync(Guid userId)
         {
             int completedRentalsCount = await this.rentalRepository
                 .GetAllAsQueryable()
@@ -195,10 +194,10 @@ namespace RentDrive.Services.Data
                     r.Status == RentalStatus.Completed)
                 .CountAsync();
 
-            return completedRentalsCount;
+            return ServiceResponse<int>.Ok(completedRentalsCount);
         }
 
-        public async Task<IEnumerable<UserRentalViewModel>> GetUserRentalsByIdAsync(Guid userId)
+        public async Task<ServiceResponse<IEnumerable<UserRentalViewModel>>> GetUserRentalsByIdAsync(Guid userId)
         {
             List<UserRentalViewModel> userRentals = await this.rentalRepository
                 .GetAllAsQueryable()
@@ -228,21 +227,21 @@ namespace RentDrive.Services.Data
                 })
                 .ToListAsync();
 
-            return userRentals;
+            return ServiceResponse<IEnumerable<UserRentalViewModel>>.Ok(userRentals);
         }
 
-        public async Task<bool> ConfirmRentalByIdAsync(string userId, Guid rentalId)
+        public async Task<ServiceResponse<bool>> ConfirmRentalByIdAsync(Guid userId, Guid rentalId)
         {
             Rental? rental = await this.rentalRepository
                 .GetAllAsQueryable()
                 .FirstOrDefaultAsync(r =>
                     r.Id == rentalId &&
-                    r.RenterId.ToString() == userId &&
+                    r.RenterId == userId &&
                     r.Status != RentalStatus.Completed);
 
             if (rental == null)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Rental Not Found!");
             }
 
             Vehicle vehicle = await this.vehicleRepository
@@ -250,7 +249,7 @@ namespace RentDrive.Services.Data
 
             if (vehicle == null)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Vehicle Not Found!");
             }
 
             ApplicationUser? owner = await this.applicationUserRepository
@@ -260,7 +259,7 @@ namespace RentDrive.Services.Data
 
             if (owner == null || owner?.Wallet == null)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Rental Owner Not Found!");
             }
 
             int daysRented = (rental.EndDate - rental.StartDate).Days + 1;
@@ -270,7 +269,7 @@ namespace RentDrive.Services.Data
 
             try
             {
-                if (vehicle.OwnerId.ToString() == CompanyId) // Vehicle is company ownder
+                if (vehicle.OwnerId == new Guid(CompanyId)) // Vehicle is company ownder
                 {
                     WalletTransaction companyTransaction = new WalletTransaction()
                     {
@@ -288,11 +287,11 @@ namespace RentDrive.Services.Data
                     ApplicationUser? company = await this.applicationUserRepository
                         .GetAllAsQueryable()
                         .Include(au => au.Wallet)
-                        .FirstOrDefaultAsync(au => au.Id.ToString() == CompanyId);
+                        .FirstOrDefaultAsync(au => au.Id == new Guid(CompanyId));
 
                     if (company == null || company?.Wallet == null)
                     {
-                        return false;
+                        return ServiceResponse<bool>.Fail("Comapny Not Found!");
                     }
 
                     WalletTransaction ownerTransaction = new WalletTransaction()
@@ -321,7 +320,7 @@ namespace RentDrive.Services.Data
                 await this.rentalRepository.SaveChangesAsync();
 
                 await transaction.CommitAsync();
-                return true;
+                return ServiceResponse<bool>.Ok(true);
             }
             catch
             {
@@ -330,7 +329,7 @@ namespace RentDrive.Services.Data
             }
         }
 
-        public async Task<bool> CancelRentalByIdAsync(string userId, Guid rentalId)
+        public async Task<ServiceResponse<bool>> CancelRentalByIdAsync(Guid userId, Guid rentalId)
         {
             Rental? rental = await this.rentalRepository
                 .GetAllAsQueryable()
@@ -338,13 +337,13 @@ namespace RentDrive.Services.Data
                 .ThenInclude(au => au.Wallet)
                 .FirstOrDefaultAsync(r =>
                     r.Id == rentalId &&
-                    r.RenterId.ToString() == userId &&
+                    r.RenterId == userId &&
                     r.StartDate > DateTime.UtcNow &&
                     r.Status == RentalStatus.Active);
 
             if (rental == null)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Rental Not Found!");
             }
 
             using var transaction = await dbContext.Database.BeginTransactionAsync();
@@ -370,7 +369,7 @@ namespace RentDrive.Services.Data
                 await transaction.CommitAsync();
 
 
-                return true;
+                return ServiceResponse<bool>.Ok(true);
             }
             catch
             {
@@ -379,19 +378,19 @@ namespace RentDrive.Services.Data
             }
         }
 
-        public async Task<IEnumerable<UserVehicleRentalViewModel>> GetUserOwnedVehiclesRentals(string userId, Guid vehicleId)
+        public async Task<ServiceResponse<IEnumerable<UserVehicleRentalViewModel>>> GetUserOwnedVehiclesRentals(Guid userId, Guid vehicleId)
         {
             IEnumerable<UserVehicleRentalViewModel> userVehicleRentals = await this.rentalRepository
                 .GetAllAsQueryable()
                 .Include(r => r.Vehicle)
                 .Include(r => r.Renter)
                 .Where(r =>
-                    r.Vehicle.OwnerId.ToString() == userId &&
+                    r.Vehicle.OwnerId == userId &&
                     r.VehicleId == vehicleId)
                 .Select(r => new UserVehicleRentalViewModel()
                 {
                     Id = r.Id,
-                    Username = r.Renter.UserName,
+                    Username = r.Renter.UserName ?? "Unknown",
                     BookedOn = $"{r.BookedOn.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}",
                     StartDate = r.StartDate,
                     EndDate = r.EndDate,
@@ -402,7 +401,7 @@ namespace RentDrive.Services.Data
                 })
                 .ToListAsync();
 
-            return userVehicleRentals;
+            return ServiceResponse<IEnumerable<UserVehicleRentalViewModel>>.Ok(userVehicleRentals);
         }
     }
 }

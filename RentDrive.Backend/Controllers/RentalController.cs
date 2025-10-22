@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Rental;
-using System.Formats.Asn1;
-using System.Security.Claims;
 
 namespace RentDrive.Backend.Controllers
 {
@@ -23,11 +23,17 @@ namespace RentDrive.Backend.Controllers
         [HttpGet("{vehicleId}")]
         public async Task<IActionResult> GetBookedDatesByVehicleId(Guid vehicleId)
         {
-            IEnumerable<DateTime> bookedDates = await this.rentalService
+            ServiceResponse<IEnumerable<DateTime>> response = await this.rentalService
                 .GetBookedDatesByVehicleIdAsync(vehicleId);
 
-            return Ok(bookedDates);
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpPost("rent/{vehicleId}")]
         public async Task<IActionResult> RentVehicle(Guid vehicleId, RentVehicleViewModel viewModel)
         {
@@ -36,93 +42,131 @@ namespace RentDrive.Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            Guid guidUserId = Guid.Empty;
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized("Unauthorized User!");
+            }
 
+            Guid guidUserId = Guid.Empty;
             if (!IsGuidValid(userId, ref guidUserId))
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            bool wasVehicleBooked = await this.rentalService
+            ServiceResponse<bool> response = await this.rentalService
                 .RentVehicle(vehicleId, guidUserId, viewModel.BookedDates);
 
-            if (!wasVehicleBooked)
+            if (!response.Success)
             {
-                return BadRequest("Failed to rent vehicle");
+                return BadRequest(response.ErrorMessage);
             }
 
-            return Ok();
+            return Ok(response.Result);
         }
+
         [HttpGet("my-rentals")]
         public async Task<IActionResult> GetUserRentals()
         {
-            string? userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out Guid userId))
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            IEnumerable<UserRentalViewModel> myRentals = await this.rentalService
-                .GetUserRentalsByIdAsync(userId);
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(userId, ref guidUserId))
+            {
+                return Unauthorized("Unauthorized User!");
+            }
 
-            return Ok(myRentals);
+            ServiceResponse<IEnumerable<UserRentalViewModel>> response = await this.rentalService
+                .GetUserRentalsByIdAsync(guidUserId);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpPost("confirm-rental/{rentalId}")]
         public async Task<IActionResult> ConfirmRentalById(Guid rentalId)
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId))
+            if (userId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            bool confirmedRental = await this.rentalService
-                .ConfirmRentalByIdAsync(userId, rentalId);
-
-            if (!confirmedRental)
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(userId, ref guidUserId))
             {
-                return BadRequest("Rental confirmation failed.");
+                return Unauthorized("Unauthorized User!");
             }
 
-            return Ok("Rental confirmed successfully.");
+            ServiceResponse<bool> response= await this.rentalService
+                .ConfirmRentalByIdAsync(guidUserId, rentalId);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpPost("cancel-rental/{rentalId}")]
         public async Task<IActionResult> CancelRentalById(Guid rentalId)
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId))
+            if (userId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            bool cancelledRental = await this.rentalService
-                .CancelRentalByIdAsync(userId, rentalId);
-
-            if (!cancelledRental)
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(userId, ref guidUserId))
             {
-                return BadRequest("Rental cancelation failed.");
+                return Unauthorized("Unauthorized User!");
             }
 
-            return Ok("Rental cancelled successfully.");
+            ServiceResponse<bool> response = await this.rentalService
+                .CancelRentalByIdAsync(guidUserId, rentalId);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
+
         [HttpGet("vehicle/{vehicleId}")]
         public async Task<IActionResult> GetUserVehiclesRentalsByVehicleId(Guid vehicleId)
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId))
+            if (userId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            IEnumerable<UserVehicleRentalViewModel> userVehicles = await this.rentalService
-                .GetUserOwnedVehiclesRentals(userId, vehicleId);
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(userId, ref guidUserId))
+            {
+                return Unauthorized("Unauthorized User!");
+            }
 
-            return Ok(userVehicles);
+            ServiceResponse<IEnumerable<UserVehicleRentalViewModel>> response= await this.rentalService
+                .GetUserOwnedVehiclesRentals(guidUserId, vehicleId);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
     }
 }
