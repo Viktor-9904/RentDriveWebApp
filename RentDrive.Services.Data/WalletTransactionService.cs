@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.WalletTransaction;
 
@@ -19,12 +20,12 @@ namespace RentDrive.Services.Data
             this.walletTransactionRepository = walletTransactionRepository;
         }
 
-        public async Task<IEnumerable<WalletTransactionHistoryViewModel>> GetWalletTransactionHistoryByUserIdAsync(string userId)
+        public async Task<ServiceResponse<IEnumerable<WalletTransactionHistoryViewModel>>> GetWalletTransactionHistoryByUserIdAsync(Guid userId)
         {
             IEnumerable<WalletTransactionHistoryViewModel> userTranasctions = await this.walletTransactionRepository
                 .GetAllAsQueryable()
                 .Include(wt => wt.Wallet)
-                .Where(wt => wt.Wallet.UserId.ToString() == userId)
+                .Where(wt => wt.Wallet.UserId == userId)
                 .OrderByDescending(wt => wt.CreatedAt)
                 .Select(wt => new WalletTransactionHistoryViewModel()
                 {
@@ -35,7 +36,7 @@ namespace RentDrive.Services.Data
                 })
                 .ToListAsync();
 
-            return userTranasctions;
+            return ServiceResponse<IEnumerable<WalletTransactionHistoryViewModel>>.Ok(userTranasctions);
         }
     }
 }

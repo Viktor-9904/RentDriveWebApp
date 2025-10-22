@@ -1,19 +1,21 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+
 using Microsoft.AspNetCore.Mvc;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.WalletTransaction;
-using System.Security.AccessControl;
-using System.Security.Claims;
 
 namespace RentDrive.Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WalletTransactionController : ControllerBase
+    public class WalletTransactionController : BaseController
     {
         private readonly IWalletTransaction walletTransactionService;
 
-        public WalletTransactionController(IWalletTransaction walletTransactionService)
+        public WalletTransactionController(
+            IWalletTransaction walletTransactionService,
+            IBaseService baseService) : base(baseService)
         {
             this.walletTransactionService = walletTransactionService;
         }
@@ -21,16 +23,27 @@ namespace RentDrive.Backend.Controllers
         [HttpGet("history")]
         public async Task<IActionResult> GetUserWalletTransactionHistory()
         {
-            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
+            string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
-            IEnumerable<WalletTransactionHistoryViewModel> transactions = await this.walletTransactionService
-                .GetWalletTransactionHistoryByUserIdAsync(userId);
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(currentUserId, ref guidUserId))
+            {
+                return Unauthorized("Unauthorized User!");
+            }
 
-            return Ok(transactions);
+            ServiceResponse<IEnumerable<WalletTransactionHistoryViewModel>> response = await this.walletTransactionService
+                .GetWalletTransactionHistoryByUserIdAsync(guidUserId);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
     }
 }
