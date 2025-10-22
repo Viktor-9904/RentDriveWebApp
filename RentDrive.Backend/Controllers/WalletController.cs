@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
 
-using RentDrive.Services.Data.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+using RentDrive.Services.Data.Common;
 using RentDrive.Web.ViewModels.WalletTransaction;
-using System.Security.Claims;
+using RentDrive.Services.Data.Interfaces;
 
 namespace RentDrive.Backend.Controllers
 {
@@ -31,15 +33,15 @@ namespace RentDrive.Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            WalletTransactionHistoryViewModel? transaction = await this.walletService
+            ServiceResponse<WalletTransactionHistoryViewModel?> response = await this.walletService
                 .AddFundsAsync(userId, viewModel);
 
-            if (transaction == null)
+            if (!response.Success)
             {
-                return BadRequest("Failed to add funds to account.");
+                return BadRequest(response.ErrorMessage);
             }
 
-            return Ok(transaction);
+            return Ok(response.Result);
         }
     }
 }

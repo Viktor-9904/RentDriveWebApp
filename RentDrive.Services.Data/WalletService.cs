@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Globalization;
+
+using Microsoft.EntityFrameworkCore;
+
 using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.WalletTransaction;
-using System.Globalization;
 
 namespace RentDrive.Services.Data
 {
@@ -21,7 +24,7 @@ namespace RentDrive.Services.Data
             this.walletTransactionRepository = walletTransactionRepository;
         }
 
-        public async Task<WalletTransactionHistoryViewModel?> AddFundsAsync(string userId, AddFundsViewModel addFundsViewModel)
+        public async Task<ServiceResponse<WalletTransactionHistoryViewModel?>> AddFundsAsync(string userId, AddFundsViewModel addFundsViewModel)
         {
             Wallet? userWallet = await this.walletRepository
                 .GetAllAsQueryable()
@@ -29,7 +32,7 @@ namespace RentDrive.Services.Data
 
             if (userWallet == null)
             {
-                return null;
+                return ServiceResponse<WalletTransactionHistoryViewModel?>.Fail("User Wallet Not Found!");
             }
 
             WalletTransaction transaction = new WalletTransaction()
@@ -48,13 +51,15 @@ namespace RentDrive.Services.Data
             await this.walletTransactionRepository.SaveChangesAsync();
 
 
-            return new WalletTransactionHistoryViewModel()
-            {
-                Id = transaction.Id,
-                CreatedOn = $"{transaction.CreatedAt.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}",
-                Amount = transaction.Amount,
-                Type = WalletTransactionType.Deposit.GetDescription(),
-            };
+            return ServiceResponse<WalletTransactionHistoryViewModel?>.Ok(
+                new WalletTransactionHistoryViewModel()
+                {
+                    Id = transaction.Id,
+                    CreatedOn = $"{transaction.CreatedAt.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}",
+                    Amount = transaction.Amount,
+                    Type = WalletTransactionType.Deposit.GetDescription(),
+                }
+            );
         }
     }
 }
