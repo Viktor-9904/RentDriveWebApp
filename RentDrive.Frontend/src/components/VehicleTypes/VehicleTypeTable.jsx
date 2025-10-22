@@ -50,6 +50,7 @@ const handleSaveClick = async () => {
 
     const response = await fetch(url, {
       method,
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
@@ -88,6 +89,7 @@ const handleSaveClick = async () => {
         `${backEndURL}/api/vehicletype/delete/${vehicleTypeToDelete.id}`,
         {
           method: "DELETE",
+          credentials: "include"
         }
       );
 

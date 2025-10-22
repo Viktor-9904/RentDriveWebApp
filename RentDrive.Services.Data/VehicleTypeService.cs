@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.Enums;
 using RentDrive.Web.ViewModels.VehicleType;
@@ -13,24 +15,30 @@ namespace RentDrive.Services.Data
     {
         private readonly IRepository<VehicleType, int> vehicleTypeRepository;
         private readonly IRepository<Vehicle, Guid> vehicleRepository;
+        private readonly IRepository<ApplicationUser, Guid> applicationUserRepository;
+
         public VehicleTypeService(
             IRepository<VehicleType, int> vehicleTypeRepository,
-            IRepository<Vehicle, Guid> vehicleRepository)
+            IRepository<Vehicle, Guid> vehicleRepository,
+            IRepository<ApplicationUser, Guid> applicationUserRepository)
         {
             this.vehicleTypeRepository = vehicleTypeRepository;
             this.vehicleRepository = vehicleRepository;
+            this.applicationUserRepository = applicationUserRepository;
         }
 
-        public async Task<bool> Exists(int vehicleTypeId)
+        public async Task<ServiceResponse<bool>> Exists(int vehicleTypeId)
         {
-            return await this.vehicleTypeRepository
+            return ServiceResponse<bool>.Ok(
+                await this.vehicleTypeRepository
                 .GetAllAsQueryable()
                 .AnyAsync(vt =>
                     vt.Id == vehicleTypeId &&
-                    vt.IsDeleted == false);
+                    vt.IsDeleted == false)
+            );
         }
 
-        public async Task<IEnumerable<VehicleTypeViewModel>> GetAllVehicleTypesAsync()
+        public async Task<ServiceResponse<IEnumerable<VehicleTypeViewModel>>> GetAllVehicleTypesAsync()
         {
             List<VehicleTypeViewModel> vehicleTypes = await this.vehicleTypeRepository
                 .GetAllAsQueryable()
@@ -52,61 +60,24 @@ namespace RentDrive.Services.Data
                 })
                 .ToListAsync();
 
-            return vehicleTypes;
-        }
-        public async Task<bool> DeleteVehicleTypeByIdAsync(int id)
-        {
-            VehicleType? vehicleType = await this.vehicleTypeRepository
-                .GetAllAsQueryable()
-                .FirstOrDefaultAsync(vt =>
-                    vt.Id == id &&
-                    vt.IsDeleted == false);
-
-            if (vehicleType == null)
-            {
-                return false;
-            }
-
-            bool currentlyInUse = await this.vehicleRepository
-                .GetAllAsQueryable()
-                .AnyAsync(v => v.VehicleTypeId == id);
-
-            if (currentlyInUse)
-            {
-                return false;
-            }
-
-            vehicleType.IsDeleted = true;
-            await this.vehicleTypeRepository.SaveChangesAsync();
-
-            return true;
+            return ServiceResponse<IEnumerable<VehicleTypeViewModel>>.Ok(vehicleTypes);
         }
 
-        public async Task<VehicleTypeEditFormViewModel?> EditVehicleType(VehicleTypeEditFormViewModel viewModel)
+        public async Task<ServiceResponse<VehicleTypeCreateFormViewModel?>> CreateNewVehicleType(Guid userId, VehicleTypeCreateFormViewModel viewModel)
         {
-            VehicleType? vehicleType = await this.vehicleTypeRepository
-                .GetAllAsQueryable()
-                .FirstOrDefaultAsync(vt =>
-                    vt.Id == viewModel.Id &&
-                    vt.IsDeleted == false);
+            ApplicationUser currentUser = await this.applicationUserRepository
+                .GetByIdAsync(userId);
 
-            if (vehicleType == null)
+            if (currentUser == null)
             {
-                return null;
+                return ServiceResponse<VehicleTypeCreateFormViewModel?>.Fail("User Not Found!");
             }
 
-            vehicleType.Name = viewModel.Name;
-            await this.vehicleTypeRepository.SaveChangesAsync();
-
-            return new VehicleTypeEditFormViewModel()
+            if (currentUser.UserType != UserType.CompanyEmployee)
             {
-                Id = vehicleType.Id,
-                Name = vehicleType.Name
-            };
-        }
+                return ServiceResponse<VehicleTypeCreateFormViewModel?>.Fail("Unauthorized User!");
+            }
 
-        public async Task<VehicleTypeCreateFormViewModel?> CreateNewVehicleType(VehicleTypeCreateFormViewModel viewModel)
-        {
             bool alreadyExists = await this.vehicleTypeRepository
                 .GetAllAsQueryable()
                 .AnyAsync(vt =>
@@ -115,7 +86,7 @@ namespace RentDrive.Services.Data
 
             if (alreadyExists)
             {
-                return null;
+                return ServiceResponse<VehicleTypeCreateFormViewModel?>.Fail("Vehicle Type Already Exists!");
             }
 
             VehicleType newVehicleType = new VehicleType()
@@ -128,11 +99,92 @@ namespace RentDrive.Services.Data
 
             viewModel.Id = newVehicleType.Id;
 
-            return new VehicleTypeCreateFormViewModel
+            return ServiceResponse<VehicleTypeCreateFormViewModel?>.Ok(
+                new VehicleTypeCreateFormViewModel
+                {
+                    Id = newVehicleType.Id,
+                    Name = newVehicleType.Name
+                }
+            );
+        }
+
+        public async Task<ServiceResponse<VehicleTypeEditFormViewModel?>> EditVehicleType(Guid userId, VehicleTypeEditFormViewModel viewModel)
+        {
+            ApplicationUser currentUser = await this.applicationUserRepository
+                .GetByIdAsync(userId);
+
+            if (currentUser == null)
             {
-                Id = newVehicleType.Id,
-                Name = newVehicleType.Name
-            };
+                return ServiceResponse<VehicleTypeEditFormViewModel?>.Fail("User Not Found!");
+            }
+
+            if (currentUser.UserType != UserType.CompanyEmployee)
+            {
+                return ServiceResponse<VehicleTypeEditFormViewModel?>.Fail("Unauthorized User!");
+            }
+
+            VehicleType? vehicleType = await this.vehicleTypeRepository
+                .GetAllAsQueryable()
+                .FirstOrDefaultAsync(vt =>
+                    vt.Id == viewModel.Id &&
+                    vt.IsDeleted == false);
+
+            if (vehicleType == null)
+            {
+                return ServiceResponse<VehicleTypeEditFormViewModel?>.Fail("Vehicle Type Not Found!");
+            }
+
+            vehicleType.Name = viewModel.Name;
+            await this.vehicleTypeRepository.SaveChangesAsync();
+
+            return ServiceResponse<VehicleTypeEditFormViewModel?>.Ok(
+                new VehicleTypeEditFormViewModel()
+                {
+                    Id = vehicleType.Id,
+                    Name = vehicleType.Name
+                }
+            );
+        }
+
+        public async Task<ServiceResponse<bool>> DeleteVehicleTypeByIdAsync(Guid userId, int id)
+        {
+            ApplicationUser currentUser = await this.applicationUserRepository
+                .GetByIdAsync(userId);
+
+            if (currentUser == null)
+            {
+                return ServiceResponse<bool>.Fail("User Not Found!");
+            }
+
+            if (currentUser.UserType != UserType.CompanyEmployee)
+            {
+                return ServiceResponse<bool>.Fail("Unauthorized User!");
+            }
+
+            VehicleType? vehicleType = await this.vehicleTypeRepository
+                .GetAllAsQueryable()
+                .FirstOrDefaultAsync(vt =>
+                    vt.Id == id &&
+                    vt.IsDeleted == false);
+
+            if (vehicleType == null)
+            {
+                return ServiceResponse<bool>.Fail("Vehicle Type Not Found!");
+            }
+
+            bool currentlyInUse = await this.vehicleRepository
+                .GetAllAsQueryable()
+                .AnyAsync(v => v.VehicleTypeId == id);
+
+            if (currentlyInUse)
+            {
+                return ServiceResponse<bool>.Fail("Vehicle Type Currently In Use!");
+            }
+
+            vehicleType.IsDeleted = true;
+            await this.vehicleTypeRepository.SaveChangesAsync();
+
+            return ServiceResponse<bool>.Ok(true);
         }
     }
 }

@@ -1,13 +1,14 @@
-﻿using RentDrive.Web.ViewModels.VehicleType;
+﻿using RentDrive.Services.Data.Common;
+using RentDrive.Web.ViewModels.VehicleType;
 
 namespace RentDrive.Services.Data.Interfaces
 {
     public interface IVehicleTypeService
     {
-        public Task<IEnumerable<VehicleTypeViewModel>> GetAllVehicleTypesAsync();
-        public Task<bool> Exists(int vehicleTypeId);
-        public Task<bool> DeleteVehicleTypeByIdAsync(int id);
-        public Task<VehicleTypeEditFormViewModel?> EditVehicleType(VehicleTypeEditFormViewModel viewModel);
-        public Task<VehicleTypeCreateFormViewModel?> CreateNewVehicleType(VehicleTypeCreateFormViewModel viewModel);
+        public Task<ServiceResponse<IEnumerable<VehicleTypeViewModel>>> GetAllVehicleTypesAsync();
+        public Task<ServiceResponse<bool>> Exists(int vehicleTypeId);
+        public Task<ServiceResponse<VehicleTypeCreateFormViewModel?>> CreateNewVehicleType(Guid userId, VehicleTypeCreateFormViewModel viewModel);
+        public Task<ServiceResponse<VehicleTypeEditFormViewModel?>> EditVehicleType(Guid userId, VehicleTypeEditFormViewModel viewModel);
+        public Task<ServiceResponse<bool>> DeleteVehicleTypeByIdAsync(Guid userId, int id);
     }
 }

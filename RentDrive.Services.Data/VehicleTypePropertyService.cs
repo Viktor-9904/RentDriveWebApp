@@ -87,10 +87,10 @@ namespace RentDrive.Services.Data
 
         public async Task<bool> CreateVehicleTypeProperty(CreateVehicleTypePropertyViewModel viewModel)
         {
-            bool vehicleTypeExists = await this.vehicleTypeService
+            ServiceResponse<bool> vehicleTypeExistsResponse = await this.vehicleTypeService
                 .Exists(viewModel.VehicleTypeId);
 
-            if (!vehicleTypeExists)
+            if (!vehicleTypeExistsResponse.Success)
             {
                 return false;
             }

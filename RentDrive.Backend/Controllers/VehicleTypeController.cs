@@ -1,6 +1,8 @@
-﻿using Azure.Core.Pipeline;
+﻿using System.Security.Claims;
+
 using Microsoft.AspNetCore.Mvc;
 
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.VehicleType;
 
@@ -8,58 +10,30 @@ namespace RentDrive.Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VehicleTypeController : ControllerBase
+    public class VehicleTypeController : BaseController
     {
         private readonly IVehicleTypeService vehicleTypeService;
-        public VehicleTypeController(IVehicleTypeService vehicleTypeService)
+        public VehicleTypeController(
+            IVehicleTypeService vehicleTypeService,
+            IBaseService baseService) : base(baseService)
         {
             this.vehicleTypeService = vehicleTypeService;
         }
+
         [HttpGet("types")]
         public async Task<IActionResult> GetAllVehicleTypes()
         {
-            IEnumerable<VehicleTypeViewModel> vehicleTypes = await this.vehicleTypeService
+            ServiceResponse<IEnumerable<VehicleTypeViewModel>> response = await this.vehicleTypeService
                 .GetAllVehicleTypesAsync();
 
-            if (vehicleTypes == null)
+            if (!response.Success)
             {
-                return NotFound();
+                return BadRequest(response.ErrorMessage);
             }
 
-            return Ok(vehicleTypes);
+            return Ok(response.Result);
         }
-        [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteVehicleTypeById(int id)
-        {
-            bool vehicleTypeSuccsessfullyDeleted = await this.vehicleTypeService
-                .DeleteVehicleTypeByIdAsync(id);
 
-            if (!vehicleTypeSuccsessfullyDeleted)
-            {
-                return BadRequest();
-            }
-
-            return Ok();
-        }
-        [HttpPut("edit/{id}")]
-        public async Task<IActionResult> EditVehicleType(int id, [FromBody] VehicleTypeEditFormViewModel viewModel)
-        {
-
-            if (id != viewModel.Id)
-            {
-                return BadRequest("ID mismatch");
-            }
-
-            VehicleTypeEditFormViewModel? editedVehicleType = await this.vehicleTypeService
-                .EditVehicleType(viewModel);
-
-            if (editedVehicleType == null)
-            {
-                return BadRequest();
-            }
-
-            return Ok(editedVehicleType);
-        }
         [HttpPost("create")]
         public async Task<IActionResult> CreateVehicleType([FromBody] VehicleTypeCreateFormViewModel viewModel)
         {
@@ -68,15 +42,84 @@ namespace RentDrive.Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            VehicleTypeCreateFormViewModel? newVehicleType = await this.vehicleTypeService
-                .CreateNewVehicleType(viewModel);
-
-            if (newVehicleType == null)
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
             {
-                return BadRequest();
+                return Unauthorized("Unauthorized User!");
             }
 
-            return Ok(newVehicleType);
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(userId, ref guidUserId))
+            {
+                return Unauthorized("Unauthorized User!");
+            }
+
+            ServiceResponse<VehicleTypeCreateFormViewModel?> response = await this.vehicleTypeService
+                .CreateNewVehicleType(guidUserId, viewModel);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
+        }
+
+        [HttpPut("edit/{id}")]
+        public async Task<IActionResult> EditVehicleType(int id, [FromBody] VehicleTypeEditFormViewModel viewModel)
+        {
+            if (id != viewModel.Id)
+            {
+                return BadRequest("ID mismatch");
+            }
+
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized("Unauthorized User!");
+            }
+
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(userId, ref guidUserId))
+            {
+                return Unauthorized("Unauthorized User!");
+            }
+
+            ServiceResponse<VehicleTypeEditFormViewModel?> response = await this.vehicleTypeService
+                .EditVehicleType(guidUserId, viewModel);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteVehicleTypeById(int id)
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized("Unauthorized User!");
+            }
+
+            Guid guidUserId = Guid.Empty;
+            if (!IsGuidValid(userId, ref guidUserId))
+            {
+                return Unauthorized("Unauthorized User!");
+            }
+
+            ServiceResponse<bool> response = await this.vehicleTypeService
+                .DeleteVehicleTypeByIdAsync(guidUserId, id);
+
+            if (!response.Success)
+            {
+                return BadRequest(response.ErrorMessage);
+            }
+
+            return Ok(response.Result);
         }
     }
 }
