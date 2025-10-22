@@ -75,8 +75,15 @@ namespace RentDrive.Services.Data
 
             foreach (ListingVehicleViewModel vehicle in allVehicles)
             {
-                string currentVehicleImageURL = await this.vehicleImageService.GetFirstImageByVehicleIdAsync(vehicle.Id);
-                vehicle.ImageURL = currentVehicleImageURL;
+                ServiceResponse<string> vehicleFirstImageResponse = await this.vehicleImageService
+                    .GetFirstImageByVehicleIdAsync(vehicle.Id);
+
+                if (!vehicleFirstImageResponse.Success)
+                {
+                    return ServiceResponse<IEnumerable<ListingVehicleViewModel>>.Fail("Failed To Load Vehicle Image!");
+                }
+
+                vehicle.ImageURL = vehicleFirstImageResponse.Result!;
             }
 
             return ServiceResponse<IEnumerable<ListingVehicleViewModel>>.Ok(allVehicles);
@@ -117,8 +124,15 @@ namespace RentDrive.Services.Data
 
             foreach (RecentVehicleIndexViewModel vehicle in top3RecentVehicles)
             {
-                string currentVehicleImageURL = await this.vehicleImageService.GetFirstImageByVehicleIdAsync(vehicle.Id);
-                vehicle.ImageURL = currentVehicleImageURL;
+                ServiceResponse<string> vehicleFirstImageResponse = await this.vehicleImageService
+                    .GetFirstImageByVehicleIdAsync(vehicle.Id);
+
+                if (!vehicleFirstImageResponse.Success)
+                {
+                    return ServiceResponse<IEnumerable<RecentVehicleIndexViewModel>>.Fail("Failed To Load Vehicle Image!");
+                }
+
+                vehicle.ImageURL = vehicleFirstImageResponse.Result!;
             }
 
             return ServiceResponse<IEnumerable<RecentVehicleIndexViewModel>>.Ok(top3RecentVehicles);
@@ -274,8 +288,15 @@ namespace RentDrive.Services.Data
             editVehicle.VehicleTypePropertyValues = await this.vehicleTypePropertyValueService
                 .GetVehicleTypePropertyValuesByVehicleIdAsync(vehicleId);
 
-            editVehicle.ImageURLs = await this.vehicleImageService
+            ServiceResponse<List<string>> editedVehicleImageURLsResponse = await this.vehicleImageService
                 .GetAllImagesByVehicleIdAsync(vehicleId);
+
+            if (!editedVehicleImageURLsResponse.Success)
+            {
+                return ServiceResponse<VehicleEditFormViewModel?>.Fail("Failed To Load Images!");
+            }
+
+            editVehicle.ImageURLs = editedVehicleImageURLsResponse.Result!;
 
             return ServiceResponse<VehicleEditFormViewModel?>.Ok(editVehicle);
         }
@@ -325,10 +346,10 @@ namespace RentDrive.Services.Data
                 return ServiceResponse<bool>.Fail("Failed To Add Vehicle Type Property Values!");
             }
 
-            bool successfullyAddedVehicleImages = await this.vehicleImageService
+            ServiceResponse<bool> addImagesRespnse = await this.vehicleImageService
                 .AddImagesAsync(viewModel.Images, newVehicle.Id);
 
-            if (!successfullyAddedVehicleImages)
+            if (!addImagesRespnse.Success)
             {
                 return ServiceResponse<bool>.Fail("Failed To Save Vehicle Images!");
             }
@@ -400,14 +421,13 @@ namespace RentDrive.Services.Data
 
             if (hasNewImages)
             {
-                bool successfullyAddedVehicleImages = await this.vehicleImageService
+                ServiceResponse<bool> addedNewImagesResponse = await this.vehicleImageService
                     .AddImagesAsync(viewModel.NewImages, vehicleToUpdate.Id);
 
-                if (!successfullyAddedVehicleImages)
+                if (!addedNewImagesResponse.Success)
                 {
                     return ServiceResponse<bool>.Fail("Failed To Add New Images!");
                 }
-
             }
 
             await this.vehicleRepository.SaveChangesAsync();

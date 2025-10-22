@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 
 using static RentDrive.Common.EntityValidationConstants.VehicleValidationConstants.VehicleImages;
@@ -17,7 +19,7 @@ namespace RentDrive.Services.Data
         {
             this.vehicleImageRepository = vehicleImageRepository;
         }
-        public async Task<string> GetFirstImageByVehicleIdAsync(Guid vehicleId)
+        public async Task<ServiceResponse<string>> GetFirstImageByVehicleIdAsync(Guid vehicleId)
         {
             string? firstImageURL = await this.vehicleImageRepository
                 .GetAllAsQueryable()
@@ -25,9 +27,10 @@ namespace RentDrive.Services.Data
                 .Select(vi => vi.ImageURL)
                 .FirstOrDefaultAsync();
 
-            return firstImageURL.IsNullOrEmpty() ? DefaultImageURL : firstImageURL!;
+            return ServiceResponse<string>.Ok(firstImageURL.IsNullOrEmpty() ? DefaultImageURL : firstImageURL!);
         }
-        public async Task<List<string>> GetAllImagesByVehicleIdAsync(Guid id)
+
+        public async Task<ServiceResponse<List<string>>> GetAllImagesByVehicleIdAsync(Guid id)
         {
             List<string> allImages = await this.vehicleImageRepository
                 .GetAllAsQueryable()
@@ -40,13 +43,14 @@ namespace RentDrive.Services.Data
                 allImages.Add(DefaultImageURL);
             }
 
-            return allImages;
+            return ServiceResponse<List<string>>.Ok(allImages);
         }
-        public async Task<bool> AddImagesAsync(List<IFormFile> images, Guid vehicleId)
+
+        public async Task<ServiceResponse<bool>> AddImagesAsync(List<IFormFile> images, Guid vehicleId)
         {
             if (images == null || images.Count == 0)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("No Images Provided!");
             }
 
             string wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
@@ -71,7 +75,6 @@ namespace RentDrive.Services.Data
 
                 VehicleImage vehicleImage = new VehicleImage
                 {
-                    Id = Guid.NewGuid(),
                     VehicleId = vehicleId,
                     ImageURL = $"images/vehicles/{uniqueFileName}"
                 };
@@ -80,9 +83,9 @@ namespace RentDrive.Services.Data
             }
 
             await vehicleImageRepository.AddRangeAsync(vehicleImages.ToArray());
+            await vehicleImageRepository.SaveChangesAsync();
 
-            return true;
+            return ServiceResponse<bool>.Ok(true);
         }
     }
-
 }
