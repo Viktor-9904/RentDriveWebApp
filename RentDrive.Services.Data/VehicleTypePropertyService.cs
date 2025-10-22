@@ -26,7 +26,7 @@ namespace RentDrive.Services.Data
             this.baseService = baseService;
         }
 
-        public async Task<IEnumerable<VehicleTypePropertyViewModel>> GetAllVehicleTypePropertiesAsync()
+        public async Task<ServiceResponse<IEnumerable<VehicleTypePropertyViewModel>>> GetAllVehicleTypePropertiesAsync()
         {
             IEnumerable<VehicleTypePropertyViewModel> vehicleTypeProperties = await this.vehicleTypePropertyRepository
                 .GetAllAsQueryable()
@@ -40,65 +40,27 @@ namespace RentDrive.Services.Data
                 })
                 .ToListAsync();
 
-            return vehicleTypeProperties;
-        }
-        public async Task<bool> EditPropertyAsync(EditVehicleTypePropertyViewModel viewModel)
-        {
-            if (!Enum.IsDefined<PropertyValueType>(viewModel.ValueType) ||
-                !Enum.IsDefined<UnitOfMeasurement>(viewModel.UnitOfMeasurement))
-            {
-                return false;
-            }
-
-            VehicleTypeProperty? propertyEntity = await this.vehicleTypePropertyRepository
-                .GetByIdAsync(viewModel.Id);
-
-            if (propertyEntity == null)
-            {
-                return false;
-            }
-
-            propertyEntity.Name = viewModel.Name;
-            propertyEntity.ValueType = viewModel.ValueType;
-            propertyEntity.UnitOfMeasurement = viewModel.UnitOfMeasurement;
-
-            bool result = await this.vehicleTypePropertyRepository.UpdateAsync(propertyEntity);
-
-            if (result)
-            {
-                await this.vehicleTypePropertyRepository.SaveChangesAsync();
-                return true;
-            }
-
-            return false;
-        }
-        public async Task<bool> DeletePropertyByIdAsync(Guid id)
-        {
-            bool result = await this.vehicleTypePropertyRepository.DeleteByIdAsync(id);
-
-            if (result)
-            {
-                await this.vehicleTypePropertyRepository.SaveChangesAsync();
-                return true;
-            }
-
-            return false;
+            return ServiceResponse<IEnumerable<VehicleTypePropertyViewModel>>.Ok(vehicleTypeProperties);
         }
 
-        public async Task<bool> CreateVehicleTypeProperty(CreateVehicleTypePropertyViewModel viewModel)
+        public async Task<ServiceResponse<VehicleTypePropertyViewModel>> CreateVehicleTypeProperty(Guid userId, CreateVehicleTypePropertyViewModel viewModel)
         {
             ServiceResponse<bool> vehicleTypeExistsResponse = await this.vehicleTypeService
                 .Exists(viewModel.VehicleTypeId);
 
             if (!vehicleTypeExistsResponse.Success)
             {
-                return false;
+                return ServiceResponse<VehicleTypePropertyViewModel>.Fail("Vehicle Type Not Found!");
             }
 
-            if (!Enum.IsDefined<PropertyValueType>(viewModel.ValueType) ||
-                !Enum.IsDefined<UnitOfMeasurement>(viewModel.UnitOfMeasurement))
+            if (!Enum.IsDefined<PropertyValueType>(viewModel.ValueType))
             {
-                return false;
+                return ServiceResponse<VehicleTypePropertyViewModel>.Fail("Property Value Type Not Defined!");
+            }
+
+            if (!Enum.IsDefined<UnitOfMeasurement>(viewModel.UnitOfMeasurement))
+            {
+                return ServiceResponse<VehicleTypePropertyViewModel>.Fail("Property Unit Of Measurement Not Defined!");
             }
 
             VehicleTypeProperty vehicleTypeProperty = new VehicleTypeProperty()
@@ -112,20 +74,72 @@ namespace RentDrive.Services.Data
             await vehicleTypePropertyRepository.AddAsync(vehicleTypeProperty);
             await vehicleTypePropertyRepository.SaveChangesAsync();
 
-            return true;
+            return ServiceResponse<VehicleTypePropertyViewModel>.Ok(
+                new VehicleTypePropertyViewModel()
+                {
+                    Id = vehicleTypeProperty.Id,
+                    VehicleTypeId = vehicleTypeProperty.VehicleTypeId,
+                    Name = vehicleTypeProperty.Name,
+                    ValueType = vehicleTypeProperty.ValueType.ToString(),
+                    UnitOfMeasurement = vehicleTypeProperty.UnitOfMeasurement.ToString()
+                }
+            );
         }
 
-        public async Task<bool> ValidateVehicleTypeProperties(int VehicleTypeId, IEnumerable<VehicleTypePropertyValueInputViewModel> propertyValues)
+        public async Task<ServiceResponse<bool>> EditPropertyAsync(Guid userId, EditVehicleTypePropertyViewModel viewModel)
+        {
+            if (!Enum.IsDefined<PropertyValueType>(viewModel.ValueType))
+            {
+                return ServiceResponse<bool>.Fail("Property Value Type Not Defined!");
+            }
+
+            if (!Enum.IsDefined<UnitOfMeasurement>(viewModel.UnitOfMeasurement))
+            {
+                return ServiceResponse<bool>.Fail("Property Unit Of Measurement Not Defined!");
+            }
+
+            VehicleTypeProperty? propertyEntity = await this.vehicleTypePropertyRepository
+                .GetByIdAsync(viewModel.Id);
+
+            if (propertyEntity == null)
+            {
+                return ServiceResponse<bool>.Fail("Property Not Found!");
+            }
+
+            propertyEntity.Name = viewModel.Name;
+            propertyEntity.ValueType = viewModel.ValueType;
+            propertyEntity.UnitOfMeasurement = viewModel.UnitOfMeasurement;
+
+            bool result = await this.vehicleTypePropertyRepository.UpdateAsync(propertyEntity);
+
+            if (!result)
+            {
+                return ServiceResponse<bool>.Fail("Failed To Save To Database!");
+            }
+
+            await this.vehicleTypePropertyRepository.SaveChangesAsync();
+            return ServiceResponse<bool>.Ok(true);
+        }
+
+        public async Task<ServiceResponse<bool>> DeletePropertyByIdAsync(Guid userId,   Guid id)
+        {
+            bool result = await this.vehicleTypePropertyRepository.DeleteByIdAsync(id);
+
+            if (!result)
+            {
+                return ServiceResponse<bool>.Fail("Failed To Delete From Database!");
+            }
+
+            await this.vehicleTypePropertyRepository.SaveChangesAsync();
+            return ServiceResponse<bool>.Ok(true);
+        }
+
+        public async Task<ServiceResponse<bool>> ValidateVehicleTypeProperties(int VehicleTypeId, IEnumerable<VehicleTypePropertyValueInputViewModel> propertyValues)
         {
             List<VehicleTypeProperty>? expectedProperties = await this.vehicleTypePropertyRepository
                 .GetAllAsQueryable()
                 .Where(vtp => vtp.VehicleTypeId == VehicleTypeId)
                 .ToListAsync();
-
-            if (expectedProperties.Count == 0)
-            {
-                return false;
-            }
 
             foreach (VehicleTypeProperty currentExpectedProperty in expectedProperties)
             {
@@ -134,17 +148,17 @@ namespace RentDrive.Services.Data
 
                 if (submittedValue == null)
                 {
-                    return false;
+                    return ServiceResponse<bool>.Fail("Property Not Found!");
                 }
 
                 ServiceResponse<bool> isCurrentValueTypeValid = this.baseService.IsValueTypeValid(currentExpectedProperty.ValueType, submittedValue.Value);
 
                 if (!isCurrentValueTypeValid.Success)
                 {
-                    // todo return .IsFailed()
+                    return ServiceResponse<bool>.Fail("Invalid Property Format!");
                 }
             }
-            return true;
+            return ServiceResponse<bool>.Ok(true);
         }
     }
 }

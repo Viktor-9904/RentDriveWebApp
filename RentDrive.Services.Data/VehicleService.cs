@@ -312,10 +312,10 @@ namespace RentDrive.Services.Data
                 return ServiceResponse<bool>.Fail("Editor User Not Found!");
             }
 
-            bool hasValidPropertyValueTypes = await this.vehicleTypePropertyService
+            ServiceResponse<bool> hasValidPropertyValueTypesResponse = await this.vehicleTypePropertyService
                 .ValidateVehicleTypeProperties(viewModel.VehicleTypeId, viewModel.PropertyValues);
 
-            if (!hasValidPropertyValueTypes)
+            if (!hasValidPropertyValueTypesResponse.Success)
             {
                 return ServiceResponse<bool>.Fail("Invalid Vehicle Type Properties!");
             }
@@ -392,10 +392,10 @@ namespace RentDrive.Services.Data
                 return ServiceResponse<bool>.Fail("Unauthorized User!");
             }
 
-            bool hasValidPropertyValueTypes = await this.vehicleTypePropertyService
+            ServiceResponse<bool> hasValidPropertyValueTypesResponse = await this.vehicleTypePropertyService
                 .ValidateVehicleTypeProperties(viewModel.VehicleTypeId, viewModel.VehicleTypePropertyInputValues);
 
-            if (!hasValidPropertyValueTypes)
+            if (!hasValidPropertyValueTypesResponse.Success)
             {
                 return ServiceResponse<bool>.Fail("Vehicle Doesn't Have Valid Properties!");
             }

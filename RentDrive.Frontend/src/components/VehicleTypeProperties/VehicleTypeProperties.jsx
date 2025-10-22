@@ -48,7 +48,9 @@ export default function VehicleTypePropertyManager() {
     const handlePropertyUpdated = (updatedProperty) => {
         setFilteredProperties(prev =>
             prev.map(p =>
-                p.id === updatedProperty.id ? updatedProperty : p
+                p.id === (updatedProperty.oldId ?? updatedProperty.id)
+                    ? updatedProperty
+                    : p
             )
         );
     };

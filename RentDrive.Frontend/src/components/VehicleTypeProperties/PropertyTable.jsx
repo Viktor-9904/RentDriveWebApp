@@ -66,6 +66,7 @@ export default function PropertyTable({
         {
           method: editValues.isNew ? "POST" : "PUT",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify(payload),
         }
       );
@@ -73,8 +74,14 @@ export default function PropertyTable({
       if (!response.ok) {
         throw new Error("Failed to save changes");
       }
+
+      const savedProperty = await response.json();
       if (onPropertyUpdated) {
-        onPropertyUpdated(payload);
+        onPropertyUpdated({
+          ...payload,
+          oldId: payload.id,
+          id: savedProperty.id
+        });
       }
 
       setEditingId(null);
@@ -94,6 +101,7 @@ export default function PropertyTable({
         `${backEndURL}/api/vehicletypeproperty/delete/${propertyToDelete.id}`,
         {
           method: "DELETE",
+          credentials: "include",
         }
       );
 
