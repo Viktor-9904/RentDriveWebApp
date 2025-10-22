@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using RentDrive.Common.Enums;
 using RentDrive.Data.Models;
 using RentDrive.Data.Repository.Interfaces;
+using RentDrive.Services.Data.Common;
 using RentDrive.Services.Data.Interfaces;
 using RentDrive.Web.ViewModels.VehicleTypeCategory;
 
@@ -12,14 +13,18 @@ namespace RentDrive.Services.Data
 
         private readonly IRepository<VehicleTypeCategory, int> vehicleTypeCategoryRepository;
         private readonly IRepository<Vehicle, Guid> vehicleRepository;
+        private readonly IRepository<ApplicationUser, Guid> applicationUserRepository;
+
         public VehicleTypeCategoryService(
             IRepository<VehicleTypeCategory, int> vehicleTypeCategoryRepository,
-            IRepository<Vehicle, Guid> vehicleRepository)
+            IRepository<Vehicle, Guid> vehicleRepository,
+            IRepository<ApplicationUser, Guid> applicationUserRepository)
         {
             this.vehicleTypeCategoryRepository = vehicleTypeCategoryRepository;
             this.vehicleRepository = vehicleRepository;
+            this.applicationUserRepository = applicationUserRepository;
         }
-        public async Task<IEnumerable<VehicleTypeCategoryViewModel>> GetAllCategories()
+        public async Task<ServiceResponse<IEnumerable<VehicleTypeCategoryViewModel>>> GetAllCategories()
         {
             IEnumerable<VehicleTypeCategoryViewModel> allCategories = await this.vehicleTypeCategoryRepository
                 .GetAllAsQueryable()
@@ -33,10 +38,24 @@ namespace RentDrive.Services.Data
                 })
                 .ToListAsync();
 
-            return allCategories;
+            return ServiceResponse<IEnumerable<VehicleTypeCategoryViewModel>>.Ok(allCategories);
         }
-        public async Task<bool> DeleteByIdAsync(int id)
+
+        public async Task<ServiceResponse<bool>> DeleteByIdAsync(Guid userId, int id)
         {
+            ApplicationUser currentUser = await this.applicationUserRepository
+                .GetByIdAsync(userId);
+
+            if (currentUser == null)
+            {
+                return ServiceResponse<bool>.Fail("User Not Found!");
+            }
+
+            if (currentUser.UserType != UserType.CompanyEmployee)
+            {
+                return ServiceResponse<bool>.Fail("Unauthorized User!");
+            }
+
             VehicleTypeCategory? category = await this.vehicleTypeCategoryRepository
                 .GetAllAsQueryable()
                 .FirstOrDefaultAsync(vtc =>
@@ -45,7 +64,7 @@ namespace RentDrive.Services.Data
 
             if (category == null)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Category Not Found!");
             }
 
             bool currentlyInUse = await this.vehicleRepository
@@ -54,17 +73,30 @@ namespace RentDrive.Services.Data
 
             if (currentlyInUse)
             {
-                return false;
+                return ServiceResponse<bool>.Fail("Category Is Currently In Use!");
             }
 
             category.IsDeleted = true;
             await this.vehicleTypeCategoryRepository.SaveChangesAsync();
 
-            return true;
+            return ServiceResponse<bool>.Ok(true);
         }
 
-        public async Task<VehicleTypeCategoryEditFormViewModel?> EditCategory(VehicleTypeCategoryEditFormViewModel viewModel)
+        public async Task<ServiceResponse<VehicleTypeCategoryEditFormViewModel?>> EditCategory(Guid userId, VehicleTypeCategoryEditFormViewModel viewModel)
         {
+            ApplicationUser currentUser = await this.applicationUserRepository
+                .GetByIdAsync(userId);
+
+            if (currentUser == null)
+            {
+                return ServiceResponse<VehicleTypeCategoryEditFormViewModel?>.Fail("User Not Found!");
+            }
+
+            if (currentUser.UserType != UserType.CompanyEmployee)
+            {
+                return ServiceResponse<VehicleTypeCategoryEditFormViewModel?>.Fail("Unauthorized User!");
+            }
+
             VehicleTypeCategory? category = await this.vehicleTypeCategoryRepository
                 .GetAllAsQueryable()
                 .FirstOrDefaultAsync(vtc =>
@@ -73,7 +105,7 @@ namespace RentDrive.Services.Data
 
             if (category == null)
             {
-                return null;
+                return ServiceResponse<VehicleTypeCategoryEditFormViewModel?>.Fail("Category Not Found!");
             }
 
             category.Name = viewModel.Name;
@@ -81,17 +113,32 @@ namespace RentDrive.Services.Data
 
             await this.vehicleRepository.SaveChangesAsync();
 
-            return new VehicleTypeCategoryEditFormViewModel()
-            {
-                Id = category.Id,
-                Name = category.Name,
-                Description = category.Description,
-                VehicleTypeId = category.VehicleTypeId,
-            };
+            return ServiceResponse<VehicleTypeCategoryEditFormViewModel?>.Ok(
+                new VehicleTypeCategoryEditFormViewModel()
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    Description = category.Description,
+                    VehicleTypeId = category.VehicleTypeId,
+                }
+            );
         }
 
-        public async Task<VehicleTypeCategoryCreateFormViewModel?> CreateCategory(VehicleTypeCategoryCreateFormViewModel viewModel)
+        public async Task<ServiceResponse<VehicleTypeCategoryCreateFormViewModel?>> CreateCategory(Guid userId, VehicleTypeCategoryCreateFormViewModel viewModel)
         {
+            ApplicationUser currentUser = await this.applicationUserRepository
+                .GetByIdAsync(userId);
+
+            if (currentUser == null)
+            {
+                return ServiceResponse<VehicleTypeCategoryCreateFormViewModel?>.Fail("User Not Found!");
+            }
+
+            if (currentUser.UserType != UserType.CompanyEmployee)
+            {
+                return ServiceResponse<VehicleTypeCategoryCreateFormViewModel?>.Fail("Unauthorized User!");
+            }
+
             bool alreadyExists = await this.vehicleTypeCategoryRepository
                 .GetAllAsQueryable()
                 .AnyAsync(vtc =>
@@ -100,7 +147,7 @@ namespace RentDrive.Services.Data
 
             if (alreadyExists)
             {
-                return null;
+                return ServiceResponse<VehicleTypeCategoryCreateFormViewModel?>.Fail("Category Already Exists!");
             }
 
             VehicleTypeCategory newCategory = new VehicleTypeCategory()
@@ -113,13 +160,15 @@ namespace RentDrive.Services.Data
             await this.vehicleTypeCategoryRepository.AddAsync(newCategory);
             await this.vehicleTypeCategoryRepository.SaveChangesAsync();
 
-            return new VehicleTypeCategoryCreateFormViewModel()
-            {
-                Id = newCategory.Id,
-                Name = newCategory.Name,
-                Description = newCategory.Description,
-                VehicleTypeId = newCategory.VehicleTypeId,
-            };
+            return ServiceResponse<VehicleTypeCategoryCreateFormViewModel?>.Ok(
+                new VehicleTypeCategoryCreateFormViewModel()
+                {
+                    Id = newCategory.Id,
+                    Name = newCategory.Name,
+                    Description = newCategory.Description,
+                    VehicleTypeId = newCategory.VehicleTypeId,
+                }
+            );
         }
     }
 }

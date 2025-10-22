@@ -1,12 +1,13 @@
-﻿using RentDrive.Web.ViewModels.VehicleTypeCategory;
+﻿using RentDrive.Services.Data.Common;
+using RentDrive.Web.ViewModels.VehicleTypeCategory;
 
 namespace RentDrive.Services.Data.Interfaces
 {
     public interface IVehicleTypeCategoryService
     {
-        public Task<IEnumerable<VehicleTypeCategoryViewModel>> GetAllCategories();
-        public Task<bool> DeleteByIdAsync(int id);
-        public Task<VehicleTypeCategoryEditFormViewModel?> EditCategory(VehicleTypeCategoryEditFormViewModel viewModel);
-        public Task<VehicleTypeCategoryCreateFormViewModel?> CreateCategory(VehicleTypeCategoryCreateFormViewModel viewModel);
+        public Task<ServiceResponse<IEnumerable<VehicleTypeCategoryViewModel>>> GetAllCategories();
+        public Task<ServiceResponse<bool>> DeleteByIdAsync(Guid userId, int id);
+        public Task<ServiceResponse<VehicleTypeCategoryEditFormViewModel?>> EditCategory(Guid userId, VehicleTypeCategoryEditFormViewModel viewModel);
+        public Task<ServiceResponse<VehicleTypeCategoryCreateFormViewModel?>> CreateCategory(Guid userId, VehicleTypeCategoryCreateFormViewModel viewModel);
     }
 }

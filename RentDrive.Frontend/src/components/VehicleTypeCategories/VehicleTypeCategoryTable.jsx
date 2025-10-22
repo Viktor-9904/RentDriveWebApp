@@ -53,6 +53,7 @@ export default function VehicleTypeCategoryTable({
       const url = `${backEndURL}/api/vehicletypecategory/${isNew ? "create" : "edit"}/${isNew ? "" : payload.id}`;
       const response = await fetch(url, {
         method,
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
@@ -84,6 +85,7 @@ export default function VehicleTypeCategoryTable({
     try {
       const response = await fetch(`${backEndURL}/api/vehicletypecategory/delete/${categoryToDelete.id}`, {
         method: "DELETE",
+        credentials: "include"
       });
 
       if (!response.ok) {
