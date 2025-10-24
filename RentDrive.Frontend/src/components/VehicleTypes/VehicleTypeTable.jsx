@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useBackendURL } from "../../hooks/useBackendURL";
+import { useErrorModal } from "../../context/ErrorModalContext"
+
 import VehicleTypeTableItem from "./VehicleTypeTableItem";
 import DeleteConfirmationModal from "../shared/DeleteConfirmationModal/DeleteConfirmationModal";
 
@@ -16,6 +18,8 @@ export default function VehicleTypeTable({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [localVehicleTypes, setLocalVehicleTypes] = useState([]);
   const [inputModel, setInputModel] = useState(null);
+
+  const {setErrorModalMessage } = useErrorModal();
 
   useEffect(() => {
     setLocalVehicleTypes(vehicleTypes);
@@ -56,6 +60,8 @@ const handleSaveClick = async () => {
     });
 
     if (!response.ok) {
+      const errorMessage = await response.text();
+      setErrorModalMessage(errorMessage);
       throw new Error(`Failed to ${payload.isNew ? "add" : "edit"} vehicle type`);
     }
 
@@ -74,7 +80,7 @@ const handleSaveClick = async () => {
     setNewTypeName("");
 
   } catch (error) {
-    alert(error.message);
+    // alert(error.message);
   }
 };
 
@@ -93,12 +99,16 @@ const handleSaveClick = async () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to delete vehicle type");
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        setErrorModalMessage(errorMessage);
+        throw new Error("Failed to delete vehicle type");
+      }
 
       setLocalVehicleTypes((prev) => prev.filter((vt) => vt.id !== vehicleTypeToDelete.id));
       setShowDeleteModal(false);
     } catch (err) {
-      alert(err.message);
+      // alert(err.message);
     }
 
     setShowDeleteModal(false);
