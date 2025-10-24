@@ -86,7 +86,6 @@ namespace RentDrive.Backend.Controllers
                 return Unauthorized("Unauthorized User!");
             }
 
-
             ServiceResponse<UserCredentialsViewModel?> response = await this.accountService
                 .GetUserCredentialsByIdAsync(guidUserId);
 

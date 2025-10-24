@@ -29,54 +29,57 @@ import ProfileSettingsPage from './pages/Profile/ProfileSettingsPage'
 import UserWallet from './components/Profile/UserWallet/UserWallet'
 import ChatPage from './pages/ChatPage/ChatPage'
 import ScrollToTop from './components/shared/ScrollToTop'
+import { ErrorModalProvider } from './context/ErrorModalContext'
 
 function App() {
   return (
-    <AccountProvider>
-      <Header />
-      <ScrollToTop />
+    <ErrorModalProvider>
+      <AccountProvider>
+        <Header />
+        <ScrollToTop />
 
-      <Routes>
+        <Routes>
 
-        <Route index element={<Home />} />
-        <Route path="/listing" element={<Listing />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/api/vehicle/:id" element={<VehicleDetailsPage />} />
+          <Route index element={<Home />} />
+          <Route path="/listing" element={<Listing />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/api/vehicle/:id" element={<VehicleDetailsPage />} />
 
-        <Route element={<EmployeeRoute />}>
-          <Route path="/manage" element={<ManageLayout />}>
-            <Route path="vehicle-type-properties" element={<VehicleTypeProperties />} />
-            <Route path="vehicle-types" element={<ManageVehicleTypes />} />
-            <Route path="vehicle-type-categories" element={<ManageVehicleTypeCategories />} />
-          </Route>
-
-        </Route>
-
-        <Route element={<AuthenticatedRoute />}>
-          <Route path="/manage" element={<ManageLayout />}>
-            <Route path="vehicles" element={<VehiclesLayout />}>
-              <Route path="create" element={<CreateVehiclePage />} />
-              <Route path="edit/:id" element={<EditVehiclePage />} />
+          <Route element={<EmployeeRoute />}>
+            <Route path="/manage" element={<ManageLayout />}>
+              <Route path="vehicle-type-properties" element={<VehicleTypeProperties />} />
+              <Route path="vehicle-types" element={<ManageVehicleTypes />} />
+              <Route path="vehicle-type-categories" element={<ManageVehicleTypeCategories />} />
             </Route>
+
           </Route>
 
-          <Route path="/profile" element={<ProfileLayoutPage />}>
-            <Route index element={<ProfileOverviewPage />} />
-            <Route path="rentals" element={<MyRentals />} />
-            <Route path="vehicles" element={<MyListedVehiclesPage />} />
-            <Route path="settings" element={<ProfileSettingsPage />} />
-            <Route path="wallet" element={<UserWallet />} />
-          </Route>
+          <Route element={<AuthenticatedRoute />}>
+            <Route path="/manage" element={<ManageLayout />}>
+              <Route path="vehicles" element={<VehiclesLayout />}>
+                <Route path="create" element={<CreateVehiclePage />} />
+                <Route path="edit/:id" element={<EditVehiclePage />} />
+              </Route>
+            </Route>
+
+            <Route path="/profile" element={<ProfileLayoutPage />}>
+              <Route index element={<ProfileOverviewPage />} />
+              <Route path="rentals" element={<MyRentals />} />
+              <Route path="vehicles" element={<MyListedVehiclesPage />} />
+              <Route path="settings" element={<ProfileSettingsPage />} />
+              <Route path="wallet" element={<UserWallet />} />
+            </Route>
 
             <Route path="chat" element={<ChatPage />} />
-        </Route>
+          </Route>
 
-      </Routes>
+        </Routes>
 
-      <Footer />
-    </AccountProvider>
+        <Footer />
+      </AccountProvider>
+    </ErrorModalProvider>
   )
 }
 
