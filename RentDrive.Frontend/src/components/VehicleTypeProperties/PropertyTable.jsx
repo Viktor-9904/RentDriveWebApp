@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useBackendURL } from "../../hooks/useBackendURL";
 
 import DeleteConfirmationModal from "../shared/DeleteConfirmationModal/DeleteConfirmationModal";
+import { useErrorModal } from "../../context/ErrorModalContext"
 
 export default function PropertyTable({
   setFilteredProperties,
@@ -22,6 +23,8 @@ export default function PropertyTable({
 
   const [propertyToDelete, setPropertyToDelete] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const { setErrorModalMessage } = useErrorModal()
 
   const handleEditClick = (prop) => {
     setEditingId(prop.id);
@@ -72,6 +75,8 @@ export default function PropertyTable({
       );
 
       if (!response.ok) {
+        const errorMessage = await response.text();
+        setErrorModalMessage(errorMessage);
         throw new Error("Failed to save changes");
       }
 
@@ -86,7 +91,7 @@ export default function PropertyTable({
 
       setEditingId(null);
     } catch (error) {
-      alert(error.message);
+      // alert(error.message);
     }
   };
 
@@ -106,6 +111,8 @@ export default function PropertyTable({
       );
 
       if (!response.ok) {
+        const errorMessage = await response.text();
+        setErrorModalMessage(errorMessage);
         throw new Error("Failed to delete property");
       }
 
@@ -116,11 +123,12 @@ export default function PropertyTable({
       if (onDeleteSuccess) {
         onDeleteSuccess(propertyToDelete.id);
       }
-
+    } catch (err) {
+      // alert(err.message);
+    }
+    finally{
       setShowDeleteModal(false);
       setPropertyToDelete(null);
-    } catch (err) {
-      alert(err.message);
     }
   };
 
