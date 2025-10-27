@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { useUserProfileDetails } from "./hooks/useUserProfileDetails";
 import { useBackendURL } from "../../hooks/useBackendURL";
+import { useErrorModal } from "../../context/ErrorModalContext"
+
 import Spinner from "../shared/Spinner/Spinner";
 
 export default function ProfileSettings() {
   const backEndURL = useBackendURL();
   const { userProfileDetails, userProfileDetailsLoading, userProfileDetailsError } = useUserProfileDetails();
+  const { setErrorModalMessage } = useErrorModal()
 
   const [profileData, setProfileData] = useState({
     username: "",
@@ -57,11 +60,12 @@ export default function ProfileSettings() {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
+        const errorMessage = await response.text();
+        setErrorModalMessage(errorMessage);
         throw new Error(errorText || "Failed to update profile");
       }
     } catch (error) {
-      alert("Error updating profile: " + error.message);
+      // alert("Error updating profile: " + error.message);
     } finally {
       setSavingProfile(false);
     }
@@ -93,13 +97,14 @@ export default function ProfileSettings() {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
+        const errorMessage = await response.text();
+        setErrorModalMessage(errorMessage);
         throw new Error(errorText || "Failed to change password");
       }
 
       setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
     } catch (erorr) {
-      alert("Error changing password: " + erorr.message);
+      // alert("Error changing password: " + erorr.message);
     } finally {
       setChangingPassword(false);
     }
