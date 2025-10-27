@@ -79,6 +79,8 @@ export default function MyRentals() {
             });
 
             if (!response.ok) {
+                const errorMessage = await response.text();
+                setErrorModalMessage(errorMessage);
                 throw new Error("Failed to confirm rental.");
             }
 
