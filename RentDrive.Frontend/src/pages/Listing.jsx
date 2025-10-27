@@ -1,4 +1,4 @@
-import PageHeading from "../components/shared/PageHeading";
+import PageHeading from "../components/shared/PageHeading/PageHeading";
 import ListingPage from "../components/Vehicles/Listing/ListingPage";
 
 export default function Listing() {

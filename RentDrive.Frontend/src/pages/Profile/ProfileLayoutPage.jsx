@@ -1,4 +1,4 @@
-import PageHeading from "../../components/shared/PageHeading";
+import PageHeading from "../../components/shared/PageHeading/PageHeading";
 import ProfileLayout from "../../components/Profile/ProfileLayout";
 
 export default function ProfileLayoutPage() {

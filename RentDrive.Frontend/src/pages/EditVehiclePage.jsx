@@ -1,4 +1,4 @@
-import PageHeading from "../components/shared/PageHeading";
+import PageHeading from "../components/shared/PageHeading/PageHeading";
 import EditVehicleForm from "../components/Vehicles/EditVehicleForm";
 
 export default function EditVehiclePage() {

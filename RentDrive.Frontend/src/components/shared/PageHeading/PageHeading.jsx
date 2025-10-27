@@ -1,3 +1,5 @@
+import "./PageHeading.css"
+
 export default function PageHeading({
   topPadding = 230,
   bottomPadding = 120,

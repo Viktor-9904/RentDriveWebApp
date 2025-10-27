@@ -1,0 +1,89 @@
+.page-heading {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-image: url(/assets/images/road-banner.jpg);
+  padding: 230px 0px 120px 0px;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-heading .top-text {
+  text-align: left;
+}
+
+.page-heading .top-text h6 {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.page-heading .top-text h2 {
+  color: #fff;
+  line-height: 70px;
+  font-size: 45px;
+  font-weight: 800;
+  text-transform: capitalize;
+  margin-top: 15px;
+}
+
+.page-heading-details {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-image: url(/assets/images/heading-bg.jpg);
+  padding: 70px 0px 30px 0px;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-heading-details .top-text {
+  text-align: left;
+}
+
+.page-heading-details .top-text h6 {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.page-heading-details .top-text h2 {
+  color: #fff;
+  line-height: 70px;
+  font-size: 45px;
+  font-weight: 800;
+  text-transform: capitalize;
+  margin-top: 15px;
+}
+
+.page-heading-create {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-image: url(/assets/images/heading-bg.jpg);
+  padding: 150px 0px 90px 0px;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-heading-create .top-text {
+  text-align: left;
+}
+
+.page-heading-create .top-text h6 {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.page-heading-create .top-text h2 {
+  color: #fff;
+  line-height: 70px;
+  font-size: 45px;
+  font-weight: 800;
+  text-transform: capitalize;
+  margin-top: 15px;
+}

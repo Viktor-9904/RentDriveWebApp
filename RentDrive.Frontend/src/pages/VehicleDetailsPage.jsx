@@ -1,4 +1,4 @@
-import PageHeading from "../components/shared/PageHeading";
+import PageHeading from "../components/shared/PageHeading/PageHeading";
 import VehicleDetails from "../components/VehicleDetails/VehicleDetails/VehicleDetails";
 
 export default function VehicleDetailsPage() {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import Chat from "../../components/Chat/ChatMessenger/Chat";
 import ChatSidebar from "../../components/Chat/ChatSideBar/ChatSideBar";
-import PageHeading from "../../components/shared/PageHeading";
+import PageHeading from "../../components/shared/PageHeading/PageHeading";
 
 import "./ChatPage.css";
 

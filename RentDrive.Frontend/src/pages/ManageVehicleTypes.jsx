@@ -1,4 +1,4 @@
-import PageHeading from "../components/shared/PageHeading";
+import PageHeading from "../components/shared/PageHeading/PageHeading";
 import VehicleTypes from "../components/VehicleTypes/VehicleTypes";
 
 export default function ManageVehicleTypes (){

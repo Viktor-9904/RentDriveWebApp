@@ -1,4 +1,4 @@
-import PageHeading from "../components/shared/PageHeading";
+import PageHeading from "../components/shared/PageHeading/PageHeading";
 import VehicleTypePropertiesEditor from "../components/VehicleTypeProperties/VehicleTypeProperties";
 
 export default function VehicleTypeProperties() {

@@ -1,5 +1,5 @@
 import ContactPage from "../components/Contact-Us/ContactPage";
-import PageHeading from "../components/shared/PageHeading";
+import PageHeading from "../components/shared/PageHeading/PageHeading";
 
 export default function ContactUs() {
     return (
