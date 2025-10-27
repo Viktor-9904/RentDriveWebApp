@@ -1,8 +1,9 @@
+import "./Header.css"
+
 import { Link } from 'react-router';
-import useLogout from '../../hooks/useLogout';
-import { useAuth } from '../../context/AccountContext';
 import { useEffect, useState } from 'react';
-import { GiConsoleController } from 'react-icons/gi';
+
+import { useAuth } from '../../../context/AccountContext';
 
 export default function Header() {
     const { user, isAuthenticated } = useAuth();
