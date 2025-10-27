@@ -1,3 +1,5 @@
+import "./RecentListings.css"
+
 import { useEffect, useState } from 'react';
 
 import RecentListingsItem from './RecentListingsItem';
