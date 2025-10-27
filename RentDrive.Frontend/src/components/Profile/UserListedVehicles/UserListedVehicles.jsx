@@ -6,11 +6,14 @@ import UserVehicleBookingsModal from "./UserVehicleBookingsModal";
 import DeleteConfirmationModal from "../../shared/DeleteConfirmationModal/DeleteConfirmationModal";
 
 import { useBackendURL } from "../../../hooks/useBackendURL";
+import { useErrorModal } from "../../../context/ErrorModalContext"
+
 import useUserVehicles from "../hooks/useUserVehicles";
 import useDeleteVehicle from "../../Vehicles/hooks/useDeleteVehicle";
 import Spinner from "../../shared/Spinner/Spinner";
 
 export default function UserListedVehicles() {
+  const { setErrorModalMessage } = useErrorModal()
   const { userVehicles, uservehiclesLoading, uservehiclesError } = useUserVehicles()
   const [myVehicles, setMyVehicles] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -63,13 +66,13 @@ export default function UserListedVehicles() {
 
     if (success) {
       setMyVehicles((prev) => prev.filter(v => v.id !== vehicleToDelete.id));
-
-      setShowDeleteModal(false);
-      setVehicleToDelete({});
     } else {
       console.error("Delete failed:", error);
-      alert(error);
+      setErrorModalMessage(error);
+      // alert(error);
     }
+    setShowDeleteModal(false);
+    setVehicleToDelete({});
   };
 
   if (uservehiclesLoading) return <Spinner message={"My Vehicles"} />
