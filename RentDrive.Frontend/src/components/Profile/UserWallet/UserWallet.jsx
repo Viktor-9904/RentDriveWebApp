@@ -5,8 +5,9 @@ import { useWalletTransactionHistory } from '../hooks/useWalletTransactionHistor
 
 import AddFundsToBalance from './AddFundsModal';
 import { useBackendURL } from '../../../hooks/useBackendURL';
-import { useFetcher } from 'react-router-dom';
+import { useErrorModal } from "../../../context/ErrorModalContext"
 import Spinner from '../../shared/Spinner/Spinner';
+import { FiExternalLink } from 'react-icons/fi';
 
 
 export default function UserWallet() {
@@ -14,6 +15,7 @@ export default function UserWallet() {
     const backEndURL = useBackendURL();
 
     const { user, isAuthenticated, loadUser } = useAuth();
+    const { setErrorModalMessage } = useErrorModal()
     const { walletTransactionHistory, walletTransactionHistoryLoading, walletTransactionHistoryError } = useWalletTransactionHistory()
 
     const [showModal, setShowModal] = useState(false);
@@ -37,16 +39,20 @@ export default function UserWallet() {
             });
 
             if (!response.ok) {
+                const errorMessage = await response.text();
+                setErrorModalMessage(errorMessage);
                 throw new Error("Failed to add funds to wallet.");
             }
 
             const newTransaction = await response.json();
             setTransactions(prev => [newTransaction, ...prev]);
             loadUser()
-            setShowModal(false);
         } catch (error) {
-            alert(error.message);
-            console.error("Error adding funds:", error);
+            // alert(error.message);
+            // console.error("Error adding funds:", error);
+        }
+        finally{
+            setShowModal(false);
         }
     };
 

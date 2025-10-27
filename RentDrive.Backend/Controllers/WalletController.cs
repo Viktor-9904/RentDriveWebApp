@@ -25,7 +25,7 @@ namespace RentDrive.Backend.Controllers
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                return Unauthorized();
+                return Unauthorized("Unauthorized User!");
             }
 
             if (!ModelState.IsValid)
