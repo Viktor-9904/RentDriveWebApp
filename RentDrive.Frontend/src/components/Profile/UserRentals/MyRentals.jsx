@@ -1,17 +1,21 @@
-import { useUserRentals } from "../hooks/useUserRentals";
 import { useEffect, useState } from "react";
-import ReviewModal from "../ReviewModal";
-import { SiPayloadcms } from "react-icons/si";
-import CancelConfirmationModal from "./CancelConfrimationModal";
-import { Flag } from "lucide-react";
+import { useErrorModal } from "../../../context/ErrorModalContext"
+
+import { useUserRentals } from "../hooks/useUserRentals";
 import { useAuth } from "../../../context/AccountContext";
 import { useBackendURL } from "../../../hooks/useBackendURL";
+
+import ReviewModal from "../ReviewModal";
+import CancelConfirmationModal from "./CancelConfrimationModal";
 import Spinner from "../../shared/Spinner/Spinner";
 
 export default function MyRentals() {
     const { user, isAuthenticated, loadUser } = useAuth();
     const { rentals, rentalsLoading, rentalError } = useUserRentals();
+
     const backEndURL = useBackendURL();
+    const { setErrorModalMessage } = useErrorModal()
+
 
     const [localRentals, setLocalRentals] = useState([]);
     const [selectedId, setSelectedId] = useState("");
@@ -84,7 +88,7 @@ export default function MyRentals() {
                 )
             );
         } catch (err) {
-            setConfirmError(err.message || "Something went wrong.");
+            // alert(err.message);
         } finally {
             setSelectedId(null);
         }
@@ -100,8 +104,10 @@ export default function MyRentals() {
                     "Content-Type": "application/json",
                 },
             });
-
+            
             if (!response.ok) {
+                const errorMessage = await response.text();
+                setErrorModalMessage(errorMessage);
                 throw new Error("Failed to cancel rental.");
             }
 
@@ -110,10 +116,12 @@ export default function MyRentals() {
                     rental.id === rentalId ? { ...rental, status: "Cancelled", IsCancelled: true, isCancellable: false } : rental
                 )
             );
-            setShowCancelModal(false);
             await loadUser();
         } catch (err) {
-            setConfirmError(err.message || "Something went wrong.");
+            // alert(err.message);
+        }
+        finally{
+            setShowCancelModal(false);
         }
     };
 
