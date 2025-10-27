@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { useBackendURL } from "../../hooks/useBackendURL";
+import { useErrorModal } from "../../context/ErrorModalContext"
 
 import VehicleTypeCategoryTableItem from "./VehicleTypeCategoryTableItem";
 import DeleteConfirmationModal from "../shared/DeleteConfirmationModal/DeleteConfirmationModal";
@@ -14,6 +15,8 @@ export default function VehicleTypeCategoryTable({
   setNewCategory
 }) {
   const backEndURL = useBackendURL();
+  const { setErrorModalMessage } = useErrorModal()
+
   const [localCategories, setLocalCategories] = useState(categories);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -59,6 +62,8 @@ export default function VehicleTypeCategoryTable({
       });
 
       if (!response.ok) {
+        const errorMessage = await response.text();
+        setErrorModalMessage(errorMessage);
         throw new Error(`Failed to ${isNew ? "add" : "edit"} vehicle type category`);
       }
 
@@ -67,12 +72,13 @@ export default function VehicleTypeCategoryTable({
       setLocalCategories((prev) =>
         isNew ? [...prev, savedCategory] : prev.map((c) => (c.id === savedCategory.id ? savedCategory : c))
       );
-
+    } catch (err) {
+      // alert(err.message);
+    }
+    finally{
       setIsNew(false);
       setNewCategory({ name: "", description: "", vehicleTypeId: "" });
       setInputModel(null);
-    } catch (err) {
-      alert(err.message);
     }
   };
 
@@ -89,15 +95,18 @@ export default function VehicleTypeCategoryTable({
       });
 
       if (!response.ok) {
-        throw new Error("Delete failed");
+        const errorMessage = await response.text();
+        setErrorModalMessage(errorMessage);
+        throw new Error(`Failed To Delete Vehicle Type Category`);
       }
 
       setLocalCategories((prev) => prev.filter((c) => c.id !== categoryToDelete.id));
     } catch (err) {
-      alert(err.message);
+      // alert(err.message);
     }
-
-    setShowDeleteModal(false);
+    finally {
+      setShowDeleteModal(false);
+    }
   };
 
   return (
