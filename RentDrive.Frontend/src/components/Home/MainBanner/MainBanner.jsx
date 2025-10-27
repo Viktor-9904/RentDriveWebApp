@@ -1,10 +1,12 @@
+import "./MainBanner.css"
+
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 
-import useAllVehicleTypes from '../Vehicles/hooks/useAllVehicleTypes';
-import useAllVehicleCategories from '../Vehicles/hooks/useAllVehicleCategories';
-import useFuelTypesEnum from '../../hooks/useFuelTypesEnum';
-import useActiveListings from '../../hooks/useActiveListings';
+import useAllVehicleTypes from '../../Vehicles/hooks/useAllVehicleTypes';
+import useAllVehicleCategories from '../../Vehicles/hooks/useAllVehicleCategories';
+import useFuelTypesEnum from '../../../hooks/useFuelTypesEnum';
+import useActiveListings from '../../../hooks/useActiveListings';
 import { data } from 'jquery';
 
 export default function MainBanner() {

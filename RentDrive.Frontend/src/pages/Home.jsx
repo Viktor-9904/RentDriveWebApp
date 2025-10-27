@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import MainBanner from "../components/Home/MainBanner";
+import MainBanner from "../components/Home/MainBanner/MainBanner";
 import RecentListing from "../components/Home/RecentListings/RecentListings";
 
 export default function Home() {
