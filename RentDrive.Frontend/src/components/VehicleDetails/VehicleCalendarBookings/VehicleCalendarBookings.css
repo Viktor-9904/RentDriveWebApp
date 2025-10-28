@@ -1,0 +1,134 @@
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  cursor: default;
+}
+
+.vehicle-calendar__tile,
+.vehicle-calendar__tile:hover {
+  cursor: default !important;
+}
+
+.vehicle-calendar__tile {
+  position: relative;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0;
+  line-height: normal;
+  color: inherit;
+  background-color: transparent !important;
+  cursor: default;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  height: 40px !important;
+  z-index: 0;
+  user-select: none;
+}
+
+.vehicle-calendar__tile--available {
+  cursor: pointer;
+  color: #ffffff !important;
+  z-index: 1;
+}
+
+.vehicle-calendar__tile--available::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  left: 1px;
+  right: 1px;
+  border-radius: 6px;
+  background-color: #16a34a93 !important;
+  z-index: -1;
+}
+
+.vehicle-calendar__tile:disabled {
+  position: relative;
+  color: #a0a0a0 !important;
+  background-color: transparent !important;
+  z-index: 0;
+}
+
+.vehicle-calendar__tile:disabled::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  left: 1px;
+  right: 1px;
+  border-radius: 6px;
+  background-color: #dddbdbd0 !important;
+  z-index: -1;
+}
+
+.vehicle-calendar__tile--booked {
+  cursor: not-allowed;
+  color: white !important;
+  z-index: 1;
+}
+
+.vehicle-calendar__tile--booked::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  border-radius: 6px;
+  background-color: #dc26268c !important;
+  z-index: -1;
+}
+
+.vehicle-calendar__legend-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.vehicle-calendar__legend-box--available {
+  background-color: #16a34a93;
+  border: 1px solid #16a34a;
+}
+
+.vehicle-calendar__legend-box--booked {
+  background-color: #dc26268c;
+  border: 1px solid #dc2626;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  cursor: default;
+}
+
+.react-calendar__tile--now {
+  position: relative;
+  background-color: transparent !important;
+  color: #0d6efd !important;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.react-calendar__tile--now::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  border: 2px solid #0d6efd;
+  border-radius: 6px;
+  z-index: -1;
+}

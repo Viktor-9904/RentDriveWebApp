@@ -1,7 +1,9 @@
+import "./VehicleCalendarBookings.css"
+
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-export default function VehicleCalendar({bookedDates}) {
+export default function VehicleCalendarBookings({bookedDates}) {
     const today = new Date();
     const sixMonthsLater = new Date();
     sixMonthsLater.setMonth(today.getMonth() + 6);

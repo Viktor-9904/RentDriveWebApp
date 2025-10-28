@@ -1,3 +1,5 @@
+import "./RentNowModal.css"
+
 import React, { useEffect, useState } from "react";
 import RentNowCalendar from "./RentNowCalendar";
 import { useNavigate } from "react-router-dom";
@@ -67,7 +69,7 @@ export default function RentNowModal({ showRentNowModal, onClose, bookedDates, p
                 </button>
                 <h4>Select Rental Dates</h4>
 
-                <div className="calendar-wrapper mb-3">
+                <div className="rent-now-calendar-wrapper mb-3">
                     <RentNowCalendar
                         bookedDates={bookedDates}
                         selectedDates={selectedDates}
@@ -84,7 +86,7 @@ export default function RentNowModal({ showRentNowModal, onClose, bookedDates, p
                 </div>
 
                 <div
-                    className={`selected-date-range ${selectedDates.length === 0 ? "empty" : ""
+                    className={`rent-now-selected-date-range ${selectedDates.length === 0 ? "empty" : ""
                         }`}
                 >
                     {selectedDates.length === 0
@@ -93,12 +95,12 @@ export default function RentNowModal({ showRentNowModal, onClose, bookedDates, p
                         (selectedDates.length > 1 ? ` - ${formatDate(selectedDates[selectedDates.length - 1])}` : "")}
                 </div>
 
-                <div className="price-info">
-                    <div className="price-box">
+                <div className="rent-now-price-info">
+                    <div className="rent-now-price-box">
                         Total price: <strong>{totalPrice.toFixed(2)}€</strong>
                     </div>
 
-                    <div className="price-box small-box">
+                    <div className="rent-now-price-box small-box">
                         Your balance: <strong>{userBalance.toFixed(2)}€</strong>
                     </div>
 

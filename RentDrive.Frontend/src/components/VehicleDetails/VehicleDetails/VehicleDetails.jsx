@@ -7,9 +7,9 @@ import { Check, MoreVertical, MoreVerticalIcon, Settings, X } from "lucide-react
 import { useAuth } from "../../../context/AccountContext";
 import { useBackendURL } from "../../../hooks/useBackendURL";
 
-import RentNowModal from "../RentNowModal";
-import VehicleCalendar from "../VehicleCalendar";
-import ReviewList from "../ReviewList";
+import RentNowModal from "../RentNowCalendar/RentNowModal";
+import VehicleCalendarBookings from "../VehicleCalendarBookings/VehicleCalendarBookings";
+import ReviewList from "../Reviews/ReviewList";
 import Spinner from "../../shared/Spinner/Spinner";
 import StarRating from "../../shared/VehicleStarRating/VehicleStarRating";
 import ExpandedVehicleImageModal from "../ExpandedVehicleImageModal/ExpandedVehicleImageModal";
@@ -112,11 +112,10 @@ export default function VehicleDetails() {
     return (
         <>
             <div className="container py-5 vehicle-details">
-
-                <div className="vehicle-header mb-4 d-flex justify-content-between align-items-center">
+                <div className="vehicle-details-header mb-4 d-flex justify-content-between align-items-center">
                     <div className="vehicle-info">
                         <div className="name-and-dots">
-                            <h2 className="make-model mb-1">{vehicle.make} {vehicle.model}</h2>
+                            <h2 className="vehicle-details-make-model mb-1">{vehicle.make} {vehicle.model}</h2>
                             {isAuthenticated && (user?.isCompanyEmployee || user?.id === vehicle.ownerId) && (
                                 <div className="dropdown">
                                     <MoreVerticalIcon className="dots-icon" />
@@ -129,11 +128,10 @@ export default function VehicleDetails() {
                         </div>
                         <StarRating rating={vehicle.starsRating} reviewCount={vehicle.reviewCount} />
                     </div>
-                    <div className="price-tag">
+                    <div className="vehicle-details-price-tag">
                         {vehicle.pricePerDay.toFixed(2)} € / day
                     </div>
                 </div>
-
 
                 <div className="row g-4">
                     <div className="col-md-7">
@@ -160,32 +158,35 @@ export default function VehicleDetails() {
                     </div>
 
                     <div className="col-md-5 d-flex flex-column align-items-center justify-content-center">
-                        <div className="calendar-wrapper w-100 mb-3">
-                            <VehicleCalendar
+                        <div className="vehicle-details-calendar-wrapper w-100 mb-3">
+                            <VehicleCalendarBookings
                                 bookedDates={bookedDatesState}
                                 setRentNowShowModal={setRentNowShowModal}
                             />
                             {isAuthenticated && vehicle?.ownerId !== user?.id && (
-                                <button
-                                    className="btn btn-success rent-now-btn mt-3 w-100"
-                                    onClick={() => setRentNowShowModal(true)}
-                                >
-                                    Rent Now
-                                </button>
+                                <div className="rent-now-btn-wrapper">
+                                    <button
+                                        className="btn btn-success rent-now-btn mt-3"
+                                        onClick={() => setRentNowShowModal(true)}
+                                    >
+                                        Rent Now
+                                    </button>
+                                </div>
                             )}
-                            </div>
+
+                        </div>
                     </div>
                 </div>
 
                 <div className="row g-4 mt-4">
                     <div className="col-md-6">
-                        <div className="card shadow-sm p-4 h-100 properties-card">
-                            <h5 className="section-heading mb-3">Vehicle Information</h5>
+                        <div className="card shadow-sm p-4 h-100 vehicle-details-properties-card">
+                            <h5 className="vehicle-details-section-heading mb-3">Vehicle Information</h5>
                             <div className="row">
                                 {baseProperties.map((prop, i) => (
                                     <div key={i} className="col-sm-12 mb-3">
-                                        <strong className="property-label">{prop.label}:</strong>
-                                        <span className="property-value">{prop.value}</span>
+                                        <strong className="vehicle-details-property-label">{prop.label}:</strong>
+                                        <span className="vehicle-details-property-value">{prop.value}</span>
                                     </div>
                                 ))}
                             </div>
@@ -193,13 +194,13 @@ export default function VehicleDetails() {
                     </div>
 
                     <div className="col-md-6">
-                        <div className="card shadow-sm p-4 h-100 properties-card">
-                            <h5 className="section-heading mb-3">Details</h5>
+                        <div className="card shadow-sm p-4 h-100 vehicle-details-properties-card">
+                            <h5 className="vehicle-details-section-heading mb-3">Details</h5>
                             <div className="row">
                                 {typeProperties.map((prop, i) => (
                                     <div key={i} className="col-sm-6 mb-3">
-                                        <strong className="property-label">{prop.label}:</strong>
-                                        <span className="property-value">
+                                        <strong className="vehicle-details-property-label">{prop.label}:</strong>
+                                        <span className="vehicle-details-property-value">
                                             {prop.value === "true" ? (
                                                 <Check className="text-green-500 inline" />
                                             ) : prop.value === "false" ? (
@@ -219,9 +220,9 @@ export default function VehicleDetails() {
                 {vehicle.description && (
                     <div className="row mt-4">
                         <div className="col-12">
-                            <div className="card shadow-sm p-4 description-card">
-                                <h5 className="section-heading mb-3">Description</h5>
-                                <p className="description-text">{vehicle.description}</p>
+                            <div className="card shadow-sm p-4 vehicle-details-description-card">
+                                <h5 className="vehicle-details-section-heading mb-3">Description</h5>
+                                <p className="vehicle-details-description-text">{vehicle.description}</p>
                             </div>
                         </div>
                     </div>
