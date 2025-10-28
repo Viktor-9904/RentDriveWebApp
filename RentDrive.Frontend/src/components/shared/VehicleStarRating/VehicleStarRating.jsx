@@ -1,3 +1,5 @@
+import "./VehicleStarRating.css"
+
 const StarRating = ({ rating = 0, reviewCount = 0 }) => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating - fullStars >= 0.5;

@@ -11,7 +11,7 @@ import RentNowModal from "../RentNowModal";
 import VehicleCalendar from "../VehicleCalendar";
 import ReviewList from "../ReviewList";
 import Spinner from "../../shared/Spinner/Spinner";
-import StarRating from "../../shared/VehicleStarRating";
+import StarRating from "../../shared/VehicleStarRating/VehicleStarRating";
 import ExpandedVehicleImageModal from "../ExpandedVehicleImageModal/ExpandedVehicleImageModal";
 import DeleteConfirmationModal from "../../shared/DeleteConfirmationModal/DeleteConfirmationModal";
 

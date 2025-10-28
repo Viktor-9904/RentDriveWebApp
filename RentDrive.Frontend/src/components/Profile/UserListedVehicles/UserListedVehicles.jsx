@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import StarRating from "../../shared/VehicleStarRating";
+import StarRating from "../../shared/VehicleStarRating/VehicleStarRating";
 import UserVehicleBookingsModal from "./UserVehicleBookingsModal";
 import DeleteConfirmationModal from "../../shared/DeleteConfirmationModal/DeleteConfirmationModal";
 

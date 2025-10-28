@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom'
-import StarRating from '../../shared/VehicleStarRating';
+import StarRating from '../../shared/VehicleStarRating/VehicleStarRating';
 import { useBackendURL } from '../../../hooks/useBackendURL';
 
 export default function RecentListingsItem({

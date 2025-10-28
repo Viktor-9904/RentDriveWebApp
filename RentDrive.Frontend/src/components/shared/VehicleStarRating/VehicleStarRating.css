@@ -1,0 +1,15 @@
+.rate {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0 0;
+  display: flex;
+  align-items: center;
+  color: #f5a623;
+  font-size: 1rem;
+}
+.rate li:last-child {
+  margin-left: 8px;
+  color: #555;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
