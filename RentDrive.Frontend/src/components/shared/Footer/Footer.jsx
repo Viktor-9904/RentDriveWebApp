@@ -1,4 +1,5 @@
-import { data } from 'jquery'
+import "./Footer.css"
+
 import { Link } from 'react-router-dom'
 
 export default function Footer() {
@@ -7,7 +8,6 @@ export default function Footer() {
     const currentYear = new Date().getFullYear();
     
     return (
-        <>
             <footer>
                 <div className="container">
                     <div className="row">
@@ -44,18 +44,18 @@ export default function Footer() {
                                 <p>27th Street of New Town, Digital Villa</p>
                                 <div className="row">
                                     <div className="col-lg-6">
-                                        <a href="tel:0100200340">010-020-0340</a>
+                                        <Link to="tel:0100200340">010-020-0340</Link>
                                         <br />
-                                        <a href="tel:0800800760">080-080-0760</a>
+                                        <Link to="tel:0800800760">080-080-0760</Link>
                                         <br />
-                                        <a href="tel:09008009040">090-080-9040</a>
+                                        <Link to="tel:09008009040">090-080-9040</Link>
                                     </div>
                                     <div className="col-lg-6">
-                                        <a href="support@rentdrive.eu">support@rentdrive.eu</a>
+                                        <Link to="support@rentdrive.eu">support@rentdrive.eu</Link>
                                         <br />
-                                        <a href="https://github.com/viktor-9904" target="_blank" rel="noopener noreferrer">GitHub</a>
+                                        <Link to="https://github.com/viktor-9904" target="_blank" rel="noopener noreferrer">GitHub</Link>
                                         <br />
-                                        <a href="https://www.linkedin.com/in/viktor-stanev-67b55a366/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                                        <Link to="https://www.linkedin.com/in/viktor-stanev-67b55a366/" target="_blank" rel="noopener noreferrer">LinkedIn</Link>
                                     </div>
                                 </div>
                             </div>
@@ -64,6 +64,5 @@ export default function Footer() {
                     </div>
                 </div>
             </footer>
-        </>
     )
 }
