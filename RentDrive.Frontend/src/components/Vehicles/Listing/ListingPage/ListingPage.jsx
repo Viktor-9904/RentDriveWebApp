@@ -1,16 +1,18 @@
+import "./ListingPage.css"
+
 import { useEffect, useState } from 'react';
 import { Range, getTrackBackground } from "react-range";
 import { useSearchParams } from "react-router-dom";
 
-import Spinner from '../../shared/Spinner/Spinner';
+import Spinner from '../../../shared/Spinner/Spinner';
 
-import { useBackendURL } from '../../../hooks/useBackendURL';
-import ListingPageItem from './ListingPageItem';
-import useAllVehicles from '../hooks/useAllVehicles';
-import useAllVehicleTypes from '../hooks/useAllVehicleTypes';
-import useAllVehicleCategories from '../hooks/useAllVehicleCategories';
-import useFilterVehiclePropertiesByTypeId from '../hooks/useFilterVehiclePropertiesByTypeId';
-import useBaseFilterProperties from '../hooks/useBaseFilterProperties';
+import { useBackendURL } from '../../../../hooks/useBackendURL';
+import useAllVehicles from '../../hooks/useAllVehicles';
+import useAllVehicleTypes from '../../hooks/useAllVehicleTypes';
+import useAllVehicleCategories from '../../hooks/useAllVehicleCategories';
+import useFilterVehiclePropertiesByTypeId from '../../hooks/useFilterVehiclePropertiesByTypeId';
+import useBaseFilterProperties from '../../hooks/useBaseFilterProperties';
+import ListingPageItem from "../ListingPageItem/ListingPageItem";
 
 export default function ListingPage() {
     const backEndURL = useBackendURL();
@@ -55,7 +57,7 @@ export default function ListingPage() {
         yearOfProduction: [1970, 1970],
     });
 
-        const togglePropertyOpen = (propertyId) => {
+    const togglePropertyOpen = (propertyId) => {
         setOpenProperties(prev => ({
             ...prev,
             [propertyId]: !prev[propertyId]
@@ -177,11 +179,11 @@ export default function ListingPage() {
     }, [localBaseFilterdProperties]);
 
     useEffect(() => {
-        if (!vehicles || vehicles.length === 0) return; 
+        if (!vehicles || vehicles.length === 0) return;
 
         setLocalVehiclesLoading(true);
         const debounceTimer = setTimeout(() => {
-            const fetchFilteredVehicles = async  () => {
+            const fetchFilteredVehicles = async () => {
                 try {
                     const payload = {
                         vehicleTypeId: selectedTypeId || null,
@@ -212,7 +214,7 @@ export default function ListingPage() {
                 } catch (err) {
                     console.error(err);
                 }
-                finally{
+                finally {
                     setLocalVehiclesLoading(false);
                 }
             }
@@ -224,7 +226,7 @@ export default function ListingPage() {
         }
 
     }, [vehicles, selectedTypeId, selectedCategoryId, baseFilters, selectedFilters, triggeredSearchQuery]);
-    
+
     useEffect(() => {
         setLocalVehicleTypes(vehicleTypes);
     }, [vehicleTypes])
@@ -247,7 +249,6 @@ export default function ListingPage() {
                 <div className="row">
                     <div className="col-lg-3 mb-4">
                         <div className="sidebar-filters">
-
                             <h5 className="mb-3">Vehicle Types</h5>
                             <select
                                 className="form-select"
@@ -481,38 +482,35 @@ export default function ListingPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-lg-12">
-                            <div className="row">
-                                {localVehiclesLoading ? (
-                                    <div className="col-12">
-                                        <Spinner message={"Vehicles"}/>
-                                    </div>
-                                ) : localVehicles?.length > 0 ? (
-                                    localVehicles.map(vehicle => (
-                                        <ListingPageItem
-                                            key={vehicle.id}
-                                            id={vehicle.id}
-                                            make={vehicle.make}
-                                            model={vehicle.model}
-                                            vehicleType={vehicle.vehicleType}
-                                            vehicleTypeCategory={vehicle.vehicleTypeCategory}
-                                            yearOfProduction={vehicle.yearOfProduction}
-                                            pricePerDay={vehicle.pricePerDay}
-                                            fuelType={vehicle.fuelType}
-                                            imageURL={vehicle.imageURL}
-                                            ownerName={vehicle.ownerName}
-                                            starsRating={vehicle.starsRating}
-                                            reviewCount={vehicle.reviewCount}
-                                        />
-                                    ))
-                                ) : (
-                                    <div className="col-12 text-center p-5">
-                                        <p>No vehicles found matching your filters.</p>
-                                    </div>
-                                )}
-                            </div>
+                        <div className="vehicle-listing">
+                            {localVehiclesLoading ? (
+                                <div className="listing-spinner-wrapper">
+                                    <Spinner message={"Vehicles"} />
+                                </div>
+                            ) : localVehicles?.length > 0 ? (
+                                localVehicles.map(vehicle => (
+                                    <ListingPageItem
+                                        key={vehicle.id}
+                                        id={vehicle.id}
+                                        make={vehicle.make}
+                                        model={vehicle.model}
+                                        vehicleType={vehicle.vehicleType}
+                                        vehicleTypeCategory={vehicle.vehicleTypeCategory}
+                                        yearOfProduction={vehicle.yearOfProduction}
+                                        pricePerDay={vehicle.pricePerDay}
+                                        fuelType={vehicle.fuelType}
+                                        imageURL={vehicle.imageURL}
+                                        ownerName={vehicle.ownerName}
+                                        starsRating={vehicle.starsRating}
+                                        reviewCount={vehicle.reviewCount}
+                                    />
+                                ))
+                            ) : (
+                                <div className="no-vehicles text-center p-5">
+                                    <p>No vehicles found matching your filters.</p>
+                                </div>
+                            )}
                         </div>
-
                     </div>
                 </div>
             </div>

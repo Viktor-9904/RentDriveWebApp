@@ -1,0 +1,51 @@
+.vehicle-listing a:hover .vehicle-listing-item {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.vehicle-listing-item {
+    background-color: #cfcfcf5b;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.vehicle-listing-item .left-image {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.vehicle-listing-item .left-image img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.vehicle-listing-item .right-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+    gap: 0.5rem;
+}
+
+.vehicle-listing-price {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #2c3e50;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.vehicle-listing-item-link {
+  text-decoration: none;
+  color: inherit;
+}
