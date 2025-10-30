@@ -1,5 +1,5 @@
 import PageHeading from "../../components/shared/PageHeading/PageHeading";
-import ProfileLayout from "../../components/Profile/ProfileLayout";
+import ProfileLayout from "../../components/Profile/ProfileLayout/ProfileLayout";
 
 export default function ProfileLayoutPage() {
     return (

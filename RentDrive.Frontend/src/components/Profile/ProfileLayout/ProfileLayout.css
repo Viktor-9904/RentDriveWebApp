@@ -1,0 +1,75 @@
+.profile-layout {
+  display: flex;
+  width: 80%;
+  max-width: none;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+  overflow: hidden;
+  font-family: system-ui, sans-serif;
+}
+
+.profile-layout-logout-button {
+  all: unset;
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  padding-top: 1.2rem;
+  border-radius: 0.25rem;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  color: #d90429;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.profile-layout-logout-button:hover {
+  background-color: #ffe5e5;
+  color: #d90429;
+}
+
+.profile-sidebar {
+  width: 220px;
+  background-color: #f9fafb;
+  border-right: 1px solid #e5e7eb;
+  padding: 1.5rem;
+}
+
+.profile-sidebar h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.profile-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.profile-sidebar a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.profile-sidebar a:hover {
+  background-color: #e0e7ff;
+}
+
+.profile-sidebar a.active {
+  background-color: #4338ca;
+  color: white;
+}
+
+.profile-content {
+  flex: 1;
+  padding: 2rem;
+  color: #374151;
+}

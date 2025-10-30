@@ -1,5 +1,7 @@
+import "./ProfileLayout.css"
+
 import { Outlet, NavLink } from "react-router-dom";
-import useLogout from "../../hooks/useLogout";
+import useLogout from "../../../hooks/useLogout";
 
 export default function ProfileLayout() {
 

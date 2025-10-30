@@ -875,17 +875,7 @@ Category Post
 }
 
 
-.profile-layout {
-  display: flex;
-  width: 80%;
-  max-width: none;
-  margin: 2rem auto;
-  background: #fff;
-  border-radius: 0.375rem;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
-  overflow: hidden;
-  font-family: system-ui, sans-serif;
-}
+
 
 .profile-sidebar {
   width: 220px;
@@ -1712,25 +1702,7 @@ Category Post
   gap: 1rem;
 }
 
-.profile-layout-logout-button {
-  all: unset;
-  display: block;
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 15px;
-  font-weight: 600;
-  font-family: inherit;
-  color: #d90429;
-  text-align: left;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
 
-.profile-layout-logout-button:hover {
-  background-color: #ffe5e5;
-  color: #d90429;
-}
 
 .form-section {
   display: flex;
