@@ -1,3 +1,5 @@
+import "./UserRentals.css"
+
 import { useEffect, useState } from "react";
 import { useErrorModal } from "../../../context/ErrorModalContext"
 
@@ -5,8 +7,8 @@ import { useUserRentals } from "../hooks/useUserRentals";
 import { useAuth } from "../../../context/AccountContext";
 import { useBackendURL } from "../../../hooks/useBackendURL";
 
-import ReviewModal from "../ReviewModal";
-import CancelConfirmationModal from "./CancelConfrimationModal";
+import ReviewModal from "./ReviewRentalModal/ReviewRentalModal";
+import CancelConfirmationModal from "./CancelRentalModal/CancelRentalConfrimationModal";
 import Spinner from "../../shared/Spinner/Spinner";
 
 export default function MyRentals() {
@@ -66,7 +68,6 @@ export default function MyRentals() {
             setSelectedId(null);
         }
     };
-
 
     const handleConfirm = async (rentalId) => {
         setSelectedId(rentalId);
@@ -133,11 +134,11 @@ export default function MyRentals() {
     if (rentalError) return <p>Error: {rentalError}</p>;
 
     return (
-        <div className="rentals-container">
-            <h3 className="rentals-heading">My Rentals</h3>
+        <div className="user-rentals-container">
+            <h3 className="user-rentals-heading">My Rentals</h3>
 
             <div className="rental-table-wrapper">
-                {localRentals?.length > 0 ? (<table className="rentals-table">
+                {localRentals?.length > 0 ? (<table className="user-rentals-table">
                     <thead>
                         <tr>
                             <th>Vehicle</th>
@@ -153,28 +154,28 @@ export default function MyRentals() {
                     <tbody>
                         {localRentals.map((rental) => (
                             <tr key={rental.id}>
-                                <td className="vehicle-cell">
+                                <td className="user-rentals-vehicle-cell">
                                     <img
                                         src={`${backEndURL}/${rental.imageUrl}`}
                                         alt={`${rental.vehicleMake} ${rental.vehicleModel}`}
-                                        className="vehicle-image"
+                                        className="user-rentals-vehicle-image"
                                     />
                                     {rental.vehicleMake} {rental.vehicleModel}
                                 </td>
                                 <td>
-                                    <span className={`rental-status ${rental.status.toLowerCase()}`}>
+                                    <span className={`user-rental-status ${rental.status.toLowerCase()}`}>
                                         {rental.status}
                                     </span>
                                 </td>
-                                <td className="date-cell">{new Date(rental.bookedOn).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", })}</td>
-                                <td className="date-cell">{new Date(rental.startDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", })}</td>
-                                <td className="date-cell">{new Date(rental.endDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", })}</td>
-                                <td className="price-cell">{rental.pricePerDay.toFixed(2)} €</td>
-                                <td className="price-cell">{rental.totalPrice.toFixed(2)} €</td>
+                                <td className="user-rental-date-cell">{new Date(rental.bookedOn).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", })}</td>
+                                <td className="user-rental-date-cell">{new Date(rental.startDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", })}</td>
+                                <td className="user-rental-date-cell">{new Date(rental.endDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", })}</td>
+                                <td className="user-rental-price-cell">{rental.pricePerDay.toFixed(2)} €</td>
+                                <td className="user-rental-price-cell">{rental.totalPrice.toFixed(2)} €</td>
                                 <td>
                                     {rental.status === "Active" && rental.isConfirmable && (
                                         <button
-                                            className="confirm-rental-button"
+                                            className="confirm-user-rental-button"
                                             onClick={() => handleConfirm(rental.id)}
                                             disabled={selectedId === rental.id}
                                         >
@@ -183,7 +184,7 @@ export default function MyRentals() {
                                     )}
                                     {rental.isCompleted && rental.hasReviewedVehicle === false && (
                                         <button
-                                            className="leave-review-rental-button"
+                                            className="leave-rental-review-button"
                                             onClick={() => {
                                                 setShowReviewModal(true);
                                                 setSelectedId(rental.id)
@@ -194,7 +195,7 @@ export default function MyRentals() {
                                     )}
                                     {rental.isCancellable && rental.isCancelled == false && (
                                         <button
-                                            className="cancel-rental-button"
+                                            className="cancel-user-rental-button"
                                             onClick={() => {
                                                 setShowCancelModal(true);
                                                 setSelectedId(rental.id)

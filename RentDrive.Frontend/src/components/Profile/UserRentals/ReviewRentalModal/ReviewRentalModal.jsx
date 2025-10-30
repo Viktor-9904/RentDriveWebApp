@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import "./ReviewRentalModal.css"
+
+import { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
-import { FaTimes } from 'react-icons/fa'; // for close icon
+import { FaTimes } from 'react-icons/fa';
 
 export default function ReviewModal({ show, onClose, onSubmit, rentalId }) {
     const [rating, setRating] = useState(0);
@@ -17,15 +19,15 @@ export default function ReviewModal({ show, onClose, onSubmit, rentalId }) {
     };
 
     return (
-        <div className="review-modal-backdrop">
-            <div className="review-modal-content">
-                <button className="review-modal-close-btn" onClick={onClose}>
+        <div className="review-rental-modal-backdrop" onClick={onClose}>
+            <div className="review-rental-modal-content" onClick={(e) => e.stopPropagation()}>
+                <button className="review-rental-modal-close-btn" onClick={onClose}>
                     <FaTimes />
                 </button>
 
-                <h3 className="review-modal-title">Leave a Review</h3>
+                <h3 className="review-rental-modal-title">Leave a Review</h3>
 
-                <div className="review-modal-stars">
+                <div className="review-rental-modal-stars">
                     {[...Array(5)].map((_, i) => {
                         const starValue = i + 1;
                         return (
@@ -35,10 +37,10 @@ export default function ReviewModal({ show, onClose, onSubmit, rentalId }) {
                                     name="rating"
                                     value={starValue}
                                     onClick={() => setRating(starValue)}
-                                    className="review-modal-radio"
+                                    className="review-rental-modal-radio"
                                 />
                                 <FaStar
-                                    className="review-modal-star"
+                                    className="review-rental-modal-star"
                                     size={30}
                                     color={starValue <= (hover || rating) ? "#ffa534" : "#ddd"}
                                     onMouseEnter={() => setHover(starValue)}
@@ -50,14 +52,14 @@ export default function ReviewModal({ show, onClose, onSubmit, rentalId }) {
                 </div>
 
                 <textarea
-                    className="review-modal-comment"
+                    className="review-rental-modal-comment"
                     placeholder="Optional comment..."
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                 />
 
-                <div className="review-modal-button-container">
-                    <button onClick={handleSubmit} className="review-modal-submit">
+                <div className="review-rental-modal-button-container">
+                    <button onClick={handleSubmit} className="review-rental-modal-submit">
                         Submit Review
                     </button>
                 </div>

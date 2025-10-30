@@ -194,3 +194,9 @@ body {
   color: #8d99af !important;
   outline: none;
 }
+
+td {
+  user-select: none;
+  cursor: default;
+  vertical-align: middle;
+}

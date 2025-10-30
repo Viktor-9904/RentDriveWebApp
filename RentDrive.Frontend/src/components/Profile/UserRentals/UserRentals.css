@@ -1,0 +1,124 @@
+.user-rentals-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  user-select: none;
+  caret-color: transparent;
+}
+
+.user-rentals-heading {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.user-rental-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.user-rentals-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  table-layout: auto;
+  user-select: none;
+  cursor: default;
+}
+
+.user-rentals-table th,
+.user-rentals-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.user-rental-status {
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: white;
+  display: inline-block;
+}
+
+.user-rental-status.active {
+  background-color: #38a169;
+}
+
+.user-rental-status.completed {
+  background-color: #718096;
+}
+
+.user-rental-status.cancelled {
+  background-color: #da5050;
+}
+
+.user-rental-date-cell {
+  width: 120px;
+  white-space: nowrap;
+}
+
+.user-rental-price-cell {
+  width: 120px;
+  white-space: nowrap;
+}
+
+.user-rentals-vehicle-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-rentals-vehicle-image {
+  width: 60px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.cancel-user-rental-button {
+  background-color: #da5050;
+  color: white;
+  padding: 0.3rem 0.75rem;
+  border: none;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cancel-user-rental-button:hover {
+  background-color: #bb4646;
+}
+
+.confirm-user-rental-button {
+  background-color: #3182ce;
+  color: white;
+  padding: 0.3rem 0.75rem;
+  border: none;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.confirm-user-rental-button:hover {
+  background-color: #2c5282;
+}
+
+.leave-rental-review-button {
+  background-color: #ffa500;
+  color: white;
+  padding: 0.3rem 0.75rem;
+  border: none;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.leave-rental-review-button:hover {
+  background-color: #d38900;
+}

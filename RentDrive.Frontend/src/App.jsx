@@ -21,7 +21,7 @@ import ManageVehicleTypeCategories from './pages/ManageVehicleTypeCategories'
 
 import ProfileLayoutPage from './pages/Profile/ProfileLayoutPage'
 import ProfileOverviewPage from './pages/Profile/ProfileOverviewPage'
-import MyRentals from './components/Profile/UserRentals/MyRentals'
+import MyRentals from './components/Profile/UserRentals/UserRentals'
 import MyListedVehiclesPage from './pages/Profile/MyListedVehiclesPage'
 
 import { AccountProvider, useAuth } from './context/AccountContext'
