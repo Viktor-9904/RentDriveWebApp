@@ -1,4 +1,4 @@
-import React from "react";
+import "./UserVehicleBookingsModal.css"
 
 export default function UserVehicleBookingsModal({ show, onClose, vehicle, bookings }) {
   if (!show || !vehicle) return null;
@@ -15,7 +15,7 @@ export default function UserVehicleBookingsModal({ show, onClose, vehicle, booki
       onClick={handleBackdropClick}
     >
       <div className="vehicle-history-modal">
-        <div className="modal-header">
+        <div className="user-vehicle-bookings-modal-header">
           <h3 className="modal-title">
             Booking History – <span className="vehicle-name">{vehicle.make} {vehicle.model}</span>
           </h3>
@@ -43,7 +43,7 @@ export default function UserVehicleBookingsModal({ show, onClose, vehicle, booki
                   <td className="text-center">{booking.bookedOn}</td>
                   <td className="text-center">{booking.period}</td>
                   <td className="text-center">
-                    <span className={`vehicle-status ${booking.status.toLowerCase()}`}>
+                    <span className={`user-vehicle-booking-status ${booking.status.toLowerCase()}`}>
                       {booking.status}
                     </span>
                   </td>

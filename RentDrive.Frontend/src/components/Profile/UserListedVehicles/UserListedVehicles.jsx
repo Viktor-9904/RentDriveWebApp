@@ -1,8 +1,10 @@
+import "./UserListedVehicles.css"
+
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import StarRating from "../../shared/VehicleStarRating/VehicleStarRating";
-import UserVehicleBookingsModal from "./UserVehicleBookingsModal";
+import UserVehicleBookingsModal from "./UserVehicleBookingsModal/UserVehicleBookingsModal";
 import DeleteConfirmationModal from "../../shared/DeleteConfirmationModal/DeleteConfirmationModal";
 
 import { useBackendURL } from "../../../hooks/useBackendURL";
@@ -78,9 +80,9 @@ export default function UserListedVehicles() {
   if (uservehiclesLoading) return <Spinner message={"My Vehicles"} />
 
   return (
-    <div className="my-vehicles-container">
-      <div className="my-vehicles-header">
-        <h3 className="my-vehicles-heading">My Vehicles</h3>
+    <div className="user-listed-vehicles-container">
+      <div className="user-listed-vehicles-header">
+        <h3 className="user-listed-vehicles-heading">My Vehicles</h3>
         <button className="add-my-vehicle-button" onClick={handleAddNew}>
           Add New Vehicle
         </button>
@@ -88,7 +90,7 @@ export default function UserListedVehicles() {
 
 
       {myVehicles?.length > 0 ? (
-        <table className="my-vehicles-table">
+        <table className="user-listed-vehicles-table">
           <thead>
             <tr>
               <th>Image</th>
@@ -107,7 +109,7 @@ export default function UserListedVehicles() {
                   <img
                     src={`${backEndURL}/${vehicle.imageUrl}`}
                     alt={`${vehicle.make} ${vehicle.model}`}
-                    className="my-vehicle-image"
+                    className="user-listed-vehicle-image"
                   />
                 </td>
                 <td>{vehicle.make} {vehicle.model}</td>
@@ -144,7 +146,7 @@ export default function UserListedVehicles() {
 
         </table>
       ) : (
-        <p className="no-vehicles-message">No vehicles posted.</p>
+        <p className="no-user-listed-vehicles-message">No vehicles posted.</p>
       )}
 
       <UserVehicleBookingsModal
