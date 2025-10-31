@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
-import { useUserProfileDetails } from "./hooks/useUserProfileDetails";
-import { useBackendURL } from "../../hooks/useBackendURL";
-import { useErrorModal } from "../../context/ErrorModalContext"
+import "./ProfileSettings.css"
 
-import Spinner from "../shared/Spinner/Spinner";
+import { useState, useEffect } from "react";
+import { useUserProfileDetails } from "../hooks/useUserProfileDetails";
+import { useBackendURL } from "../../../hooks/useBackendURL";
+import { useErrorModal } from "../../../context/ErrorModalContext"
+
+import Spinner from "../../shared/Spinner/Spinner";
 
 export default function ProfileSettings() {
   const backEndURL = useBackendURL();
@@ -114,11 +116,11 @@ export default function ProfileSettings() {
   if (userProfileDetailsError) return <p>Error loading profile: {userProfileDetailsError.message}</p>;
 
   return (
-    <div className="settings-container">
-      <h3 className="settings-heading">Account Settings</h3>
+    <div className="profile-settings-container">
+      <h3 className="profile-settings-heading">Account Settings</h3>
 
-      <form className="settings-form" onSubmit={handleProfileSubmit}>
-        <div className="form-section">
+      <form className="profile-settings-form" onSubmit={handleProfileSubmit}>
+        <div className="profile-settings-form-section">
           <label>Full Name</label>
           <input
             type="text"
@@ -131,7 +133,7 @@ export default function ProfileSettings() {
           />
         </div>
 
-        <div className="form-section">
+        <div className="profile-settings-form-section">
           <label>Email</label>
           <input
             type="email"
@@ -142,7 +144,7 @@ export default function ProfileSettings() {
           />
         </div>
 
-        <div className="form-section">
+        <div className="profile-settings-form-section">
           <label>Phone</label>
           <input
             type="tel"
@@ -154,17 +156,17 @@ export default function ProfileSettings() {
           />
         </div>
 
-        <button type="submit" className="save-btn" disabled={savingProfile}>
+        <button type="submit" className="profile-settings-save-btn" disabled={savingProfile}>
           {savingProfile ? "Saving..." : "Save Changes"}
         </button>
       </form>
 
-      <hr className="divider" />
+      <hr className="profile-settings-divider" />
 
-      <h4 className="settings-subheading">Change Password</h4>
+      <h4 className="profile-settings-subheading">Change Password</h4>
 
-      <form className="settings-form" onSubmit={handlePasswordSubmit}>
-        <div className="form-section">
+      <form className="profile-settings-form" onSubmit={handlePasswordSubmit}>
+        <div className="profile-settings-form-section">
           <label>Current Password</label>
           <input
             type="password"
@@ -177,7 +179,7 @@ export default function ProfileSettings() {
           />
         </div>
 
-        <div className="form-section">
+        <div className="profile-settings-form-section">
           <label>New Password</label>
           <input
             type="password"
@@ -190,7 +192,7 @@ export default function ProfileSettings() {
           />
         </div>
 
-        <div className="form-section">
+        <div className="profile-settings-form-section">
           <label>Confirm New Password</label>
           <input
             type="password"
@@ -203,7 +205,7 @@ export default function ProfileSettings() {
           />
         </div>
 
-        <button type="submit" className="save-btn" disabled={changingPassword}>
+        <button type="submit" className="profile-settings-save-btn" disabled={changingPassword}>
           {changingPassword ? "Updating..." : "Update Password"}
         </button>
       </form>
