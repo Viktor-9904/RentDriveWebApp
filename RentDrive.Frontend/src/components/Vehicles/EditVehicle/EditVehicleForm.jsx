@@ -1,9 +1,11 @@
+import "./EditVehicleForm.css"
+
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useBackendURL } from "../../hooks/useBackendURL";
 
-import useFuelTypesEnum from "../../hooks/useFuelTypesEnum";
-import useVehicleEdit from "./hooks/useVehicleEdit";
+import { useBackendURL } from "../../../hooks/useBackendURL";
+import useFuelTypesEnum from "../../../hooks/useFuelTypesEnum";
+import useVehicleEdit from "../hooks/useVehicleEdit";
 
 export default function EditVehicleForm() {
   const { id } = useParams();
@@ -103,8 +105,8 @@ export default function EditVehicleForm() {
     formData.append("DateOfProduction", new Date(baseData.dateOfProduction).toISOString());
     formData.append("CurbWeightInKg", baseData.curbWeight);
     formData.append("Description", baseData.description);
-    formData.append("VehicleTypeId", selectedTypeId);
-    formData.append("VehicleTypeCategoryId", selectedCategoryTypeId);
+    formData.append("edit-form-VehicleTypeId", selectedTypeId);
+    formData.append("edit-form-VehicleTypeCategoryId", selectedCategoryTypeId);
 
     // formData.append("ExistingImageUrls", JSON.stringify(existingImages.map(img => img.url)));
 
@@ -143,7 +145,7 @@ export default function EditVehicleForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="create-vehicle-form">
+    <form onSubmit={handleSubmit} className="edit-vehicle-form">
       <label>
         Make:
         <input
@@ -242,8 +244,8 @@ export default function EditVehicleForm() {
         />
       </label>
 
-      <div className="vehicle-type-section">
-        <label className="vehicle-type-label">
+      <div className="edit-form-vehicle-type-section">
+        <label className="edit-form-vehicle-type-label">
           Vehicle Type:
           <input
             type="text"
@@ -254,9 +256,9 @@ export default function EditVehicleForm() {
           />
         </label>
 
-        <div className="vehicle-type-properties">
+        <div className="edit-form-vehicle-type-properties">
 
-          <label className="vehicle-type-label">
+          <label className="edit-form-vehicle-type-label">
             Vehicle Category:
             <input
               type="text"
@@ -282,18 +284,18 @@ export default function EditVehicleForm() {
             return (
               <label
                 key={prop.propertyId}
-                className={`vehicle-type-label ${inputType === "checkbox" ? "checkbox-label" : ""}`}
+                className={`edit-form-vehicle-type-label ${inputType === "checkbox" ? "edit-form-checkbox-label" : ""}`}
               >
                 <span>
                   {prop.vehicleTypePropertyName}
                   {prop.unitOfMeasurement && prop.unitOfMeasurement !== "None"
                     ? ` (${prop.unitOfMeasurement})`
-                    : ""}
+                    : ":"}
                 </span>
 
                 <input
                   type={inputType}
-                  className={inputType === "checkbox" ? "styled-checkbox" : "form-input"}
+                  className={inputType === "checkbox" ? "edit-vehicle-styled-checkbox" : "form-input"}
                   value={inputType !== "checkbox" ? value : undefined}
                   checked={inputType === "checkbox" ? value === "true" : undefined}
                   required={inputType !== "checkbox"}
@@ -318,29 +320,27 @@ export default function EditVehicleForm() {
         </div>
       </div>
 
-
-
-      <div className="upload-section">
-        <div className="image-preview-wrapper">
+      <div className="edit-form-upload-section">
+        <div className="edit-form-vehicle-image-preview-wrapper">
           {(existingImages.length + newImages.length) > 0 ? (
             <>
               <img
                 src={existingImages[0]?.url || newImages[0]?.url}
                 alt="First preview"
-                className="preview-img"
+                className="edit-form-vehicle-preview-img"
               />
               {(existingImages.length + newImages.length) > 1 && (
-                <div className="image-count-overlay">
+                <div className="edit-form-vehicle-image-count-overlay">
                   {existingImages.length + newImages.length} images
                 </div>
               )}
             </>
           ) : (
-            <div className="no-image-placeholder">No Images</div>
+            <div className="edit-form-no-image-placeholder">No Images</div>
           )}
         </div>
 
-        <label className="upload-button" htmlFor="imageUpload">
+        <label className="edit-form-upload-button" htmlFor="imageUpload">
           Upload Images
         </label>
 
