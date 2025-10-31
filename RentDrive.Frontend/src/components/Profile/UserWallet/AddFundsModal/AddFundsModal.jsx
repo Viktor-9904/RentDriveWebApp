@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import "./AddFundsModal.css"
+
+import { useState } from 'react';
 
 export default function AddFundsToBalance({ handleAddFunds, setShowModal }) {
   const [formData, setFormData] = useState({

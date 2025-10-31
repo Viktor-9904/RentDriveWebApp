@@ -26,7 +26,7 @@ import MyListedVehiclesPage from './pages/Profile/MyListedVehiclesPage'
 
 import { AccountProvider, useAuth } from './context/AccountContext'
 import ProfileSettingsPage from './pages/Profile/ProfileSettingsPage'
-import UserWallet from './components/Profile/UserWallet/UserWallet'
+import UserWallet from './components/Profile/UserWallet/UserWallet/UserWallet'
 import ChatPage from './pages/ChatPage/ChatPage'
 import ScrollToTop from './components/shared/ScrollToTop'
 import { ErrorModalProvider } from './context/ErrorModalContext'

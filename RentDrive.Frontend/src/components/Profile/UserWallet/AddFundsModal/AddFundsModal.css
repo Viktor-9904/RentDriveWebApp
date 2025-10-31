@@ -1,0 +1,121 @@
+.wallet-modal-cancel-button {
+  background-color: #888888;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+.wallet-modal-cancel-button:hover {
+  background-color: #4e4e4e;
+}
+
+.funds-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.funds-modal__container {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+}
+
+.funds-modal__title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.funds-modal__form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.funds-modal__form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.funds-modal__label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #444;
+}
+
+.funds-modal__input {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline-offset: 2px;
+  transition: border-color 0.2s ease;
+}
+
+.funds-modal__input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.funds-modal__buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.funds-modal__confirm-button,
+.funds-modal__cancel-button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.funds-modal__confirm-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.funds-modal__confirm-button:hover {
+  background-color: #218838;
+}
+
+.funds-modal__cancel-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.funds-modal__cancel-button:hover {
+  background-color: #c82333;
+}
+
+.funds-modal__expiry-dropdowns {
+  display: flex;
+  gap: 1rem;
+}
+
+.funds-modal__select {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}

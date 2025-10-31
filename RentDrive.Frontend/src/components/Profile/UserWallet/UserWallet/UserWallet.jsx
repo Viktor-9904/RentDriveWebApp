@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import "./UserWallet.css"
 
-import { useAuth } from '../../../context/AccountContext';
-import { useWalletTransactionHistory } from '../hooks/useWalletTransactionHistory';
+import  { useState, useEffect } from 'react';
 
-import AddFundsToBalance from './AddFundsModal';
-import { useBackendURL } from '../../../hooks/useBackendURL';
-import { useErrorModal } from "../../../context/ErrorModalContext"
-import Spinner from '../../shared/Spinner/Spinner';
-import { FiExternalLink } from 'react-icons/fi';
+import { useAuth } from '../../../../context/AccountContext';
+import { useWalletTransactionHistory } from '../../hooks/useWalletTransactionHistory';
+
+import AddFundsToBalance from "../AddFundsModal/AddFundsModal";
+import { useBackendURL } from '../../../../hooks/useBackendURL';
+import { useErrorModal } from "../../../../context/ErrorModalContext"
+import Spinner from '../../../shared/Spinner/Spinner';
 
 
 export default function UserWallet() {
