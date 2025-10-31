@@ -1,14 +1,16 @@
+import "./CreateVehicleForm.css"
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AccountContext";
-import { useBackendURL } from "../../hooks/useBackendURL";
+import { useAuth } from "../../../context/AccountContext";
+import { useBackendURL } from "../../../hooks/useBackendURL";
 
-import useAllVehicleTypes from "./hooks/useAllVehicleTypes";
-import useAllVehicleTypeProperties from "./hooks/useAllVehicleTypeProperties";
-import useAllVehicleCategories from "./hooks/useAllVehicleCategories";
-import useValueTypesEnum from "../../hooks/useValueTypesEnum";
-import useUnitsEnum from "../../hooks/useUnitsEnum";
-import useFuelTypesEnum from "../../hooks/useFuelTypesEnum";
+import useAllVehicleTypes from "../hooks/useAllVehicleTypes";
+import useAllVehicleTypeProperties from "../hooks/useAllVehicleTypeProperties";
+import useAllVehicleCategories from "../hooks/useAllVehicleCategories";
+import useValueTypesEnum from "../../../hooks/useValueTypesEnum";
+import useUnitsEnum from "../../../hooks/useUnitsEnum";
+import useFuelTypesEnum from "../../../hooks/useFuelTypesEnum";
 
 export default function CreateVehicleForm() {
   const backEndURL = useBackendURL();
@@ -125,8 +127,8 @@ export default function CreateVehicleForm() {
     formData.append("DateOfProduction", new Date(baseData.dateOfProduction).toISOString());
     formData.append("CurbWeightInKg", baseData.curbWeight);
     formData.append("Description", baseData.description);
-    formData.append("VehicleTypeId", selectedTypeId);
-    formData.append("VehicleTypeCategoryId", selectedCategoryTypeId);
+    formData.append("create-form-VehicleTypeId", selectedTypeId);
+    formData.append("create-form-VehicleTypeCategoryId", selectedCategoryTypeId);
 
     if (vehicleTypePropertyValues) {
       Object.entries(vehicleTypePropertyValues).forEach(([propertyId, value], index) => {
@@ -136,7 +138,7 @@ export default function CreateVehicleForm() {
     }
 
     images.forEach((img) => {
-      formData.append("Images", img.file);
+      formData.append("create-form-vehicle-Images", img.file);
     });
 
     try {
@@ -156,7 +158,6 @@ export default function CreateVehicleForm() {
       console.error("Error uploading vehicle:", error);
     }
   };
-
 
   const handleVehicleTypePropertyChange = (propId, value) => {
     setVehicleTypePropertyValues((prev) => ({
@@ -289,8 +290,8 @@ export default function CreateVehicleForm() {
         />
       </label>
 
-      <div className="vehicle-type-section">
-        <label className="vehicle-type-label">
+      <div className="create-form-vehicle-type-section">
+        <label className="create-form-vehicle-type-label">
           Vehicle Type:
           <select
             className="form-select"
@@ -310,10 +311,10 @@ export default function CreateVehicleForm() {
         </label>
 
         {selectedTypeId && sortedProperties.length > 0 && (
-          <div className="vehicle-type-properties">
+          <div className="create-form-vehicle-type-properties">
 
             {selectedTypeId && vehicleCategories && (
-              <label className="vehicle-type-label">
+              <label className="create-form-vehicle-type-label">
                 Vehicle Category:
                 <select
                   className="form-select"
@@ -335,7 +336,6 @@ export default function CreateVehicleForm() {
               </label>
             )}
 
-
             {sortedProperties.map((prop) => {
               let inputType = "text";
 
@@ -356,7 +356,7 @@ export default function CreateVehicleForm() {
               const value = vehicleTypePropertyValues[prop.id] ?? (inputType === "checkbox" ? false : "");
 
               return (
-                <label key={prop.id} className={inputType === "checkbox" ? "checkbox-label" : ""}>
+                <label key={prop.id} className={inputType === "checkbox" ? "create-form-checkbox-label" : ""}>
                   <span>
                     {prop.name}
                     {inputType === "checkbox" && ":"}
@@ -365,7 +365,7 @@ export default function CreateVehicleForm() {
                     type={inputType}
                     name={prop.name}
                     required={inputType !== "checkbox"}
-                    className={inputType === "checkbox" ? "styled-checkbox" : ""}
+                    className={inputType === "checkbox" ? "create-vehicle-styled-checkbox" : ""}
                     checked={inputType === "checkbox" ? value : undefined}
                     value={inputType !== "checkbox" ? value : undefined}
                     min={inputType === "number" ? 1 : undefined}
@@ -379,22 +379,21 @@ export default function CreateVehicleForm() {
                 </label>
               );
             })}
-
           </div>
         )}
       </div>
 
-      <div className="upload-section">
-        <div className="image-preview-wrapper">
+      <div className="create-form-upload-section">
+        <div className="create-form-vehicle-image-preview-wrapper">
           {images.length > 0 ? (
             <>
               <img
                 src={images[0].url}
                 alt="First preview"
-                className="preview-img"
+                className="create-form-vehicle-preview-img"
               />
               {images.length > 1 && (
-                <div className="image-count-overlay">
+                <div className="create-form-vehicle-image-count-overlay">
                   {images.length} images
                 </div>
               )}
@@ -404,14 +403,14 @@ export default function CreateVehicleForm() {
           )}
         </div>
 
-        <label className="upload-button" htmlFor="imageUpload">
+        <label className="create-form-upload-button" htmlFor="create-form-vehicle-imageUpload">
           Upload Images
         </label>
 
         <input
-          id="imageUpload"
+          id="create-form-vehicle-imageUpload"
           type="file"
-          accept="image/*"
+          accept="create-form-vehicle-image/*"
           multiple
           onChange={handleImageChange}
           style={{ display: "none" }}

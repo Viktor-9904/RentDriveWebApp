@@ -1,5 +1,5 @@
 import PageHeading from "../components/shared/PageHeading/PageHeading";
-import CreateVehicleForm from "../components/Vehicles/CreateVehicleForm";
+import CreateVehicleForm from "../components/Vehicles/CreateVehicle/CreateVehicleForm";
 
 export default function CreateVehiclePage() {
     return (
