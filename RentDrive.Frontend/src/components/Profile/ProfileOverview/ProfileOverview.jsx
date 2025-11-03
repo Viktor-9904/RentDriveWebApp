@@ -1,5 +1,5 @@
 import Spinner from "../../shared/Spinner/Spinner";
-import "./profileOverview.css"
+import "./ProfileOverview.css"
 
 import { useOverview } from "../hooks/useOverview";
 
