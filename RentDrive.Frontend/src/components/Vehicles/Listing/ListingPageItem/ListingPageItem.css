@@ -49,3 +49,11 @@
   text-decoration: none;
   color: inherit;
 }
+
+.vehicle-listing-item-link:hover,
+.vehicle-listing-item-link:focus,
+.vehicle-listing-item-link:visited,
+.vehicle-listing-item-link:active {
+  color: inherit;
+  text-decoration: none;
+}
