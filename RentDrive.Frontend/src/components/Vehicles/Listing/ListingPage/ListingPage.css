@@ -316,4 +316,12 @@
   padding: 5rem 0;
 }
 
-
+.no-matched-vehicles {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  text-align: center;
+  width: 100%;
+}
