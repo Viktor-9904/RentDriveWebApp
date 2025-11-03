@@ -23,7 +23,7 @@ export default function ListingPageItem({
     const backEndURL = useBackendURL();
 
   return (
-    <Link to={`/api/vehicle/${id}`} className="vehicle-listing-item-link">
+    <Link to={`/vehicle/${id}`} className="vehicle-listing-item-link">
       <div className="vehicle-listing-item d-flex flex-column h-100">
         <div className="left-image mb-3 text-center">
           <img

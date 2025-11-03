@@ -11,10 +11,12 @@ import useAllVehicleCategories from "../hooks/useAllVehicleCategories";
 import useValueTypesEnum from "../../../hooks/useValueTypesEnum";
 import useUnitsEnum from "../../../hooks/useUnitsEnum";
 import useFuelTypesEnum from "../../../hooks/useFuelTypesEnum";
+import { useErrorModal } from "../../../context/ErrorModalContext";
 
 export default function CreateVehicleForm() {
   const backEndURL = useBackendURL();
   const navigate = useNavigate();
+  const { setErrorModalMessage } = useErrorModal()
 
   const { vehicleTypes, loadingVehicleTypes, errorVehicleTypes } = useAllVehicleTypes();
   const { vehicleTypeProperties, loadingVehicleTypeProperties, errorVehicleTypeProperties } = useAllVehicleTypeProperties();
@@ -112,7 +114,7 @@ export default function CreateVehicleForm() {
     e.preventDefault();
 
     if (images.length === 0) {
-      alert("Please upload at least one image.");
+      setErrorModalMessage("Please upload at least one image!");
       return;
     }
 
@@ -127,8 +129,8 @@ export default function CreateVehicleForm() {
     formData.append("DateOfProduction", new Date(baseData.dateOfProduction).toISOString());
     formData.append("CurbWeightInKg", baseData.curbWeight);
     formData.append("Description", baseData.description);
-    formData.append("create-form-VehicleTypeId", selectedTypeId);
-    formData.append("create-form-VehicleTypeCategoryId", selectedCategoryTypeId);
+    formData.append("VehicleTypeId", selectedTypeId);
+    formData.append("VehicleTypeCategoryId", selectedCategoryTypeId);
 
     if (vehicleTypePropertyValues) {
       Object.entries(vehicleTypePropertyValues).forEach(([propertyId, value], index) => {
@@ -138,7 +140,7 @@ export default function CreateVehicleForm() {
     }
 
     images.forEach((img) => {
-      formData.append("create-form-vehicle-Images", img.file);
+      formData.append("Images", img.file);
     });
 
     try {
@@ -149,13 +151,15 @@ export default function CreateVehicleForm() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save vehicle");
+        const errorMessage = await response.text();
+        setErrorModalMessage(errorMessage);
+        throw new Error(errorMessage || "Failed to create vehicle!");
       }
 
       navigate('/listing');
     } catch (error) {
-      alert(error.message);
-      console.error("Error uploading vehicle:", error);
+      // alert(error.message);
+      // console.error("Error uploading vehicle:", error);
     }
   };
 

@@ -45,7 +45,7 @@ function App() {
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/api/vehicle/:id" element={<VehicleDetailsPage />} />
+          <Route path="/vehicle/:id" element={<VehicleDetailsPage />} />
 
           <Route element={<EmployeeRoute />}>
             <Route path="/manage" element={<ManageLayout />}>

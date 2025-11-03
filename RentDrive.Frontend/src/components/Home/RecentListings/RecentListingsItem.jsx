@@ -23,7 +23,7 @@ export default function RecentListingsItem({
 
     return (
         <div className="col-lg-12">
-            <Link to={`/api/vehicle/${id}`}>
+            <Link to={`/vehicle/${id}`}>
                 <div className="owl-carousel owl-listing">
                     <div className="item">
                         <div className="row">

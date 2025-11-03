@@ -105,8 +105,8 @@ export default function EditVehicleForm() {
     formData.append("DateOfProduction", new Date(baseData.dateOfProduction).toISOString());
     formData.append("CurbWeightInKg", baseData.curbWeight);
     formData.append("Description", baseData.description);
-    formData.append("edit-form-VehicleTypeId", selectedTypeId);
-    formData.append("edit-form-VehicleTypeCategoryId", selectedCategoryTypeId);
+    formData.append("VehicleTypeId", selectedTypeId);
+    formData.append("VehicleTypeCategoryId", selectedCategoryTypeId);
 
     // formData.append("ExistingImageUrls", JSON.stringify(existingImages.map(img => img.url)));
 
@@ -133,7 +133,7 @@ export default function EditVehicleForm() {
         throw new Error("Failed to save vehicle");
       }
 
-      navigate(`/api/vehicle/${id}`);
+      navigate(`/vehicle/${id}`);
     } catch (error) {
       alert(error.message);
       console.error("Error uploading vehicle:", error);
@@ -141,7 +141,7 @@ export default function EditVehicleForm() {
   };
 
    const handleCancel = () => {
-    navigate(`/api/vehicle/${id}`)
+    navigate(`/vehicle/${id}`)
   };
 
   return (
