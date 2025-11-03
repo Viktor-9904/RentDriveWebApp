@@ -3,8 +3,8 @@
 }
 
 .review-section-heading {
+    padding-bottom: 1rem;
     position: relative;
-    padding-bottom: 8px;
     margin-bottom: 16px;
     font-weight: 700;
     font-size: 1.25rem;
