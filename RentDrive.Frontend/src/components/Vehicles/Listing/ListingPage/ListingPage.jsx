@@ -506,7 +506,7 @@ export default function ListingPage() {
                                     />
                                 ))
                             ) : (
-                                <div className="no-vehicles text-center p-5">
+                                <div className="no-matched-vehicles text-center p-5">
                                     <p>No vehicles found matching your filters.</p>
                                 </div>
                             )}
