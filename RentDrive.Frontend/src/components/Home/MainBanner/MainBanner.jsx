@@ -100,7 +100,7 @@ export default function MainBanner() {
                                             <select
                                                 id="vehicleCategory"
                                                 name="vehicleCategory"
-                                                className="form-select searchSelect"
+                                                className="form-select"
                                                 value={selectedCategoryId}
                                                 onChange={e => setSelectedCategoryId(e.target.value)}
                                             >
