@@ -1,6 +1,7 @@
 import "./Header.css"
 
 import { Link } from 'react-router';
+import { Menu, X } from "lucide-react";
 import { useEffect, useState } from 'react';
 
 import { useAuth } from '../../../context/AccountContext';
@@ -10,7 +11,7 @@ export default function Header() {
     const [showBalance, setShowBalance] = useState(false);
 
     useEffect(() => {
-        if(isAuthenticated){
+        if (isAuthenticated) {
             setShowBalance(true)
         }
         else {
@@ -19,7 +20,7 @@ export default function Header() {
     }, [user, isAuthenticated])
 
     const navigation = [
-        { name: 'Home', href: '/' },
+        // { name: 'Home', href: '/' },
         { name: 'Listing', href: '/listing' },
         ...(isAuthenticated
             ? [
@@ -53,46 +54,97 @@ export default function Header() {
         ,
     ];
 
-    return (
-        <>
-            <header className="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-12">
-                            <nav className="main-nav">
-                                <Link to="/" className="logo" />
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [openSubmenu, setOpenSubmenu] = useState(null);
+    const toggleMenu = () => setMenuOpen(!menuOpen);
 
-                                {/*TODO: ADD - className="active" */}
-                                <ul className="nav">
-                                    {navigation.map((item) => (
-                                        item.dropdown ? (
-                                            <li className="has-sub" key={item.name}>
-                                                <Link to="#">{item.name}</Link>
-                                                <ul className="sub-menu">
-                                                    {item.children.map((child) => (
-                                                        <li key={child.name}>
-                                                            <Link to={child.href}>{child.name}</Link>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </li>
-                                        ) : (
-                                            <li key={item.name}>
-                                                <Link to={item.href}>{item.name}</Link>
-                                            </li>
-                                        )
-                                    ))}
-                                     {showBalance && <li className="balance-display">
+    return (
+        <header className="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
+            <div className="container">
+                <div className="row">
+                    <div className="col-12">
+                        <nav className="main-nav">
+                            <Link 
+                                to="/" 
+                                className="logo" 
+                                onClick={() => {
+                                    setOpenSubmenu(null);
+                                    setMenuOpen(false);
+                                    window.scrollTo(0, 0);
+                            }} />
+                            <div className="menu-trigger" onClick={toggleMenu}>
+                                {menuOpen ? (
+                                    <X size={28} className="menu-icon" />
+                                ) : (
+                                    <Menu size={28} className="menu-icon" />
+                                )}
+                            </div>
+                            <ul className={`nav ${menuOpen ? "active" : ""}`}>
+                                {navigation.map((item, index) => (
+                                    item.dropdown ? (
+                                        <li
+                                            className={`has-sub ${openSubmenu === index ? "open" : ""}`}
+                                            key={item.name}
+                                        >
+                                            <Link
+                                                to="#"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setOpenSubmenu(openSubmenu === index ? null : index);
+                                                }}
+                                            >
+                                                {item.name}
+                                            </Link>
+                                            <ul className="sub-menu">
+                                                {item.children.map((subItem) => (
+                                                    <li key={subItem.name}>
+                                                        <Link
+                                                            to={subItem.href}
+                                                            onClick={() => {
+                                                                setOpenSubmenu(null);
+                                                                setMenuOpen(false);
+                                                                window.scrollTo(0, 0);
+                                                            }}
+                                                        >
+                                                            {subItem.name}
+                                                        </Link>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </li>
+                                    ) : (
+                                        <li key={item.name}>
+                                            <Link
+                                                to={item.href}
+                                                onClick={() => {
+                                                    setOpenSubmenu(null);
+                                                    setMenuOpen(false);
+                                                    window.scrollTo(0, 0);
+                                                }}
+                                            >
+                                                {item.name}
+                                            </Link>
+                                        </li>
+                                    )
+                                ))}
+                                {showBalance && (
+                                    <li className="balance-display">
                                         <span>Balance:</span>
-                                        <span className="amount">{user?.balance?.toFixed(2) ?? '0.00'}€</span>
-                                        {user?.pendingBalance > 0 && <span className='pending-balance'>(Pending: {user.pendingBalance.toFixed(2)}€)</span>}
-                                    </li>}
-                                </ul>
-                            </nav>
-                        </div>
+                                        <span className="amount">
+                                            {user?.balance?.toFixed(2) ?? "0.00"}€
+                                        </span>
+                                        {user?.pendingBalance > 0 && (
+                                            <span className="pending-balance">
+                                                (Pending: {user.pendingBalance.toFixed(2)}€)
+                                            </span>
+                                        )}
+                                    </li>
+                                )}
+                            </ul>
+                        </nav>
                     </div>
                 </div>
-            </header>
-        </>
+            </div>
+        </header>
     );
 }
