@@ -87,3 +87,53 @@
   text-transform: capitalize;
   margin-top: 15px;
 }
+
+@media (max-width: 992px) {
+  .page-heading {
+    padding: 160px 0 80px 0;
+    text-align: center;
+  }
+
+  .page-heading .top-text {
+    text-align: center;
+  }
+
+  .page-heading .top-text h2 {
+    font-size: 36px;
+    line-height: 50px;
+  }
+
+  .page-heading .top-text h6 {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-heading {
+    padding: 120px 0 60px 0;
+  }
+
+  .page-heading .top-text h2 {
+    font-size: 28px;
+    line-height: 40px;
+  }
+
+  .page-heading .top-text h6 {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-heading {
+    padding: 100px 0 50px 0;
+  }
+
+  .page-heading .top-text h2 {
+    font-size: 29px;
+    line-height: 34px;
+  }
+
+  .page-heading .top-text h6 {
+    font-size: 12px;
+  }
+}
