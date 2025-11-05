@@ -24,7 +24,6 @@ export default function RecentListingsItem({
     return (
         <div className="col-lg-12">
             <Link to={`/vehicle/${id}`}>
-                <div className="owl-carousel owl-listing">
                     <div className="item">
                         <div className="row">
                             <div className="col-lg-12">
@@ -33,12 +32,12 @@ export default function RecentListingsItem({
                                         <img src={`${backEndURL}/${imageURL}`} alt="" />
                                     </div>
                                     <div className="right-content align-self-center">
-                                        <h4>{`${make} - ${model}`}</h4>
-                                        {ownerName && ownerName.length > 0 && <h6><strong>Property of:</strong> {`${ownerName}`}</h6>}
                                         <StarRating rating={starsRating} reviewCount={reviewCount} />
+                                        <h4>{`${make} - ${model}`}</h4>
                                         <span className="price"><div className="icon"><img src="assets/images/listing-icon-01.png" alt="" /></div> {`${pricePerDay.toFixed(2)} € / per day with taxes.`}</span>
-                                        <span className="details">Type: <em>{vehicleType}</em></span>
-                                        <span className="details">Category: <em>{vehicleTypeCategory}</em></span>
+                                        <hr></hr>
+                                        {ownerName && ownerName.length > 0 && <span className="details"><strong>Property of:</strong> {`${ownerName}`}</span>}
+                                        <span className="details">Type: <em>{vehicleType} - {vehicleTypeCategory}</em></span>
                                         <span className="details">Year of production: <em>{yearOfProduction}</em></span>
                                         <span className="details">Fuel: <em>{fuelType}</em></span>
                                         <span className="details">Description: <em>{description}</em></span>
@@ -47,7 +46,6 @@ export default function RecentListingsItem({
                             </div>
                         </div>
                     </div>
-                </div>
             </Link>
         </div>
     )
