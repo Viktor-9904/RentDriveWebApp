@@ -246,6 +246,23 @@ export default function ListingPage() {
     return (
         <div className="listing-page">
             <div className="container">
+                <div className="col-lg-5 ms-auto">
+                    <div className="mb-4">
+                        <div className="input-group">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Search by make, model, type..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                            />
+                            <button className="btn btn-primary listing-search-button" type="button" onClick={handleSearch}>
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div className="row">
                     <div className="col-lg-3 mb-4">
                         <div className="sidebar-filters">
@@ -465,23 +482,6 @@ export default function ListingPage() {
                     </div>
 
                     <div className="col-lg-9">
-                        <div className="col-lg-5 ms-auto">
-                            <div className="mb-4">
-                                <div className="input-group">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Search by make, model, type..."
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                                    />
-                                    <button className="btn btn-primary" type="button" onClick={handleSearch}>
-                                        Search
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                         <div className="vehicle-listing">
                             {localVehiclesLoading ? (
                                 <div className="listing-spinner-wrapper">

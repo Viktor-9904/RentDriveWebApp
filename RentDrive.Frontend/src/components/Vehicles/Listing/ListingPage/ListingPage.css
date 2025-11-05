@@ -114,6 +114,10 @@
   line-height: 23px;
 }
 
+.listing-search-button{
+  background-color: #005be4bb;
+}
+
 .listing-page .item .left-image .hover-content {
   position: absolute;
   left: 50%;
@@ -324,4 +328,85 @@
   min-height: 300px;
   text-align: center;
   width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .vehicle-listing {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .listing-page .col-lg-3 {
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .listing-page .row {
+    flex-direction: column;
+  }
+
+  .listing-page .col-lg-3,
+  .listing-page .col-lg-9 {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .vehicle-listing {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .sidebar-filters {
+    margin-bottom: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .vehicle-listing {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .listing-page .col-lg-5.ms-auto {
+    width: 100%;
+    margin: 0 auto 2rem auto;
+  }
+
+  .listing-page .input-group input,
+  .listing-page .input-group button {
+    font-size: 0.9rem;
+  }
+
+  .sidebar-filters select,
+  .sidebar-filters .form-select {
+    font-size: 0.9rem;
+  }
+
+  .collapsible-header {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .vehicle-listing {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0.5rem;
+  }
+
+  .listing-page {
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
+
+  .sidebar-filters {
+    padding: 0 0.5rem;
+  }
+
+  .listing-page .input-group button {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
 }
