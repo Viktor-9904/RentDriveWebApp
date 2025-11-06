@@ -52,8 +52,9 @@ export default function ChatSidebar({ onSelectUser }) {
                       const filtered = prev.filter(u => u.userId !== user.userId);
                       return [user, ...filtered];
                     });
-                    onSelectUser(user),
-                      setSearch("")
+
+                    onSelectUser(user);
+                    setSearch("");
                   }}
                 >
                   <div className="user-avatar">{user.username.charAt(0)}</div>
@@ -74,7 +75,9 @@ export default function ChatSidebar({ onSelectUser }) {
             <div
               key={user.userId}
               className="chat-sidebar-user"
-              onClick={() => onSelectUser(user)}
+              onClick={() => {
+                onSelectUser(user)
+              }}
             >
               <div className="user-avatar">{user.username.charAt(0)}</div>
               <div className="user-name">{user.username}</div>

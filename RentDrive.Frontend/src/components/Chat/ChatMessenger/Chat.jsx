@@ -115,7 +115,9 @@ export default function Chat({ selectedUser }) {
                                 className={`message ${fromMe ? "message--me" : "message--them"}`}
                                 title={`${fromMe ? "Me" : "Them"} • ${new Date(msg.timeSent).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
                             >
-                                {!fromMe && <div className="message-sender">{selectedUser?.username}</div>}
+                                {!fromMe && (!localMessages[index - 1] || localMessages[index - 1].senderId !== msg.senderId) && (
+                                    <div className="message-sender">{selectedUser?.username}</div>
+                                )}
                                 <div className="message-bubble">
                                     <div className="message-text">{msg.text}</div>
                                     <div className="message-time">
@@ -126,7 +128,7 @@ export default function Chat({ selectedUser }) {
                         );
                     })
                 )}
-                <div ref={bottomRef} />
+                {/* <div ref={bottomRef} /> */}
             </main>
 
             <form className="chat-input-area" onSubmit={sendMessage}>

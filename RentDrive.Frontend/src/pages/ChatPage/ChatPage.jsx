@@ -14,11 +14,11 @@ export default function ChatPage() {
       <PageHeading
         topPadding={180}
         bottomPadding={90}
-        subTitle="Chat Dashboard"
-        mainTitle="Your Messages"
+        subTitle={<span>Chat Dashboard</span>}
+        mainTitle={<span>Your Messages<br/><br/></span>}
       />
 
-      <div className="chat-page-container">
+      <div className={`chat-page-container ${selectedUser ? "chat-active" : "chat-list-view"}`}>
         <ChatSidebar onSelectUser={setSelectedUser} />
 
         <div className="chat-main">
