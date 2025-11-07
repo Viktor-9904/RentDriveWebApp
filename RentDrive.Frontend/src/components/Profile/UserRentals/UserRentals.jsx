@@ -137,7 +137,7 @@ export default function MyRentals() {
         <div className="user-rentals-container">
             <h3 className="user-rentals-heading">My Rentals</h3>
 
-            <div className="rental-table-wrapper">
+            <div className="user-rental-table-wrapper">
                 {localRentals?.length > 0 ? (<table className="user-rentals-table">
                     <thead>
                         <tr>
