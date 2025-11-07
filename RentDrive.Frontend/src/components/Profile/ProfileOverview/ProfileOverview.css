@@ -73,3 +73,21 @@
   background-color: #fde68a;
   color: #b45309;
 }
+
+@media (max-width: 576px) {
+  .profile-container {
+    padding: 1rem;
+  }
+
+  .profile-heading {
+    font-size: 1.25rem;
+  }
+
+  .profile-overview-summary-number {
+    font-size: 2rem;
+  }
+
+  .profile-overview-summary-label {
+    font-size: 0.9rem;
+  }
+}
