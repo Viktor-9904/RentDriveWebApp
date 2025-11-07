@@ -29,7 +29,7 @@ export default function ProfileLayout() {
           </NavLink>
         </nav>
 
-        <div style={{ marginTop: "auto" }}>
+        <div>
           <button
             className="profile-layout-logout-button"
             onClick={handleLogout}
