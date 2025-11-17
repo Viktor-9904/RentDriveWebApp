@@ -13,6 +13,8 @@
 }
 
 .user-listed-vehicle-image {
+  display: block;
+  margin: 0 auto;
   width: 120px;
   height: 70px;
   object-fit: cover;
@@ -39,6 +41,11 @@
 .user-listed-vehicles-table th {
   background-color: #f5f5f5;
   font-weight: 600;
+}
+
+.user-listed-vehicles-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
 }
 
 .user-listed-vehicles-header {
@@ -164,13 +171,46 @@
   z-index: 999;
 }
 
-.vehicle-bookings-modal {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 800px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+
+.star-rating-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.star-rating-container .review-count {
+  color: #555;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.star-rating-container i {
+  color: #f5a623;
+  font-size: 1rem;
+}
+
+
+@media (max-width: 480px) {
+  .user-listed-vehicles-header h3 {
+    font-size: 1.4rem;
+  }
+
+  .user-listed-vehicle-image {
+    width: 100px;
+    height: 60px;
+  }
+
+  .user-listed-vehicles-table th,
+  .user-listed-vehicles-table td {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .edit-button,
+  .delete-button {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+  }
 }

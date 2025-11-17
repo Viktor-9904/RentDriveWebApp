@@ -90,61 +90,62 @@ export default function UserListedVehicles() {
 
 
       {myVehicles?.length > 0 ? (
-        <table className="user-listed-vehicles-table">
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Make & Model</th>
-              <th>Fuel Type</th>
-              <th>Price/Day</th>
-              <th>Times Booked</th>
-              <th>Rating</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {myVehicles.map((vehicle) => (
-              <tr key={vehicle.id} onClick={() => handleRowClick(vehicle)}>
-                <td>
-                  <img
-                    src={`${backEndURL}/${vehicle.imageUrl}`}
-                    alt={`${vehicle.make} ${vehicle.model}`}
-                    className="user-listed-vehicle-image"
-                  />
-                </td>
-                <td>{vehicle.make} {vehicle.model}</td>
-                <td>{vehicle.fuelType}</td>
-                <td>{vehicle.pricePerDay.toFixed(2)} €</td>
-                <td>{vehicle.timesBooked}</td>
-                <td>
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <StarRating rating={vehicle.starRating} reviewCount={vehicle.reviewCount} />
-                  </div>
-                </td>
-                <td>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEdit(vehicle.id);
-                    }} className="edit-button"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(vehicle);
-                    }}
-                    className="delete-button"
-                  >
-                    Delete
-                  </button>
-                </td>
+        <div className="user-listed-vehicles-table-wrapper">
+          <table className="user-listed-vehicles-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Make & Model</th>
+                <th>Fuel Type</th>
+                <th>Price/Day</th>
+                <th>Times Booked</th>
+                <th>Rating</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-
-        </table>
+            </thead>
+            <tbody>
+              {myVehicles.map((vehicle) => (
+                <tr key={vehicle.id} onClick={() => handleRowClick(vehicle)}>
+                  <td>
+                    <img
+                      src={`${backEndURL}/${vehicle.imageUrl}`}
+                      alt={`${vehicle.make} ${vehicle.model}`}
+                      className="user-listed-vehicle-image"
+                    />
+                  </td>
+                  <td>{vehicle.make} {vehicle.model}</td>
+                  <td>{vehicle.fuelType}</td>
+                  <td>{vehicle.pricePerDay.toFixed(2)} €</td>
+                  <td>{vehicle.timesBooked}</td>
+                  <td>
+                    <div className="star-rating-container">
+                      <StarRating rating={vehicle.starRating} reviewCount={vehicle.reviewCount} />
+                    </div>
+                  </td>
+                  <td>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(vehicle.id);
+                      }} className="edit-button"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(vehicle);
+                      }}
+                      className="delete-button"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
         <p className="no-user-listed-vehicles-message">No vehicles posted.</p>
       )}

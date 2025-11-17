@@ -98,3 +98,42 @@
   background-color: #fdecea;
   color: #c62828;
 }
+
+@media (max-width: 768px) {
+  .vehicle-bookings-modal {
+    width: 95%;
+    padding: 1rem;
+  }
+
+  .vehicle-history-table th,
+  .vehicle-history-table td {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .vehicle-bookings-modal {
+    width: 98%;
+    padding: 0.75rem;
+  }
+
+  .vehicle-history-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .vehicle-history-table {
+    min-width: 500px;
+  }
+
+  .vehicle-history-table th,
+  .vehicle-history-table td {
+    padding: 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .user-vehicle-booking-status {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.5rem;
+  }
+}
