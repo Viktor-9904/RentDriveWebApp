@@ -9,7 +9,6 @@
   margin: 0 auto;
 }
 
-
 .wallet-transaction-positive {
   color: green;
 }
@@ -53,6 +52,7 @@
   align-items: center;
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
+  gap: 1rem;
 }
 
 .wallet-balance-box {
@@ -84,7 +84,6 @@
 .wallet-add-funds-button:hover {
   background-color: #285e61;
 }
-
 
 .transaction-table {
   width: 100%;
@@ -125,4 +124,60 @@
   border: 2px solid #a0aec0;
   color: #4a5568;
   background-color: #f7fafc;
+}
+
+@media (max-width: 768px) {
+  .user-wallet-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .wallet-add-funds-button {
+    margin-left: 0;
+    padding: 0.45rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .wallet-balance-amount {
+    font-size: 1rem;
+  }
+
+  .transaction-table th,
+  .transaction-table td {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  .transaction-type {
+    font-size: 0.85rem;
+    padding: 3px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wallet-balance-box {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .wallet-balance-amount {
+    font-size: 0.95rem;
+  }
+
+  .wallet-add-funds-button {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .transaction-table th,
+  .transaction-table td {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+
+  .transaction-type {
+    font-size: 0.8rem;
+    padding: 2px 6px;
+  }
 }
