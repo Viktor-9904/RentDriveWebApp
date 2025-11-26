@@ -7,7 +7,8 @@ services:
       - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./letsencrypt:/etc/letsencrypt:ro
+      - ./letsencrypt:/etc/letsencrypt
+      - ./webroot:/var/www/html
       - images-data:/usr/share/nginx/html/images:ro
     depends_on:
       - frontend
@@ -49,6 +50,7 @@ services:
     container_name: rentdrivewebapp-certbot-1
     volumes:
       - ./letsencrypt:/etc/letsencrypt
+      - ./webroot:/var/www/html
     networks:
       - app-network
 
