@@ -127,8 +127,8 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<RentDriveDbContext>();
     db.Database.Migrate();
 
-    //var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    //await UserSeeder.SeedUsersAsync(userManager);
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    await UserSeeder.SeedUsersAsync(userManager);
 }
 
 // Configure the HTTP request pipeline.

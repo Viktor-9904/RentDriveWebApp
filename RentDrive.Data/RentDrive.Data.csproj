@@ -22,8 +22,4 @@
     <ProjectReference Include="..\RentDrive.Data.Models\RentDrive.Data.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

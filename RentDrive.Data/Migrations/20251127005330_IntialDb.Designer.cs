@@ -12,8 +12,8 @@ using RentDrive.Data;
 namespace RentDrive.Data.Migrations
 {
     [DbContext(typeof(RentDriveDbContext))]
-    [Migration("20251008114525_renamedMessageToTextInChatMessageEntity")]
-    partial class renamedMessageToTextInChatMessageEntity
+    [Migration("20251127005330_IntialDb")]
+    partial class IntialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
