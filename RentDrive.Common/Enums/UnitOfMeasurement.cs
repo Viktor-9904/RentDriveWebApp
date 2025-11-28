@@ -19,6 +19,9 @@ namespace RentDrive.Common.Enums
         KmPerHour,
 
         [Display(Name = "L/100 km")]
-        LPer100Km
+        LPer100Km,
+
+        [Display(Name = "in")]
+        In,
     }
 }
