@@ -31,8 +31,6 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 string frontEndURL = builder.Configuration["FrontEndURL:URL"]!;
 
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
 // Add services to the container.
 builder.Services.AddDbContext<RentDriveDbContext>(options =>
     options.UseNpgsql(connectionString));

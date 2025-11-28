@@ -14,6 +14,7 @@ using static RentDrive.Data.Configuration.VehicleTypePropertyValueSeerder;
 using static RentDrive.Data.Configuration.RentalSeeder;
 using static RentDrive.Data.Configuration.VehicleReviewSeeder;
 using static RentDrive.Data.Configuration.WalletSeeder;
+using static RentDrive.Data.Configuration.ApplicationUserConfiguration;
 
 namespace RentDrive.Data
 {
@@ -46,15 +47,15 @@ namespace RentDrive.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            modelBuilder.Entity<VehicleType>().HasData(SeedVehicleTypes());
-            modelBuilder.Entity<VehicleTypeCategory>().HasData(SeedVehicleTypeCategories());
-            modelBuilder.Entity<Vehicle>().HasData(SeedVehicles());
-            modelBuilder.Entity<VehicleImage>().HasData(SeedVehicleImages());
-            modelBuilder.Entity<VehicleTypeProperty>().HasData(SeedVehicleTypeProperties());
-            modelBuilder.Entity<VehicleTypePropertyValue>().HasData(SeedVehicleTypePropertyValues());
-            modelBuilder.Entity<Rental>().HasData(SeedRentals());
-            modelBuilder.Entity<VehicleReview>().HasData(SeedVehicleReviews());
-            modelBuilder.Entity<Wallet>().HasData(SeedUserWallets());
+            //modelBuilder.Entity<VehicleType>().HasData(SeedVehicleTypes());
+            //modelBuilder.Entity<VehicleTypeCategory>().HasData(SeedVehicleTypeCategories());
+            //modelBuilder.Entity<Vehicle>().HasData(SeedVehicles());
+            //modelBuilder.Entity<VehicleImage>().HasData(SeedVehicleImages());
+            //modelBuilder.Entity<VehicleTypeProperty>().HasData(SeedVehicleTypeProperties());
+            //modelBuilder.Entity<VehicleTypePropertyValue>().HasData(SeedVehicleTypePropertyValues());
+            //modelBuilder.Entity<Rental>().HasData(SeedRentals());
+            //modelBuilder.Entity<VehicleReview>().HasData(SeedVehicleReviews());
+            //modelBuilder.Entity<Wallet>().HasData(SeedUserWallets());
         }
     }
 }

@@ -12,8 +12,8 @@ using RentDrive.Data;
 namespace RentDrive.Data.Migrations
 {
     [DbContext(typeof(RentDriveDbContext))]
-    [Migration("20251127005330_IntialDb")]
-    partial class IntialDb
+    [Migration("20251128161654_InitialDb")]
+    partial class InitialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
